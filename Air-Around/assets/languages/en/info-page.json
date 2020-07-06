@@ -1,0 +1,36 @@
+{
+	"map-text-1": "In parks or near rivers and lakes, the air can be much cleaner than in the city!",
+	"map-text-2": "Try to visit them from time to time.",
+	"map-text-3": "You can search for nearby ones on the map.",
+
+	"aqi--tooltip-aqi--title": "What is AQI?",
+	"aqi--tooltip-aqi--text": "The AQI (Air Quality Index) - is an index for reporting daily air quality. It tells you how clean or polluted your air is, and what associated health effects might be a concern for you.",
+
+	"aqi--tooltip-color--title": "Why this color?",
+	"aqi--tooltip-color--text": "The purpose of the AQI is to help you understand what local air quality means to your health. To make it easier to understand, the AQI is divided into six categories:",
+	
+	"aqi--tooltip-color--good": "Good (0–50)",
+	"aqi--tooltip-color--satisfactory": "Satisfactory (51–100)",
+	"aqi--tooltip-color--moderately": "Moderately polluted (101–200)",
+	"aqi--tooltip-color--poor": "Poor (201–300)",
+	"aqi--tooltip-color--very-poor": "Very poor (301–400)",
+	"aqi--tooltip-color--severe": "Severe (401–500)",
+
+	"aqi--tooltip-color--good-text": "Air quality is considered satisfactory, and air pollution poses little or no risk.",
+	"aqi--tooltip-color--satisfactory-text": "Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people. For example, people who are unusually sensitive to ozone may experience respiratory symptoms.",
+	"aqi--tooltip-color--moderately-text": "Although general public is not likely to be affected at this AQI range, people with lung disease, older adults and children are at a greater risk from exposure to ozone, whereas persons with heart and lung, older adults and children are at greater risk from the presence of particles in the air.",
+	"aqi--tooltip-color--poor-text": "Everyone may begin to experience some adverse health effects, and members of the sensitive groups may experience more serious effects.",
+	"aqi--tooltip-color--very-poor-text": "This would trigger a health alert signifying that everyone may experience more serious health effects.",
+	"aqi--tooltip-color--severe-text": "This would trigger a health warnings of emergency conditions. The entire population is more likely to be affected.",
+
+	"weather--feels-like": "Feels like",
+	"weather--night": "Night",
+	"weather--day": "Day",
+	"weather--m-s": "m/s",
+	"weather--m-b": "mb",
+	"weather--humidity": "Humidity",
+	"weather--wind-speed": "Wind speed",
+	"weather--sunrise-sunset": "Sunrise / Sunset",
+	"weather--clouds": "Overcast",
+	"weather--pressure": "Air pressure"
+}
