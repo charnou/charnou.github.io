@@ -95,7 +95,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       return WEATHERBIT_API_KEY;
     });
 
-    var WEATHERBIT_API_KEY = '6d74527a4d2140ef98f4124ddfa48387';
+    var WEATHERBIT_API_KEY = '63fe9ae32258456a95c276875a61cd6e';
     /***/
   },
 
@@ -6697,7 +6697,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function setCoordinates(address) {
           var coordinates = {
             latitude: (address.geometry.viewport.Za.i + address.geometry.viewport.Za.j) / 2,
-            longitude: (address.geometry.viewport.Ua.i + address.geometry.viewport.Ua.j) / 2
+            longitude: (address.geometry.viewport.Va.i + address.geometry.viewport.Va.j) / 2
           };
           this.store.dispatch(_geo_actions__WEBPACK_IMPORTED_MODULE_2__["setCoordinatesByInputSelectedLocation"]({
             coordinates: coordinates
@@ -20795,11 +20795,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     if (_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].production) {
       Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["enableProdMode"])(); // HIDING ALL CONSOLE LOGS IN PRODUCTION
 
-      console.log = function () {};
+      console.log = function () {
+        return null;
+      };
 
-      console.warn = function () {};
+      console.warn = function () {
+        return null;
+      };
 
-      console.error = function () {};
+      console.error = function () {
+        return null;
+      };
     }
 
     _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["platformBrowser"]().bootstrapModule(_app_app_module__WEBPACK_IMPORTED_MODULE_2__["AppModule"])["catch"](function (err) {

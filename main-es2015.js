@@ -48,7 +48,7 @@ const GOOGLE_API_KEY = 'AIzaSyAH80ogFrnw_kD196C8CElt--E21XLp1jY';
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WEATHERBIT_API_KEY", function() { return WEATHERBIT_API_KEY; });
-const WEATHERBIT_API_KEY = '6d74527a4d2140ef98f4124ddfa48387';
+const WEATHERBIT_API_KEY = '63fe9ae32258456a95c276875a61cd6e';
 
 
 /***/ }),
@@ -3384,8 +3384,8 @@ class GeoFacade {
             latitude: (address.geometry.viewport.Za.i +
                 address.geometry.viewport.Za.j) /
                 2,
-            longitude: (address.geometry.viewport.Ua.i +
-                address.geometry.viewport.Ua.j) /
+            longitude: (address.geometry.viewport.Va.i +
+                address.geometry.viewport.Va.j) /
                 2,
         };
         this.store.dispatch(_geo_actions__WEBPACK_IMPORTED_MODULE_2__["setCoordinatesByInputSelectedLocation"]({
@@ -25258,9 +25258,9 @@ __webpack_require__.r(__webpack_exports__);
 if (_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].production) {
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["enableProdMode"])();
     // HIDING ALL CONSOLE LOGS IN PRODUCTION
-    console.log = () => { };
-    console.warn = () => { };
-    console.error = () => { };
+    console.log = () => null;
+    console.warn = () => null;
+    console.error = () => null;
 }
 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["platformBrowser"]().bootstrapModule(_app_app_module__WEBPACK_IMPORTED_MODULE_2__["AppModule"])
     .catch((err) => console.error(err));
