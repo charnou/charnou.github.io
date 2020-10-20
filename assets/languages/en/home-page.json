@@ -1,0 +1,23 @@
+{
+	"morning": "Good morning!",
+	"day": "Have a good day!",
+	"evening": "Good evening!",
+	"night": "Good night!",
+	"analyze-button--title": "Check",
+
+	"info--atention-title": "Why Should I Pay Attention to the Air Quality Index?",
+	"info--atention-text": "Air pollution can harm anyone, but it can be really dangerous for alot of people, including children and teens, people with asthma andother lung diseases, anyone over 65, anyone who exercises or worksoutdoors or has diabetes or cardiovascular disease like high bloodpressure, or has suffered a heart attack or stroke. Even healthyadults who exercise or work outdoors can be harmed. Changing whatyou do on these bad air days can reduce your risk of being harmed.",
+
+	"info--aqi-title": "How Does the Air Quality Index Work?",
+	"info--aqi-text": "In more than 100 countries across the planet, air pollution levelsare measured daily and ranked on a scale of 0 for perfect air allthe way up to 500 for air pollution levels that pose an immediatedanger to the public. The AQI further breaks air pollution levelsinto five categories, each of which has a name, an associated color,and advice to go along with it.",
+
+	"info--tips-title": "What Can You Do to Protect Yourself and Your Family?",
+	"info--tips-1": "Check daily air pollution in your area. The color-codedforecasts can let you know when the air is unhealthy in yourcommunity. Sources include local radio and TV weather reports,newspapers and online at AirAround.",
+	"info--tips-2": "Avoid exercising outdoors when pollution levels are high. Whenthe air is bad, walk indoors in a shopping mall or gym or use anexercise machine. Limit the amount of time your child spendsplaying outdoors if the air quality is unhealthy.",
+	"info--tips-3": "Always avoid exercising near high-traffic areas. Even when airquality forecasts are green, the vehicles on busy highways cancreate high pollution levels up to one-third a mile away.",
+	"info--tips-4": "Use less energy in your home. Generating electricity and othersources of energy creates air pollution. By reducing energy use,you can help improve air quality, curb greenhouse gas emissions,encourage energy independence and save money!",
+	"info--tips-5": "Walk, bike or carpool. Combine trips. Use buses, subways, light rail systems, commuter trains or other alternatives to driving your car.",
+	"info--tips-6": "Don't burn wood or trash. Burning firewood and trash are among the major sources of particulate pollution (soot).",
+	"info--tips-7": "Use hand-powered or electric lawn care equipment rather thangasoline-powered. Old two-stroke engines like lawnmowers andleaf or snow blowers often have no pollution control devices.They can pollute the air even more than cars, though enginessold since 2011 are cleaner.",
+	"info--tips-8": "Don't allow anyone to smoke indoors and support measures to make all public places tobacco-free."
+}
