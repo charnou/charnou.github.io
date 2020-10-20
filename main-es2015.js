@@ -2703,7 +2703,7 @@ class GeoService {
     getCoordinatesByAPI() {
         return new rxjs__WEBPACK_IMPORTED_MODULE_1__["Observable"]((observer) => {
             this.http
-                .get('api.ipapi.com/api/check?access_key=cadfd70fd65cdfd986d644d980d7bd0c')
+                .get('http://api.ipapi.com/api/check?access_key=cadfd70fd65cdfd986d644d980d7bd0c')
                 .subscribe((data) => {
                 if (data) {
                     const coordinates = {

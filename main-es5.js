@@ -5329,7 +5329,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var _this15 = this;
 
           return new rxjs__WEBPACK_IMPORTED_MODULE_1__["Observable"](function (observer) {
-            _this15.http.get('api.ipapi.com/api/check?access_key=cadfd70fd65cdfd986d644d980d7bd0c').subscribe(function (data) {
+            _this15.http.get('http://api.ipapi.com/api/check?access_key=cadfd70fd65cdfd986d644d980d7bd0c').subscribe(function (data) {
               if (data) {
                 var coordinates = {
                   latitude: data.latitude,
