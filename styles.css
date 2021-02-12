@@ -1,0 +1,101 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Source+Sans+Pro:wght@400;700&display=swap");
+
+.links--title {
+	font-family: "Oswald", sans-serif;
+	font-size: 40px;
+	margin-bottom: 35px;
+	padding-left: 15px;
+	display: block;
+	cursor: help;
+}
+
+.links--content {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+.links--block {
+	box-sizing: border-box;
+	min-width: 400px;
+	padding: 0 15px;
+	font-family: "Source Sans Pro", sans-serif;
+	flex: 0 1 25%;
+}
+
+.links--block:not(:last-child) {
+	border-right: 1px solid #ddd;
+}
+
+.links--block-title {
+	display: inline-block;
+	padding: 3px 10px;
+	margin-bottom: 15px;
+	color: #ffffff;
+	background-color: #39c2d6;
+	font-weight: 700;
+	font-size: 18px;
+	cursor: default;
+}
+
+.links--list {
+	font-weight: 500;
+	font-size: 19px;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.links--list a {
+	text-decoration: none;
+	color: #333333;
+	display: block;
+}
+
+.links--list-item {
+	position: relative;
+	padding: 0 0 10px 20px;
+}
+
+.links--list-item:hover {
+	background-color: #f9f9f9;
+}
+
+.links--list-item:hover .links--list-item-name {
+	text-decoration: underline #39c2d6;
+	color: #000000;
+}
+
+.links--list-item:before {
+	content: ">";
+	display: inline-block;
+	font-weight: 900;
+	transform: scaleX(0.5);
+	font-size: 24px;
+	line-height: 14px;
+	color: #777;
+	position: absolute;
+	top: 4px;
+	left: 0;
+}
+
+.links--list-item-description {
+	color: #686868;
+	font-weight: 500;
+	font-size: 16px;
+}
+
+.sub-link-list--link-item:hover {
+	text-decoration: underline #39c2d6;
+	color: #000000;
+}
+
+.links--list-item.sub-link-list:hover .links--list-item-name {
+	text-decoration: none;
+	color: #333333;
+}
+
+.links--list-item.sub-link-list a:hover .links--list-item-name {
+	text-decoration: underline #39c2d6;
+	color: #000000;
+}
