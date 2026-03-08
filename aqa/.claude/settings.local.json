@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install canvas-confetti)",
+      "WebFetch(domain:motion.dev)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:blog.maximeheckel.com)",
+      "Bash(npm install motion)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:adrianotiger.github.io)",
+      "WebFetch(domain:jabbany.github.io)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(curl -s \"https://api.github.com/repos/lars-rooij/webmeji/contents/shimeji\")",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(f[''name'']\\) for f in data]\")",
+      "Bash(python -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(f[''name'']\\) for f in data]\")",
+      "Bash(curl -s \"https://api.github.com/repos/lars-rooij/webmeji/contents/miku\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/lars-rooij/webmeji/main/README.md\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/lars-rooij/webmeji/main/index.html\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/lars-rooij/webmeji/main/webmeji.css\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/lars-rooij/webmeji/main/config.js\")",
+      "Bash(ls /c/Repositories/charnou.github.io/aqa/webmeji* /c/Repositories/charnou.github.io/aqa/shimeji/)"
+    ]
+  }
+}
