@@ -64,6 +64,52 @@ export default function App() {
     sv2.current = setTimeout(() => save({ ck, em, gk, notes }), 400);
   }, [ck, em, gk, notes, ok]);
 
+  const scrolledRef = useRef(false);
+  useEffect(() => {
+    if (!ok || scrolledRef.current || tab !== "road") return;
+    scrolledRef.current = true;
+    for (const mo of plan) {
+      for (const w of mo.weeks) {
+        for (const t of w.tasks) {
+          if (!ck[t.id]) {
+            sM((p) => ({ ...p, [mo.month]: true }));
+            setTimeout(() => {
+              const el = document.querySelector(`[data-task-id="${t.id}"]`);
+              if (!el) return;
+              let cancelled = false;
+              const cancel = () => { cancelled = true; };
+              window.addEventListener("wheel", cancel, { once: true, passive: true });
+              window.addEventListener("touchstart", cancel, { once: true, passive: true });
+              window.addEventListener("pointerdown", cancel, { once: true, passive: true });
+              const rect = el.getBoundingClientRect();
+              const targetY = window.scrollY + rect.top - window.innerHeight / 2 + rect.height / 2;
+              const startY = window.scrollY;
+              const dist = targetY - startY;
+              const duration = Math.min(800, Math.abs(dist) * 0.6);
+              let start = null;
+              const step = (ts) => {
+                if (cancelled) return cleanup();
+                if (!start) start = ts;
+                const p = Math.min((ts - start) / duration, 1);
+                const ease = p < 0.5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2;
+                window.scrollTo(0, startY + dist * ease);
+                if (p < 1) requestAnimationFrame(step);
+                else cleanup();
+              };
+              const cleanup = () => {
+                window.removeEventListener("wheel", cancel);
+                window.removeEventListener("touchstart", cancel);
+                window.removeEventListener("pointerdown", cancel);
+              };
+              requestAnimationFrame(step);
+            }, 300);
+            return;
+          }
+        }
+      }
+    }
+  }, [ok]);
+
   const tg = useCallback(
     (id, e) => {
       if (!ck[id] && e) {
@@ -140,12 +186,66 @@ export default function App() {
 
   const mn = "'JetBrains Mono',monospace";
 
+  const formatDesc = (text) => {
+    if (!text) return text;
+    const parts = text.split(/(`[^`]+`)/g);
+    return parts.map((p, i) => {
+      if (p.startsWith("`") && p.endsWith("`")) {
+        return (
+          <code
+            key={i}
+            style={{
+              fontFamily: mn,
+              background: "#1C2128",
+              padding: "1px 5px",
+              borderRadius: 3,
+              color: "#E6EDF3",
+              fontSize: 11,
+            }}
+          >
+            {p.slice(1, -1)}
+          </code>
+        );
+      }
+      return p;
+    });
+  };
+
+  const scrollTargetRef = useRef(null);
+
+  const goToTask = useCallback((taskId) => {
+    let targetTab = "road";
+    if (taskId.startsWith("alt-")) targetTab = "alt";
+    else if (taskId.startsWith("ss-")) targetTab = "soft";
+    else if (taskId.startsWith("adv-")) targetTab = "tips";
+
+    if (targetTab === "road") {
+      const mo = plan.find((m) =>
+        m.weeks.some((w) => w.tasks.some((t) => t.id === taskId))
+      );
+      if (mo) sM((p) => ({ ...p, [mo.month]: true }));
+    }
+
+    scrollTargetRef.current = taskId;
+    setTab(targetTab);
+    sE((p) => ({ ...p, [taskId]: true }));
+  }, [setTab]);
+
   const rT = (t, c) => {
     const d = ck[t.id];
     const o = ex[t.id];
     return (
       <div
         key={t.id}
+        data-task-id={t.id}
+        ref={scrollTargetRef.current === t.id ? (el) => {
+          if (el) {
+            scrollTargetRef.current = null;
+            requestAnimationFrame(() =>
+              el.scrollIntoView({ behavior: "smooth", block: "center" })
+            );
+          }
+        } : undefined}
         style={{
           borderRadius: 7,
           background: d ? c + "06" : "transparent",
@@ -155,7 +255,7 @@ export default function App() {
           style={{
             display: "flex",
             alignItems: "flex-start",
-            gap: 7,
+            gap: 10,
             padding: "6px 7px",
             cursor: "pointer",
           }}
@@ -166,33 +266,40 @@ export default function App() {
               e.stopPropagation();
               tg(t.id, e);
             }}
-            className={d ? "check-pop" : undefined}
             style={{
-              width: 17,
-              height: 17,
-              borderRadius: 5,
+              padding: 4,
+              margin: -4,
               flexShrink: 0,
-              marginTop: 2,
-              border: d ? "none" : "2px solid #30363D",
-              background: d ? c : "transparent",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               cursor: "pointer",
-              transition: "background .2s, border .2s",
             }}
           >
-            {d && (
-              <svg width={10} height={10} viewBox="0 0 12 12" fill="none">
-                <path
-                  d="M2.5 6.5L5 9L9.5 3.5"
-                  stroke="#fff"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            )}
+            <div
+              className={d ? "check-pop" : undefined}
+              style={{
+                width: 17,
+                height: 17,
+                borderRadius: 5,
+                marginTop: 2,
+                border: d ? "none" : "2px solid #30363D",
+                background: d ? c : "transparent",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "background .2s, border .2s",
+              }}
+            >
+              {d && (
+                <svg width={10} height={10} viewBox="0 0 12 12" fill="none">
+                  <path
+                    d="M2.5 6.5L5 9L9.5 3.5"
+                    stroke="#fff"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </div>
           </div>
           <span
             style={{
@@ -264,7 +371,7 @@ export default function App() {
                     whiteSpace: "pre-line",
                   }}
                 >
-                  {t.desc}
+                  {formatDesc(t.desc)}
                 </p>
                 <div style={{ fontSize: 10, color: "#484F58", marginBottom: 4 }}>
                   Готовые гугл запросы, просто нажми:
@@ -1100,17 +1207,28 @@ export default function App() {
                 padding: "8px 14px",
               }}>
                 {sec.items.map((t) => (
-                  <div key={t.id} style={{
-                    padding: "8px 0",
-                    borderBottom: "1px solid #21262D",
-                  }}>
+                  <div
+                    key={t.id}
+                    onClick={() => goToTask(t.id)}
+                    style={{
+                      padding: "8px 0",
+                      borderBottom: "1px solid #21262D",
+                      cursor: "pointer",
+                    }}
+                  >
                     <div style={{
                       fontSize: 12,
                       fontWeight: 600,
                       color: "#C9D1D9",
                       marginBottom: 4,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                     }}>
-                      {t.text}
+                      <span>{t.text}</span>
+                      <svg width={10} height={10} viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0, opacity: 0.4 }}>
+                        <path d="M4.5 2L8.5 6L4.5 10" stroke="#8B949E" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
                     </div>
                     <div style={{
                       fontSize: 12,

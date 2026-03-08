@@ -19,7 +19,8 @@
       "Bash(curl -s \"https://raw.githubusercontent.com/lars-rooij/webmeji/main/index.html\")",
       "Bash(curl -s \"https://raw.githubusercontent.com/lars-rooij/webmeji/main/webmeji.css\")",
       "Bash(curl -s \"https://raw.githubusercontent.com/lars-rooij/webmeji/main/config.js\")",
-      "Bash(ls /c/Repositories/charnou.github.io/aqa/webmeji* /c/Repositories/charnou.github.io/aqa/shimeji/)"
+      "Bash(ls /c/Repositories/charnou.github.io/aqa/webmeji* /c/Repositories/charnou.github.io/aqa/shimeji/)",
+      "Bash(grep -n '`' \"C:\\\\Repositories\\\\charnou.github.io\\\\aqa-dev\\\\src\\\\data\\\\plan.js\")"
     ]
   }
 }
