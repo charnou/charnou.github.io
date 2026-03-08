@@ -114,6 +114,10 @@ class Creature {
     this.forceWalkAfter = false; // flag for forcing walk after some actions
     this.forceThinkAfter = false;
 
+    // platform detection
+    this.platforms = [];
+    this.currentPlatform = null;
+
     this.container.style.left = `${this.positionX}px`;
     this.container.style.top = 'auto'; // reset top for CSS positioning
     this.baseBottom = 0; // reference for bottom alignment
@@ -138,6 +142,52 @@ class Creature {
       this.container.style.left = `${this.positionX}px`;
     };
     window.addEventListener('resize', this.resizeHandler);
+
+    // platform tracking: periodic scan
+    this.scanPlatforms();
+    this.platformScanTimer = setInterval(() => this.scanPlatforms(), 500);
+
+    // scroll behavior: follow content when on platforms, follow viewport on bottom/edges
+    this.attachedToViewport = true;
+    this.lastScrollY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const delta = window.scrollY - this.lastScrollY;
+      this.lastScrollY = window.scrollY;
+      if (!this.attachedToViewport && !this.isDragging && !this.isJumping &&
+          (!this.isFalling || this.tripAfterFallActive)) {
+        this.positionY -= delta;
+        this.container.style.top = `${this.positionY}px`;
+        if (this.currentPlatform && this.currentPlatform.el) {
+          const r = this.currentPlatform.el.getBoundingClientRect();
+          this.currentPlatform = { el: this.currentPlatform.el, left: r.left, right: r.right, top: r.top, width: r.width };
+        }
+      }
+    }, { passive: true });
+
+    // tab change: fly in from the side when user switches tabs
+    this.activeTabButtonIndex = this.getActiveTabButtonIndex();
+    window.addEventListener('hashchange', () => {
+      const oldIdx = this.activeTabButtonIndex;
+      // wait for React to re-render new tab content
+      requestAnimationFrame(() => { requestAnimationFrame(() => {
+        const newIdx = this.getActiveTabButtonIndex();
+        this.activeTabButtonIndex = newIdx;
+        if (oldIdx === -1 || newIdx === -1 || oldIdx === newIdx) return;
+        if (this.attachedToViewport) return; // on bottom/edge — stays with user
+        // character was on content that's now gone — fly in from the side
+        if (this.animationFrameId) {
+          cancelAnimationFrame(this.animationFrameId);
+          this.animationFrameId = null;
+        }
+        this.resetAnimation();
+        this.isFalling = false;
+        this.isJumping = false;
+        this.tripAfterFallActive = false;
+        this.isPetting = false;
+        this.currentPlatform = null;
+        this.flyIn(oldIdx < newIdx ? 'left' : 'right');
+      }); });
+    });
 
     // enable mouse hover and drag interactions
     this.enablePetInteraction();
@@ -218,6 +268,7 @@ class Creature {
     if (!this.spriteConfig.ALLOWANCES.includes(targetEdge)) return; // edge not allowed
 
     this.isJumping = true;
+    this.attachedToViewport = true;
     this.resetAnimation();
 
     const jumpConfig = this.spriteConfig.jump;
@@ -290,6 +341,88 @@ class Creature {
             this.updateEdgeClass();
             this.startEdgeIdle(); // start idle after landing
         }
+    };
+    requestAnimationFrame(step);
+  }
+
+  // fly to a target platform (uses falling animation, can go up or down)
+  flyToPlatform(target) {
+    if (this.isFalling || this.isPetting || this.isDragging || this.isJumping) return;
+
+    this.isJumping = true;
+    this.currentPlatform = null;
+    this.attachedToViewport = false;
+    this.resetAnimation();
+
+    const scrollYAtStart = window.scrollY;
+    const cfg = this.spriteConfig.falling;
+    if (!cfg) { this.isJumping = false; return; }
+
+    const startX = this.positionX;
+    const startY = this.positionY;
+    const landX = target.left + Math.random() * Math.max(0, target.width - this.containerWidth);
+    const endX = Math.max(target.left, Math.min(landX, target.right - this.containerWidth));
+    const endY = target.top - this.containerHeight;
+
+    const dx = endX - startX;
+    const dy = endY - startY;
+    const distance = Math.hypot(dx, dy);
+    if (distance === 0) { this.isJumping = false; return; }
+
+    const duration = distance / this.spriteConfig.jumpspeed;
+    const startTime = performance.now();
+
+    let frameIndex = 0;
+    this.img.src = cfg.frames[0];
+    const frameTimer = setInterval(() => {
+      frameIndex = (frameIndex + 1) % cfg.frames.length;
+      this.img.src = cfg.frames[frameIndex];
+    }, cfg.interval);
+
+    if (dx !== 0) this.setFacingFromDelta(dx);
+
+    const step = (time) => {
+      if (this.isDragging) {
+        clearInterval(frameTimer);
+        this.isJumping = false;
+        return;
+      }
+
+      const elapsed = (time - startTime) / 1000;
+      const t = Math.min(elapsed / duration, 1);
+      const scrollDelta = window.scrollY - scrollYAtStart;
+
+      this.positionX = startX + dx * t;
+      this.positionY = (startY + dy * t) - scrollDelta;
+
+      // clamp to page bounds
+      const pageY = this.positionY + window.scrollY;
+      const maxPageY = document.documentElement.scrollHeight - this.containerHeight;
+      if (pageY < 0) this.positionY = -window.scrollY;
+      else if (pageY > maxPageY) this.positionY = maxPageY - window.scrollY;
+
+      this.container.style.left = `${this.positionX}px`;
+      this.container.style.top = `${this.positionY}px`;
+
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else {
+        clearInterval(frameTimer);
+        this.isJumping = false;
+        // refresh platform position from DOM on landing
+        const r = target.el.getBoundingClientRect();
+        this.positionY = Math.max(0, r.top - this.containerHeight);
+        this.currentPlatform = { el: target.el, left: r.left, right: r.right, top: r.top, width: r.width };
+        this.container.style.top = `${this.positionY}px`;
+        this.attachedToViewport = false;
+        this.lastScrollY = window.scrollY;
+        this.currentEdge = 'bottom';
+        this.updateEdgeClass();
+        this.resetAnimation();
+        this.lastTime = performance.now();
+        this.setNextAction();
+        this.animationFrameId = requestAnimationFrame(this.animate);
+      }
     };
     requestAnimationFrame(step);
   }
@@ -460,6 +593,177 @@ class Creature {
   };
   }
 
+  // platform detection ----------------------------------------------------
+  scanPlatforms() {
+    const sel = this.spriteConfig.PLATFORM_SELECTOR;
+    if (!sel) { this.platforms = []; return; }
+    const els = document.querySelectorAll(sel);
+    this.platforms = Array.from(els).map(el => {
+      const r = el.getBoundingClientRect();
+      return { el, left: r.left, right: r.right, top: r.top, width: r.width };
+    }).filter(p => p.width > 0)
+      .sort((a, b) => a.top - b.top);
+  }
+
+  findSurfaceBelow(centerX, feetY) {
+    for (const p of this.platforms) {
+      if (p.top > feetY + 2 && p.top < window.innerHeight &&
+          centerX >= p.left && centerX <= p.right) {
+        return { y: p.top - this.containerHeight, platform: p };
+      }
+    }
+    return { y: window.innerHeight - this.containerHeight, platform: null };
+  }
+
+  getCurrentPlatform() {
+    const feetY = this.positionY + this.containerHeight;
+    const centerX = this.positionX + this.containerWidth / 2;
+    for (const p of this.platforms) {
+      if (Math.abs(feetY - p.top) < 4 && centerX >= p.left && centerX <= p.right) {
+        return p;
+      }
+    }
+    return null;
+  }
+
+  isOnSurface() {
+    return this.currentPlatform !== null ||
+           this.positionY >= window.innerHeight - this.containerHeight - 2;
+  }
+
+  checkPlatformValidity() {
+    if (!this.currentPlatform || this.isFalling || this.isDragging || this.isJumping) return;
+    const el = this.currentPlatform.el;
+    const r = el.getBoundingClientRect();
+    const centerX = this.positionX + this.containerWidth / 2;
+    if (r.width > 0 && centerX >= r.left && centerX <= r.right &&
+        r.top > 0 && r.top < window.innerHeight) {
+      this.positionY = r.top - this.containerHeight;
+      this.container.style.top = `${this.positionY}px`;
+      this.currentPlatform = { el, left: r.left, right: r.right, top: r.top, width: r.width };
+    } else {
+      this.currentPlatform = null;
+      this.fallToBottom();
+    }
+  }
+
+  // tab change detection ---------------------------------------------------
+  getActiveTabButtonIndex() {
+    const els = document.querySelectorAll(this.spriteConfig.PLATFORM_SELECTOR);
+    let header = null;
+    for (const el of els) {
+      if (getComputedStyle(el).position === 'sticky') { header = el; break; }
+    }
+    if (!header) return -1;
+    const buttons = header.querySelectorAll('button');
+    for (let i = 0; i < buttons.length; i++) {
+      if (buttons[i].style.fontWeight === '600') return i;
+    }
+    return -1;
+  }
+
+  // fly in from the side of the screen (after tab change)
+  flyIn(fromSide) {
+    if (this.isDragging) return;
+
+    this.isJumping = true;
+    this.attachedToViewport = false;
+    this.currentPlatform = null;
+    this.resetAnimation();
+
+    const scrollYAtStart = window.scrollY;
+    const cfg = this.spriteConfig.falling;
+    if (!cfg) { this.isJumping = false; return; }
+
+    // find landing target on the new tab
+    this.scanPlatforms();
+    const visible = this.platforms.filter(p =>
+      p.top >= this.containerHeight && p.top < window.innerHeight
+    );
+
+    let endX, endY, landingPlatform = null;
+
+    if (visible.length && Math.random() < 0.6) {
+      landingPlatform = visible[Math.floor(Math.random() * visible.length)];
+      const landX = landingPlatform.left + Math.random() * Math.max(0, landingPlatform.width - this.containerWidth);
+      endX = Math.max(landingPlatform.left, Math.min(landX, landingPlatform.right - this.containerWidth));
+      endY = Math.max(0, landingPlatform.top - this.containerHeight);
+    } else {
+      endX = Math.random() * (window.innerWidth - this.containerWidth);
+      endY = window.innerHeight - this.containerHeight;
+    }
+
+    // start off-screen
+    const startX = fromSide === 'left' ? -this.containerWidth * 2 : window.innerWidth + this.containerWidth;
+    const startY = endY;
+    this.positionX = startX;
+    this.positionY = startY;
+    this.container.style.left = `${startX}px`;
+    this.container.style.top = `${startY}px`;
+
+    this.facing = fromSide === 'left' ? 'right' : 'left';
+    this.updateImageDirection();
+
+    const dx = endX - startX;
+    const dy = endY - startY;
+    const distance = Math.hypot(dx, dy);
+    if (distance === 0) { this.isJumping = false; return; }
+
+    const duration = distance / this.spriteConfig.jumpspeed;
+    const startTime = performance.now();
+
+    let frameIndex = 0;
+    this.img.src = cfg.frames[0];
+    const frameTimer = setInterval(() => {
+      frameIndex = (frameIndex + 1) % cfg.frames.length;
+      this.img.src = cfg.frames[frameIndex];
+    }, cfg.interval);
+
+    const step = (time) => {
+      if (this.isDragging) {
+        clearInterval(frameTimer);
+        this.isJumping = false;
+        return;
+      }
+
+      const elapsed = (time - startTime) / 1000;
+      const t = Math.min(elapsed / duration, 1);
+      const scrollDelta = window.scrollY - scrollYAtStart;
+
+      this.positionX = startX + dx * t;
+      this.positionY = (startY + dy * t) - scrollDelta;
+
+      this.container.style.left = `${this.positionX}px`;
+      this.container.style.top = `${this.positionY}px`;
+
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else {
+        clearInterval(frameTimer);
+        this.isJumping = false;
+
+        if (landingPlatform && landingPlatform.el && landingPlatform.el.isConnected) {
+          const r = landingPlatform.el.getBoundingClientRect();
+          this.positionY = Math.max(0, r.top - this.containerHeight);
+          this.currentPlatform = { el: landingPlatform.el, left: r.left, right: r.right, top: r.top, width: r.width };
+          this.attachedToViewport = false;
+        } else {
+          this.positionY = window.innerHeight - this.containerHeight;
+          this.attachedToViewport = true;
+        }
+        this.container.style.top = `${this.positionY}px`;
+        this.lastScrollY = window.scrollY;
+        this.currentEdge = 'bottom';
+        this.updateEdgeClass();
+        this.resetAnimation();
+        this.lastTime = performance.now();
+        this.setNextAction();
+        this.animationFrameId = requestAnimationFrame(this.animate);
+      }
+    };
+    requestAnimationFrame(step);
+  }
+
   // falling and recovery -------------------------------------------------
   // animate falling to bottom
   fallToBottom(fallSpeed=this.spriteConfig.fallspeed){
@@ -467,26 +771,45 @@ class Creature {
     this.tripAfterFallActive = false;
     this.isFalling = true;
     this.currentEdge='bottom';
+    this.currentPlatform = null;
+    this.attachedToViewport = false;
     this.updateEdgeClass();
     this.resetAnimation();
 
+    const scrollYAtStart = window.scrollY;
     const cfg=this.spriteConfig.falling; if(!cfg) return;
 
     let frameIndex=0;
     this.img.src=cfg.frames[0];
-    this.frameTimer=setInterval(()=>{ 
-      frameIndex=(frameIndex+1)%cfg.frames.length; 
-      this.img.src=cfg.frames[frameIndex]; 
+    this.frameTimer=setInterval(()=>{
+      frameIndex=(frameIndex+1)%cfg.frames.length;
+      this.img.src=cfg.frames[frameIndex];
       }, cfg.interval);
 
-    const startY=this.positionY, endY=window.innerHeight-this.containerHeight, distance=endY-startY;
-    if(distance<=0){ clearInterval(this.frameTimer); 
-      this.frameTimer=null; this.positionY=endY; 
-      this.container.style.top=`${endY}px`; 
-      return this.playTripAfterFall(); 
+    // Find landing surface (platform or viewport bottom)
+    this.scanPlatforms();
+    const centerX = this.positionX + this.containerWidth / 2;
+    const feetY = this.positionY + this.containerHeight;
+    const surface = this.findSurfaceBelow(centerX, feetY);
+    const startY=this.positionY, endY=surface.y, landingPlatform=surface.platform, distance=endY-startY;
+    if(distance<=0){ clearInterval(this.frameTimer);
+      this.frameTimer=null;
+      if (landingPlatform && landingPlatform.el) {
+        const r = landingPlatform.el.getBoundingClientRect();
+        this.positionY = r.top - this.containerHeight;
+        this.currentPlatform = { el: landingPlatform.el, left: r.left, right: r.right, top: r.top, width: r.width };
+        this.attachedToViewport = false;
+      } else {
+        this.positionY = window.innerHeight - this.containerHeight;
+        this.attachedToViewport = true;
+      }
+      this.container.style.top=`${this.positionY}px`;
+      this.lastScrollY = window.scrollY;
+      return this.playTripAfterFall();
     }
 
     const startTime=performance.now();
+    const scrollCompensate = !!landingPlatform;
     const step = (time) => {
       if (this.isDragging) {
           clearInterval(this.frameTimer);
@@ -495,17 +818,27 @@ class Creature {
       }
 
       const elapsed = (time - startTime) / 1000;
-      const deltaY = fallSpeed * elapsed;
-      this.positionY = Math.min(startY + deltaY, endY); 
+      const scrollDelta = scrollCompensate ? (window.scrollY - scrollYAtStart) : 0;
+      const contentY = Math.min(startY + fallSpeed * elapsed, endY);
+      this.positionY = contentY - scrollDelta;
       this.container.style.top = `${this.positionY}px`;
 
-      if (this.positionY < endY) {
+      if (contentY < endY) {
           requestAnimationFrame(step);
       } else {
           clearInterval(this.frameTimer);
           this.frameTimer = null;
-          this.positionY = endY;
-          this.container.style.top = `${endY}px`;
+          if (landingPlatform && landingPlatform.el) {
+            const r = landingPlatform.el.getBoundingClientRect();
+            this.positionY = r.top - this.containerHeight;
+            this.currentPlatform = { el: landingPlatform.el, left: r.left, right: r.right, top: r.top, width: r.width };
+            this.attachedToViewport = false;
+          } else {
+            this.positionY = window.innerHeight - this.containerHeight;
+            this.attachedToViewport = true;
+          }
+          this.container.style.top = `${this.positionY}px`;
+          this.lastScrollY = window.scrollY;
           this.playTripAfterFall();
       }
     };
@@ -546,6 +879,17 @@ class Creature {
     if(this.isDragging) return;
     this.isFalling = false;
     this.isPetting = false;
+    // refresh position from DOM if on a platform (scroll may have shifted it during trip)
+    if (this.currentPlatform && this.currentPlatform.el) {
+      const r = this.currentPlatform.el.getBoundingClientRect();
+      this.positionY = r.top - this.containerHeight;
+      this.currentPlatform = { el: this.currentPlatform.el, left: r.left, right: r.right, top: r.top, width: r.width };
+      this.container.style.top = `${this.positionY}px`;
+      this.attachedToViewport = false;
+    } else {
+      this.attachedToViewport = true;
+    }
+    this.lastScrollY = window.scrollY;
     this.resetAnimation();
     this.lastTime = performance.now();
     this.currentAction = 'sit';
@@ -566,7 +910,7 @@ class Creature {
         return;
     }
 
-    if (!this.isJumping && this.positionY >= window.innerHeight - this.containerHeight) {
+    if (!this.isJumping && this.isOnSurface()) {
       if (Math.random() < this.spriteConfig.JUMP_CHANCE) { // decicion on wether to jump or not
         const edges = ['top', 'left', 'right']
           .filter(e => this.spriteConfig.ALLOWANCES.includes(e));
@@ -574,6 +918,18 @@ class Creature {
         if (edges.length) {
           const target = edges[Math.floor(Math.random() * edges.length)]; // random coordinate on edge
           this.jumpToEdge(target);
+          return;
+        }
+      }
+      // chance to fly to another visible platform
+      if (Math.random() < 0.12) {
+        this.scanPlatforms();
+        const candidates = this.platforms.filter(p => {
+          if (this.currentPlatform && p.el === this.currentPlatform.el) return false;
+          return p.top >= this.containerHeight && p.top < window.innerHeight;
+        });
+        if (candidates.length) {
+          this.flyToPlatform(candidates[Math.floor(Math.random() * candidates.length)]);
           return;
         }
       }
@@ -736,6 +1092,21 @@ class Creature {
             this.direction = -1;
             this.facing = 'left';
             this.updateImageDirection();
+        }
+        // bounce at platform edges
+        if (this.currentPlatform) {
+          const centerX = this.positionX + this.containerWidth / 2;
+          if (centerX <= this.currentPlatform.left) {
+            this.positionX = this.currentPlatform.left - this.containerWidth / 2;
+            this.direction = 1;
+            this.facing = 'right';
+            this.updateImageDirection();
+          } else if (centerX >= this.currentPlatform.right) {
+            this.positionX = this.currentPlatform.right - this.containerWidth / 2;
+            this.direction = -1;
+            this.facing = 'left';
+            this.updateImageDirection();
+          }
         }
         this.applyEdgeOffset();
     }

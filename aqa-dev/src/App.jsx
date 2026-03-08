@@ -315,6 +315,7 @@ export default function App() {
   const rM = (m) => (
     <div
       key={m.id}
+      data-platform
       style={{
         background: m.c + "10",
         border: `1px solid ${m.c}30`,
@@ -359,6 +360,7 @@ export default function App() {
 
       {/* Header */}
       <div
+        data-platform
         style={{
           position: "sticky",
           top: 0,
@@ -483,6 +485,7 @@ export default function App() {
               return (
                 <div key={mo.month} style={{ marginBottom: 10 }}>
                   <button
+                    data-platform
                     onClick={() => tm(mo.month)}
                     style={{
                       width: "100%",
@@ -659,6 +662,7 @@ export default function App() {
               c: "#F0883E",
             })}
             <div
+              data-platform
               style={{
                 background: "#161B22",
                 borderRadius: 10,
@@ -684,6 +688,7 @@ export default function App() {
               c: "#D2A8FF",
             })}
             <div
+              data-platform
               style={{
                 background: "#161B22",
                 borderRadius: 10,
@@ -708,6 +713,7 @@ export default function App() {
               c: "#F778BA",
             })}
             <div
+              data-platform
               style={{
                 background: "#161B22",
                 borderRadius: 10,
@@ -723,6 +729,7 @@ export default function App() {
               c: "#F0883E",
             })}
             <div
+              data-platform
               style={{
                 background: "#161B22",
                 borderRadius: 10,

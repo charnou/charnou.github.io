@@ -4,6 +4,7 @@ window.SPAWNING = [
 
 window.SHIMEJI_CONFIG = {
   ALLOWANCES: ['pet', 'drag', 'bottom', 'top', 'left', 'right'],
+  PLATFORM_SELECTOR: '[data-platform]',
 
   walkspeed: 25,
   fallspeed: 100,
