@@ -247,7 +247,8 @@ class Creature {
       this.lastScrollY = window.scrollY;
 
       if (['top', 'left', 'right'].includes(this.currentEdge)) {
-        this.startEdgeIdle();
+        // start climbing immediately on edge spawn (no idle wait)
+        this.startAction(this.currentEdge === 'top' ? 'climbTop' : 'climbSide');
       } else {
         this.currentAction = this.actionSequence[this.currentActionIndex];
         this.startAction(this.currentAction);
@@ -285,7 +286,7 @@ class Creature {
       if (!this.attachedToViewport && !this.isDragging && !this.isJumping && !this.isInHouse &&
           (!this.isFalling || this.tripAfterFallActive)) {
         this.positionY -= delta;
-        this.container.style.top = `${this.positionY}px`;
+        this.applyEdgeOffset();
         if (this.currentPlatform && this.currentPlatform.el) {
           const r = this.currentPlatform.el.getBoundingClientRect();
           this.currentPlatform = { el: this.currentPlatform.el, left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height };
@@ -771,15 +772,19 @@ class Creature {
     if(!this.spriteConfig.ALLOWANCES?.includes('pet') || !this.spriteConfig.ALLOWANCES?.includes('bottom')) return;
 
     this.container.addEventListener('mouseenter',()=> {
-        if(this.isFalling||this.isPointerDown||this.isPetting||this.isJumping||this.currentEdge!=='bottom') return;
-        if (Math.random() < 0.4) {
+        // block while in house, falling, or already petting
+        if(this.isFalling||this.isPointerDown||this.isPetting||this.isInHouse) return;
+
+        // headshake only when standing on bottom surface and not jumping
+        const canHeadshake = this.currentEdge === 'bottom' && !this.isJumping;
+        if (canHeadshake && Math.random() < 0.4) {
           // 40% chance: head-shake pet animation
           this.isPetting=true;
           this._petMode = 'headshake';
           this.wasActionBeforePet=this.currentAction;
           this.startPetAnimation();
         } else {
-          // 60% chance: say something instead (persists after mouseleave)
+          // phrase reaction — works in ALL states (sideways, upside down, flying)
           this.isPetting=true;
           this._petMode = 'phrase';
           this.wasActionBeforePet=this.currentAction;
@@ -794,14 +799,16 @@ class Creature {
                 this._petMode = null;
                 this.currentAction = this.wasActionBeforePet || 'sit';
                 this.wasActionBeforePet = null;
-                this.setNextAction();
+                if (this.currentEdge === 'bottom' && !this.isJumping && !this.isFalling) {
+                  this.setNextAction();
+                }
               }
             });
           }
         }
     });
     this.container.addEventListener('mouseleave',()=> {
-        if(this.isFalling||this.isPointerDown||this.isJumping||this.currentEdge==='top') return;
+        if(this.isFalling||this.isPointerDown) return;
         if (this._petMode === 'phrase') {
           // phrase persists — don't stop, let the bubble timer handle cleanup
           return;
@@ -1022,9 +1029,7 @@ class Creature {
       return;
     }
     const r = el.getBoundingClientRect();
-    if (r.width === 0 || r.height === 0 ||
-        r.bottom < -200 || r.top > window.innerHeight + 200 ||
-        r.right < -200 || r.left > window.innerWidth + 200) {
+    if (r.width === 0 || r.height === 0) {
       this.currentPlatform = null;
       this.currentEdge = 'bottom';
       this.attachedToViewport = true;
@@ -1478,7 +1483,7 @@ class Creature {
     const weights = options.map(opt => {
       const dist = Math.hypot(opt.x - cx, opt.y - cy);
       // steep inverse: nearby platforms get much higher weight
-      return 1 / (1 + dist / 80);
+      return 1 / (1 + dist / 50);
     });
     const totalWeight = weights.reduce((s, w) => s + w, 0);
     let r = Math.random() * totalWeight;
@@ -1982,32 +1987,32 @@ class Creature {
     this._houseActive = true;
     this.currentAction = 'goingHome';
 
-    // pick random edge and position
+    // pick random edge and position (flush to screen edge, no gap)
     const edges = ['left', 'right', 'top', 'bottom'];
     const edge = edges[Math.floor(Math.random() * edges.length)];
     this._houseEdge = edge;
 
-    const houseSize = 50;
+    const houseSize = 60;
     let x, y, hiddenTransform, rotation;
 
     if (edge === 'left') {
-      x = 10;
+      x = 0;
       y = 100 + Math.random() * (window.innerHeight - 200);
       hiddenTransform = 'translateX(-100%)';
       rotation = '90deg';
     } else if (edge === 'right') {
-      x = window.innerWidth - houseSize - 10;
+      x = window.innerWidth - houseSize;
       y = 100 + Math.random() * (window.innerHeight - 200);
       hiddenTransform = 'translateX(100%)';
       rotation = '-90deg';
     } else if (edge === 'top') {
       x = 100 + Math.random() * (window.innerWidth - 200);
-      y = 10;
+      y = 0;
       hiddenTransform = 'translateY(-100%)';
       rotation = '180deg';
     } else {
       x = 100 + Math.random() * (window.innerWidth - 200);
-      y = window.innerHeight - houseSize - 10;
+      y = window.innerHeight - houseSize;
       hiddenTransform = 'translateY(100%)';
       rotation = '0deg';
     }
@@ -2017,10 +2022,10 @@ class Creature {
 
     this.house.style.left = `${x}px`;
     this.house.style.top = `${y}px`;
-    const fullHidden = rotation !== '0deg' ? `${hiddenTransform} rotate(${rotation})` : hiddenTransform;
-    this.house.style.transform = fullHidden;
+    this.house.style.rotate = rotation; // rotation applied instantly, not animated
+    this.house.style.transform = hiddenTransform; // only translation — will slide in
     this.house.style.filter = '';
-    this.house.style.setProperty('--house-rotation', rotation);
+    this.house.style.opacity = '1'; // show immediately, no fade
     this.house.offsetWidth; // force reflow
     this.house.classList.add('slide-in');
 
@@ -2189,11 +2194,12 @@ class Creature {
 
   _dismissHouse() {
     this.house.classList.remove('slide-in');
-    // reset after transition (1.5s CSS transition + buffer)
+    // slides back out via CSS transition (transform goes back to hiddenTransform)
     setTimeout(() => {
       this._houseActive = false;
       this._houseEdge = null;
       this.house.style.opacity = '0';
+      this.house.style.rotate = '';
     }, 1700);
   }
 
@@ -2281,7 +2287,7 @@ class Creature {
     }
 
     // chance to fly to cursor (only if mouse is known, on bottom surface, visible, not in cooldown)
-    if (!flyCooldown && Math.random() < 0.04 && this._mouseX >= 0 && this.currentEdge === 'bottom' && this.isVisibleToUser()) {
+    if (!flyCooldown && Math.random() < 0.07 && this._mouseX >= 0 && this.currentEdge === 'bottom' && this.isVisibleToUser()) {
       this.flyToCursor();
       return;
     }
@@ -2462,9 +2468,9 @@ class Creature {
       this._offScreenTimer = (this._offScreenTimer || 0) + delta;
       if (this._offScreenTimer > 5) { // check every 5 seconds
         this._offScreenTimer = 0;
-        // chance increases with time away: starts at 5%, grows to ~50% after 2 minutes
+        // chance increases with time away: starts at 5%, grows to ~60% after ~80 seconds
         const awaySeconds = (performance.now() - (this._offScreenSince || performance.now())) / 1000;
-        const comeChance = Math.min(0.50, 0.05 + awaySeconds * 0.004);
+        const comeChance = Math.min(0.60, 0.05 + awaySeconds * 0.007);
         if (Math.random() < comeChance) {
           const oldHome = this._homeScreenIdx;
           this._isOnCurrentScreen = true;
@@ -2604,7 +2610,7 @@ class Creature {
         if (!this.currentPlatform) return; // was invalidated and fell
       }
       // sanity: if stuck off-screen, recover (skip if on a platform — scroll may have moved it legitimately)
-      if (!this.isJumping && !this.isFalling && this.currentEdge === 'bottom' && !this.currentPlatform) {
+      if (!this.isJumping && !this.isFalling && this.currentEdge === 'bottom' && !this.currentPlatform && this.attachedToViewport) {
         if (this.positionX < -this.containerWidth || this.positionX > window.innerWidth + this.containerWidth ||
             this.positionY < -this.containerHeight || this.positionY > window.innerHeight + this.containerHeight) {
           this.positionX = Math.random() * this.maxPos;

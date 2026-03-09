@@ -23,7 +23,7 @@ export const advice = [
     id: "adv-3",
     text: "Ошибки — это обучение",
     time: "0.5ч",
-    desc: "Красный текст → ПОДСКАЗКА, не катастрофа.\n1. Прочитай ошибку ЦЕЛИКОМ\n2. Найди номер строки\n3. Скопируй → Google\n4. **Stack Overflow** решит 90%\n\nЧастые: `Cannot find module` (путь/`npm install`), `TimeoutError` (локатор), `SyntaxError` (скобка/запятая).",
+    desc: "Красный текст → ПОДСКАЗКА, не катастрофа.\n1. Прочитай ошибку ЦЕЛИКОМ\n2. Найди номер строки\n3. Скопируй → Google / ChatGPT / Claude\n4. **Stack Overflow** + **AI-ассистенты** решат 90%\n\nЧастые:\n`Cannot find module` — неправильный путь или забыл `npm install`\n`TimeoutError` — неверный локатор\n`SyntaxError` — пропущена скобка или запятая",
     s: [
       "как читать ошибки JavaScript",
       "debugging для начинающих",
@@ -75,10 +75,11 @@ export const advice = [
     id: "adv-8",
     text: "Где искать стажировки",
     time: "1.5ч",
-    desc: "EPAM campus.epam.com — бесплатное обучение + стажировка\nAndersen, Itransition, ISsoft — стажировки\nhh.ru/djinni: фильтр 'стажировка'/'trainee'\nLinkedIn: 'QA intern'\n\nRed flags: неоплачиваемая >1 мес, обязанности мидла, нет ментора.\nРеферал от знакомого в компании — огромный плюс!",
+    desc: "**Компании с AQA-стажировками:**\nEPAM campus.epam.com — бесплатное обучение + стажировка (QA Automation трек)\niTechArt Students Lab — бесплатно, 3 мес, менторство, трудоустройство\nAndersen — trainee-программа с QA Automation направлением\nТ-Банк (Т-Старт) — оплачиваемая стажировка QA, 3–6 мес, удалённо\nCoherent Solutions, IDT Belarus — стажировки\n\n**Где искать:**\nhh.ru, djinni.co, dev.by/jobs, rabota.by: фильтр 'стажировка'/'trainee'\nLinkedIn: 'QA Automation intern'\n\nRed flags: неоплачиваемая >1 мес, обязанности мидла, нет ментора.\nРеферал от знакомого в компании — огромный плюс!",
     s: [
       "стажировки QA Automation Беларусь 2026",
-      "EPAM internship QA программа",
+      "iTechArt Students Lab QA",
+      "Т-Банк Т-Старт стажировка QA",
       "как найти первую работу Junior QA Automation",
     ],
   },
@@ -129,7 +130,7 @@ export const advice = [
     id: "adv-13",
     text: "Пирамида тестирования",
     time: "1ч",
-    desc: "Unit (70%) → Integration (20%) → E2E (10%).\n\nUnit: быстрые, изолированные, много.\nIntegration: API, взаимодействие модулей.\nE2E: медленные, дорогие, критические сценарии.\n\nАнти-паттерн: 'Ice cream cone' — всё в E2E. Хрупко + медленно.\nAQA пишет в основном E2E + API. Но понимай всю пирамиду.",
+    desc: "Классика: Unit (70%) → Integration (20%) → E2E (10%).\n\nUnit: быстрые, изолированные, много.\nIntegration: API, взаимодействие модулей.\nE2E: медленные, дорогие, критические сценарии.\n\nАнти-паттерн: 'Ice cream cone' — всё в E2E. Хрупко + медленно.\n\nСовременный тренд: **Testing Trophy** (больше integration) — с быстрыми фреймворками (Playwright) E2E стало дешевле. Точные пропорции зависят от проекта.\nAQA пишет в основном E2E + API. Но понимай всю пирамиду.",
     s: [
       "пирамида тестирования объяснение",
       "test pyramid Martin Fowler",

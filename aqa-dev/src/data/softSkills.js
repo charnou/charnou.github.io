@@ -23,7 +23,7 @@ export const softSkills = [
     id: "ss-3",
     text: "Технический английский",
     time: "2ч",
-    desc: "Нужно: читать документацию, Stack Overflow, GitHub, понимать ошибки.\nКак: переключи интерфейсы на EN, читай docs на EN, смотри YouTube с субтитрами, Tandem для разговорной.\n\nНе нужен идеальный English. Нужен РАБОЧИЙ.",
+    desc: "Нужно: читать документацию, Stack Overflow, GitHub, понимать ошибки.\nКак: переключи интерфейсы на EN, читай docs на EN, смотри YouTube с субтитрами.\nРесурсы: **MDN Web Docs**, **playwright.dev**, **devdocs.io** — всё на EN.\n\nНе нужен идеальный English. Нужен РАБОЧИЙ.",
     s: [
       "английский для тестировщика ресурсы",
       "technical English for QA engineers",
@@ -74,7 +74,7 @@ export const softSkills = [
     id: "ss-8",
     text: "Нетворкинг и сообщество",
     time: "1.5ч",
-    desc: "40–60% вакансий закрываются по рекомендации!\n\nTelegram: @qa_chatka, @aqa_chatka, @qa_sklad\nLinkedIn: подпишись на QA-лидеров, комментируй, делись прогрессом.\nOpen Source: контрибьюти (даже исправление опечатки).\nНапиши статью о своём пути обучения.",
+    desc: "40–60% вакансий закрываются по рекомендации!\n\nTelegram: @qa_chatka, @aqa_chatka, @qa_sklad\nLinkedIn: подпишись на QA-лидеров, комментируй, делись прогрессом.\nOpen Source: контрибьюти (даже исправление опечатки).\nОбучение: **Test Automation University** (бесплатно), **QA Guru** (курсы).\nНапиши статью о своём пути обучения.",
     s: [
       "QA сообщество Telegram каналы",
       "нетворкинг для Junior IT",
@@ -84,7 +84,7 @@ export const softSkills = [
     id: "ss-9",
     text: "Навык обучения",
     time: "1ч",
-    desc: "IT меняется быстро. Навык обучения > знание инструмента.\nT-shaped: широко понимаешь (manual, auto, API, perf) + глубоко в одном (Playwright+JS).\nПодкасты, конференции (Heisenbug, SQA Days), блоги.",
+    desc: "IT меняется быстро. Навык обучения > знание инструмента.\nT-shaped: широко понимаешь (manual, auto, API, perf) + глубоко в одном (Playwright+JS).\nПодкасты, конференции (Heisenbug, SQA Days), блоги.\nСледи за changelog инструментов: Playwright releases, Node.js updates.",
     s: [
       "T-shaped skills developer",
       "QA подкасты конференции 2026",

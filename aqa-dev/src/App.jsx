@@ -261,13 +261,13 @@ export default function App() {
         while (i + 1 < code.length && code[i + 1] === ' ') i++;
       } else if (ch === '}') {
         ind = Math.max(0, ind - 1);
-        if (!r.endsWith('\n')) r += '\n';
-        r += '  '.repeat(ind) + '}';
+        r = r.replace(/\s+$/, '');
+        r += '\n' + '  '.repeat(ind) + '}';
       } else if (ch === ';' && ind > 0 && i + 1 < code.length && code[i + 1] !== '}' && code[i + 1] !== '\n') {
         r += ';\n' + '  '.repeat(ind);
         while (i + 1 < code.length && code[i + 1] === ' ') i++;
-      } else if (ch === ' ' && r.endsWith('\n')) {
-        // skip leading spaces after newline (we add our own indentation)
+      } else if (ch === ' ' && (r.endsWith('\n') || r.endsWith('  '))) {
+        // skip leading/trailing spaces (we add our own indentation)
       } else {
         r += ch;
       }

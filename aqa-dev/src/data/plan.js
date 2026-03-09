@@ -32,7 +32,7 @@ export const plan = [
             id: "1-3",
             text: "Уровни: unit, integration, e2e, acceptance",
             time: "2ч",
-            desc: "**Unit** — отдельные функции (пишут разработчики). **Integration** — взаимодействие модулей. **E2E** — полный пользовательский путь от начала до конца — это то, что ТЫ будешь автоматизировать. **Acceptance** — соответствие бизнес-требованиям, часто с участием PO.",
+            desc: "**Unit** — отдельные функции (пишут разработчики).\n**Integration** — взаимодействие модулей.\n**E2E** — полный пользовательский путь от начала до конца — это то, что ТЫ будешь автоматизировать.\n**Acceptance** — соответствие бизнес-требованиям, часто с участием PO.",
             s: [
               "уровни тестирования пирамида",
               "unit integration e2e acceptance примеры",
@@ -42,7 +42,7 @@ export const plan = [
             id: "1-4",
             text: "Пирамида тестирования",
             time: "1.5ч",
-            desc: "🔺 Мало E2E (медленные, дорогие)\n🔷 Среднее integration\n🟩 Много unit (быстрые, дешёвые)\n\nАнтипаттерн: 'Мороженое' — много E2E, мало unit → CI идёт часами.\n\nНа собеседовании: нарисуй, объясни каждый уровень, приведи пример из проекта.",
+            desc: "🔺 Мало E2E (медленные, дорогие)\n🔷 Среднее integration\n🟩 Много unit (быстрые, дешёвые)\n\nАнтипаттерн: 'Мороженое' — много E2E, мало unit → CI идёт часами.\n\nСовременные альтернативы: **Testing Trophy** (Kent C. Dodds) — упор на integration тесты. С быстрыми фреймворками (Playwright) E2E стало дешевле.\n\nНа собеседовании: нарисуй пирамиду, объясни каждый уровень, приведи пример из проекта.",
             s: [
               "пирамида тестирования зачем нужна",
               "test pyramid anti-patterns ice cream",
@@ -62,7 +62,7 @@ export const plan = [
             id: "1-6",
             text: "Тест-кейсы и чек-листы",
             time: "3ч",
-            desc: "Тест-кейс: ID, заголовок, предусловия, шаги, ожидаемый результат.\nПример: TC-001 | Успешный логин | Пользователь зарегистрирован | 1)Открыть /login 2)Ввести email 3)Ввести пароль 4)Нажать Войти | Переход на /dashboard\n\nЧек-лист — сокращённая версия без шагов.\n\nПрактика: напиши 15 тест-кейсов на форму логина saucedemo.com (позитивные + негативные + граничные).",
+            desc: "Тест-кейс: ID, заголовок, предусловия, шаги, ожидаемый результат.\n\nПример:\nTC-001 | Успешный логин\nПредусловие: Пользователь зарегистрирован\n1) Открыть /login\n2) Ввести email\n3) Ввести пароль\n4) Нажать Войти\nОжидание: Переход на /dashboard\n\nЧек-лист — сокращённая версия без шагов.\n\nПрактика: напиши 15 тест-кейсов на форму логина saucedemo.com (позитивные + негативные + граничные).",
             s: [
               "как писать тест кейсы примеры шаблон",
               "чек лист тестирования формы логина",
@@ -92,7 +92,7 @@ export const plan = [
             id: "1-9",
             text: "SDLC и STLC",
             time: "2ч",
-            desc: "SDLC: Требования → Анализ → Дизайн → Разработка → Тестирование → Деплой → Поддержка\n\nSTLC: Анализ требований → План тестирования → Тест-кейсы → Подготовка среды → Выполнение → Closure\n\nМодели: **Waterfall** (устарела), V-Model (каждому этапу — свой уровень тестов), Agile (95% команд сейчас).",
+            desc: "SDLC: Требования → Анализ → Дизайн → Разработка → Тестирование → Деплой → Поддержка\n\nSTLC: Анализ требований → План тестирования → Тест-кейсы → Подготовка среды → Выполнение → Closure\n\nМодели: **Waterfall** (редко в IT), V-Model (каждому этапу — свой уровень тестов), Agile (95% команд сейчас).",
             s: [
               "SDLC STLC для тестировщика",
               "модели разработки waterfall agile",
@@ -112,7 +112,7 @@ export const plan = [
             id: "1-11",
             text: "Jira: аккаунт, доска, баг",
             time: "2ч",
-            desc: "1. atlassian.com → Start free → создай проект\n2. Разберись с Kanban-доской: To Do → In Progress → Done\n3. Типы задач: `Story`, `Bug`, `Task`, `Epic`\n4. Создай 2–3 учебных бага с полной структурой\n5. JQL: project = X AND type = Bug AND status = Open\n\nJira — стандарт индустрии (~80% вакансий). Альтернативы: YouTrack, Linear, Trello.",
+            desc: "1. atlassian.com → Start free → создай проект\n2. Разберись с Kanban-доской: To Do → In Progress → Done\n3. Типы задач: `Story`, `Bug`, `Task`, `Epic`\n4. Создай 2–3 учебных бага с полной структурой\n5. JQL: project = X AND type = Bug AND status = Open\n\nJira — один из самых популярных инструментов (встречается в большинстве вакансий). Альтернативы: YouTrack, Linear, Trello.",
             s: [
               "Jira для тестировщика с нуля",
               "как создать баг в Jira tutorial",
@@ -128,10 +128,10 @@ export const plan = [
             id: "1-12",
             text: "Установить Node.js, VS Code",
             time: "1.5ч",
-            desc: "1. nodejs.org → скачай LTS (не Current!). Проверка: `node -v`, `npm -v`\n2. code.visualstudio.com → установи\n3. Расширения: ESLint, Prettier, JS code snippets, Material Icon Theme\n4. Settings: включи Format On Save\n5. Создай папку qa-learning → `hello.js` → `console.log('Hello QA!')` → `node hello.js`\n\nВидишь вывод? Окружение готово!",
+            desc: "1. nodejs.org → скачай LTS (не Current!).\nПроверка:\n`node -v`\n`npm -v`\n2. code.visualstudio.com → установи\n3. Расширения: ESLint, Prettier, JS code snippets, Material Icon Theme\n4. Settings: включи Format On Save\n5. Создай папку и первый файл:\n`mkdir qa-learning && cd qa-learning`\n`node hello.js`\n\nВидишь вывод `Hello QA!`? Окружение готово!",
             s: [
               "установка Node.js VS Code пошагово",
-              "VS Code настройка JavaScript 2025",
+              "VS Code настройка JavaScript 2026",
             ],
           },
           {
@@ -258,7 +258,7 @@ export const plan = [
             id: "2-2",
             text: "CSS-селекторы для локаторов",
             time: "2ч",
-            desc: "`#myId` — по id | `.myClass` — по классу | `[name='email']` — по атрибуту | `[data-testid='login']` — для тестов\n`div > p` — прямой потомок | `div p` — любой потомок\n`:first-child`, `:nth-child(2)`, `:not(.disabled)`\n\nXPath (когда CSS не хватает): `//div[@id='main']//button[text()='Submit']`\n\nПрактика: DevTools → Console → `document.querySelectorAll('.class')`",
+            desc: "`#myId` — по id\n`.myClass` — по классу\n`[name='email']` — по атрибуту\n`[data-testid='login']` — для тестов\n`div > p` — прямой потомок\n`div p` — любой потомок\n`:first-child`, `:nth-child(2)`, `:not(.disabled)`\n\nXPath (когда CSS не хватает): `//div[@id='main']//button[text()='Submit']`\n\nПрактика: DevTools → Console → `document.querySelectorAll('.class')`",
             s: [
               "CSS селекторы для автоматизации",
               "CSS selector vs XPath что лучше",
@@ -268,7 +268,7 @@ export const plan = [
             id: "2-3",
             text: "Git: основные команды",
             time: "3ч",
-            desc: "`git init` → `git add .` → `git commit -m 'feat: add tests'` → `git push origin main`\n\nВетки: `git checkout -b feature/login` → работай → add → commit → push → PR → merge\n\n`git status` — состояние | `git log --oneline` — история | `git diff` — изменения | `git pull` — получить обновления\n\nCommit convention: `feat:` `fix:` `test:` `docs:`",
+            desc: "`git init` → `git add .` → `git commit -m 'feat: add tests'` → `git push origin main`\n\nВетки: `git switch -c feature/login` (или `git checkout -b`) → работай → add → commit → push → PR → merge\n\n`git status` — состояние\n`git log --oneline` — история\n`git diff` — изменения\n`git pull` — получить обновления\n\nCommit convention: `feat:` `fix:` `test:` `docs:`",
             s: [
               "git для начинающих пошагово",
               "git команды шпаргалка на русском",
@@ -288,7 +288,7 @@ export const plan = [
             id: "2-5",
             text: ".gitignore, README.md",
             time: "1ч",
-            desc: "`.gitignore`: `node_modules/` `.env` `test-results/` `playwright-report/` `*.log`\n`README.md`: # заголовок, **жирный**, - список, ```code```",
+            desc: "`.gitignore`:\n`node_modules/`\n`.env`\n`test-results/`\n`playwright-report/`\n`*.log`\n\n`README.md`: # заголовок, **жирный**, - список, ```code```",
             s: [
               "gitignore шаблон Node.js",
               "markdown шпаргалка",
@@ -300,7 +300,7 @@ export const plan = [
             id: "2-6",
             text: "Chrome DevTools",
             time: "2.5ч",
-            desc: "F12 → Elements: DOM-дерево, Ctrl+Shift+C для выбора элемента, Copy selector/XPath\nConsole: JS-консоль, ошибки, console.log\nNetwork: ВСЕ HTTP-запросы, фильтр XHR (только API), статусы, тела ответов\nApplication: Cookies, LocalStorage",
+            desc: "F12 →\n**Elements**: DOM-дерево, Ctrl+Shift+C для выбора элемента, Copy selector/XPath\n**Console**: JS-консоль, ошибки, console.log\n**Network**: ВСЕ HTTP-запросы, фильтр XHR (только API), статусы, тела ответов\n**Application**: Cookies, LocalStorage",
             s: [
               "Chrome DevTools для тестировщика гайд",
               "DevTools Network XHR анализ",
@@ -310,7 +310,7 @@ export const plan = [
             id: "2-7",
             text: "HTTP: методы и структура",
             time: "2ч",
-            desc: "GET — получить | POST — создать | PUT — обновить | PATCH — частично | DELETE — удалить\n\nЗапрос = метод + URL + заголовки + тело (для POST/PUT)\nИдемпотентность: GET/PUT/DELETE — можно вызвать 10 раз, результат один. POST — нет.",
+            desc: "**GET** — получить\n**POST** — создать\n**PUT** — обновить целиком\n**PATCH** — обновить частично\n**DELETE** — удалить\n\nЗапрос = метод + URL + заголовки + тело (для POST/PUT)\nИдемпотентность: GET/PUT/DELETE — можно вызвать 10 раз, результат один. POST — нет.",
             s: [
               "HTTP методы подробно для тестировщика",
               "GET POST PUT DELETE разница",
@@ -366,7 +366,7 @@ export const plan = [
             id: "2-12",
             text: "Postman: коллекции, переменные, тесты",
             time: "4ч",
-            desc: "Коллекция — папка запросов. Переменные: `{{base_url}}` вместо хардкода.\nPre-request: генерация данных перед запросом.\nTests: `pm.response.to.have.status(200);` `pm.expect(json.data).to.have.lengthOf(6);`\nRunner — запуск всей коллекции.\n\nСоздай коллекцию из 10–15 запросов к reqres.in и restful-booker с тестами к каждому.",
+            desc: "Коллекция — папка запросов. Переменные: `{{base_url}}` вместо хардкода.\nPre-request: генерация данных перед запросом.\nTests:\n`pm.response.to.have.status(200);`\n`pm.expect(json.data).to.have.lengthOf(6);`\nRunner — запуск всей коллекции.\n\nСоздай коллекцию из 10–15 запросов к reqres.in и restful-booker с тестами к каждому.",
             s: [
               "Postman коллекции переменные тесты",
               "pm.expect Postman все проверки",
@@ -376,7 +376,7 @@ export const plan = [
             id: "2-13",
             text: "async/await, Promises",
             time: "3ч",
-            desc: "Promise — будущий результат: pending → fulfilled/rejected\n`async function getUsers() { const res = await fetch(url); const data = await res.json(); }`\n\n`await` приостанавливает до результата. Только внутри `async`.\n`try/catch` для ошибок.\n\nВ **Playwright** ВСЁ через `await`: `await page.goto(url);` `await page.click('button');`",
+            desc: "Promise — будущий результат: pending → fulfilled/rejected\n`async function getUsers() { const res = await fetch(url); const data = await res.json(); }`\n\n`await` приостанавливает до результата. Только внутри `async`.\n`try/catch` для ошибок.\n\nВ **Playwright** ВСЁ через `await`: `await page.goto(url);` `await page.getByRole('button').click();`",
             s: [
               "async await JavaScript подробно",
               "промисы learn.javascript.ru",
@@ -386,7 +386,7 @@ export const plan = [
             id: "2-14",
             text: "Модули, npm, package.json",
             time: "2ч",
-            desc: "`npm init -y` → `package.json`\n`npm install axios` → dependencies\n`export function sum(a,b){return a+b}` → `import {sum} from './math.js'`\nscripts: `\"test\":\"npx playwright test\"` → `npm test`\n`node_modules` → `.gitignore`!",
+            desc: "`npm init -y` → `package.json`\n`npm install playwright` → зависимость добавляется в dependencies\n\n`export function sum(a,b){return a+b}` → `import {sum} from './math.js'`\nscripts: `\"test\":\"npx playwright test\"` → `npm test`\n\n`node_modules/` → ОБЯЗАТЕЛЬНО в `.gitignore`!\n`package-lock.json` → коммитить (фиксирует версии).",
             s: [
               "npm package.json для начинающих",
               "import export JavaScript модули",
@@ -396,10 +396,11 @@ export const plan = [
             id: "2-15",
             text: "API-тесты на JavaScript",
             time: "3ч",
-            desc: "`npm install axios`.\n`const res = await axios.get('https://reqres.in/api/users');`\n`console.assert(res.status === 200);`\n`console.assert(res.data.data.length === 6);`\n\nНапиши 5–7 тестов: GET список, GET один, POST создание, PUT обновление, DELETE, 404.",
+            desc: "Используй встроенный `fetch` (Node.js 18+, без установки!):\n\n`const res = await fetch('https://reqres.in/api/users');`\n`const json = await res.json();`\n`import assert from 'node:assert/strict';`\n`assert.strictEqual(res.status, 200);`\n`assert.strictEqual(json.data.length, 6);`\n\nPOST:\n`const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name:'Anna'}) });`\n\nНапиши 5–7 тестов: GET список, GET один, POST создание, PUT обновление, DELETE, 404.\n\n⚠️ `fetch` не кидает ошибку на 4xx/5xx — проверяй `res.ok` или `res.status` вручную.",
             s: [
-              "axios JavaScript GET POST примеры",
+              "fetch API JavaScript примеры GET POST",
               "API тесты JavaScript без фреймворка",
+              "native fetch Node.js tutorial",
             ],
           },
           {
@@ -439,11 +440,11 @@ export const plan = [
             id: "3-1",
             text: "Установить Playwright",
             time: "1ч",
-            desc: "`mkdir project && cd project`\n`npm init playwright@latest` → JS или TS → tests → Yes → Yes\nПодожди скачивания браузеров (~500MB)\n`npx playwright test` → примеры пройдут\n`npx playwright show-report` → HTML-отчёт",
+            desc: "`mkdir project && cd project`\n`npm init playwright@latest` → JS или TS → tests → Yes → Yes\nПодожди скачивания браузеров (~500MB)\n`npx playwright test` → примеры пройдут\n`npx playwright show-report` → HTML-отчёт\nУстанови расширение **Playwright Test for VS Code** — запуск и отладка тестов прямо из редактора.",
             s: [
               "Playwright установка пошагово",
               "npm init playwright tutorial",
-              "Playwright getting started tutorial 2025",
+              "Playwright getting started tutorial 2026",
             ],
           },
           {
@@ -461,7 +462,7 @@ export const plan = [
             id: "3-3",
             text: "Локаторы",
             time: "3ч",
-            desc: "🥇 `getByRole('button', {name:'Submit'})` — лучший!\n🥈 `getByText('Add to cart')`, `getByLabel('Email')`, `getByPlaceholder('Enter email')`\n🥉 `getByTestId('login-btn')` — ищет data-testid\n⚙️ `page.locator('#id')`, `page.locator('.class')`\n\nПриоритет: `Role` > `Text` > `TestId` > `CSS` > `XPath`\n`npx playwright codegen url` — покажет какие локаторы генерирует",
+            desc: "🥇 `getByRole('button', {name:'Submit'})` — лучший! Семантический, доступный.\n🥈 `getByLabel('Email')`, `getByPlaceholder('Enter email')` — для форм\n🥉 `getByText('Add to cart')` — для нeинтерактивных элементов\n🔧 `getByTestId('login-btn')` — запасной вариант (escape hatch), когда семантические не подходят\n⚙️ `page.locator('#id')`, `page.locator('.class')` — последний выбор\n\nПриоритет: `Role` > `Label`/`Placeholder` > `Text` > `TestId` > `CSS` > `XPath`\n\n`npx playwright codegen url` — генерирует локаторы автоматически",
             s: [
               "Playwright locators все виды",
               "getByRole getByText best practices",
@@ -481,7 +482,7 @@ export const plan = [
             id: "3-5",
             text: "Формы, ожидания, скриншоты",
             time: "4ч",
-            desc: "`page.fill('#email', 'test@test.com');` `page.click('button');`\n`page.selectOption('#country', 'US');` `page.check('#agree');`\n`page.keyboard.press('Enter');`\n\nAuto-waiting: **Playwright** сам ждёт. `waitForSelector`, `waitForResponse` — для сложных случаев.\n⚠️ `waitForTimeout` — АНТИПАТТЕРН!\n\nConfig: `screenshot:'only-on-failure'`, `video:'retain-on-failure'`, `trace:'on-first-retry'`\n`npx playwright codegen url` — генерация тестов",
+            desc: "`await page.getByLabel('Email').fill('test@test.com');`\n`await page.getByRole('button', {name:'Submit'}).click();`\n`await page.getByLabel('Country').selectOption('US');`\n`await page.getByLabel('I agree').check();`\n`await page.keyboard.press('Enter');`\n\nAuto-waiting: **Playwright** сам ждёт. `waitForResponse`, `waitForURL` — для сложных случаев.\n⚠️ `waitForTimeout` — АНТИПАТТЕРН!\n\nConfig: `screenshot:'only-on-failure'`, `video:'retain-on-failure'`, `trace:'on-first-retry'`\n`npx playwright codegen url` — генерация тестов\n`npx playwright test --ui` — визуальный режим для отладки",
             s: [
               "Playwright формы fill click select",
               "Playwright auto-waiting trace viewer",
@@ -508,7 +509,7 @@ export const plan = [
             id: "3-7",
             text: "Page Object Model",
             time: "3ч",
-            desc: "Каждая страница = класс:\n`class LoginPage {`\n  `constructor(page) {`\n    `this.page = page;`\n    `this.email = page.getByPlaceholder('Username');`\n    `this.password = page.getByPlaceholder('Password');`\n    `this.loginBtn = page.getByRole('button', {name:'Login'});`\n  `}`\n  `async login(user, pass) {`\n    `await this.email.fill(user); await this.password.fill(pass); await this.loginBtn.click();`\n  `}`\n`}`\n\nТесты читаются как сценарии: `await loginPage.login('user','pass');`",
+            desc: "Каждая страница = класс:\n`class LoginPage {`\n  `constructor(page) {`\n    `this.page = page;`\n    `this.email = page.getByPlaceholder('Username');`\n    `this.password = page.getByPlaceholder('Password');`\n    `this.loginBtn = page.getByRole('button', {name:'Login'});`\n  `}`\n  `async login(user, pass) {`\n    `await this.email.fill(user);`\n    `await this.password.fill(pass);`\n    `await this.loginBtn.click();`\n  `}`\n`}`\n\nТесты читаются как сценарии: `await loginPage.login('user','pass');`",
             s: [
               "Page Object Model Playwright пример",
               "POM паттерн зачем нужен",
@@ -538,7 +539,7 @@ export const plan = [
             id: "3-10",
             text: "API-тестирование в Playwright",
             time: "4ч",
-            desc: "`test('GET users', async ({ request }) => {`\n  `const res = await request.get('/users');`\n  `expect(res.ok()).toBeTruthy();`\n  `const json = await res.json();`\n  `expect(json.data).toHaveLength(6);`\n`});`\n\n`test('POST create', async ({ request }) => {`\n  `const res = await request.post('/users', { data: {name:'Anna'} });`\n  `expect(res.status()).toBe(201);`\n`});`\n\nКомбинирование: **API** создаёт данные → UI проверяет.\n`describe`, `beforeEach`, `afterEach` для группировки.\nТеги: `@smoke`, `@regression` → `--grep @smoke`",
+            desc: "Встроенный `request` — НЕ нужны axios/fetch/supertest!\nРаботает в том же контексте (куки, авторизация shared с браузером).\n\n`test('GET users', async ({ request }) => {`\n  `const res = await request.get('/users');`\n  `expect(res.ok()).toBeTruthy();`\n  `const json = await res.json();`\n  `expect(json.data).toHaveLength(6);`\n`});`\n\n`test('POST create', async ({ request }) => {`\n  `const res = await request.post('/users', { data: {name:'Anna'} });`\n  `expect(res.status()).toBe(201);`\n`});`\n\nКомбинирование: **API** создаёт данные → UI проверяет.\n`test.describe`, `test.beforeEach`, `test.afterEach` для группировки.\nТеги: `test('login', { tag: ['@smoke'] }, ...)` → `npx playwright test --grep @smoke`",
             s: [
               "Playwright API testing tutorial",
               "Playwright API UI hybrid test",
@@ -562,7 +563,7 @@ export const plan = [
             id: "4-1",
             text: "TypeScript основы",
             time: "3ч",
-            desc: "`let name: string = 'Anna'; let age: number = 25;`\n`interface User { id: number; name: string; email: string; age?: number; }`\n`type Status = 'active' | 'inactive';`\n`enum Role { Admin='ADMIN', User='USER' }`\n`function greet(name: string): string { return 'Hello, ' + name; }`\n\n**Playwright** + TS = отличный автокомплит для всего API.",
+            desc: "`let name: string = 'Anna';`\n`let age: number = 25;`\n\n`interface` — описание структуры:\n`interface User { id: number; name: string; email: string; age?: number; }`\n\n`type` — псевдоним типа:\n`type Status = 'active' | 'inactive';`\n\n`enum` — перечисление:\n`enum Role { Admin='ADMIN', User='USER' }`\n\n`function greet(name: string): string { return 'Hello, ' + name; }`\n\n**Playwright** + TS = отличный автокомплит для всего API.",
             s: [
               "TypeScript для начинающих основы",
               "TypeScript interface enum tutorial",
@@ -572,7 +573,7 @@ export const plan = [
             id: "4-2",
             text: "Переписать тесты на TS + GitHub Actions CI",
             time: "5ч",
-            desc: "Переименуй `.js`→`.ts`, добавь типы к PO (`Page`, `Locator` из `@playwright/test`).\n\n**CI**: .github/workflows/playwright.yml:\nname: Tests\non: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps: `checkout` → `setup-node` → `npm ci` → `playwright install --with-deps` → `test` → `upload-artifact`\n\nТеперь тесты запускаются автоматически!",
+            desc: "Переименуй `.js`→`.ts`, добавь типы к PO (`Page`, `Locator` из `@playwright/test`).\n\n**CI**: создай `.github/workflows/playwright.yml`:\n`name: Tests`\n`on: [push, pull_request]`\n`jobs: test: runs-on: ubuntu-latest`\n\nШаги: `checkout` → `setup-node` → `npm ci` → `playwright install --with-deps` → `npx playwright test` → `upload-artifact`\n\nТеперь тесты запускаются автоматически при каждом push и PR!",
             s: [
               "Playwright TypeScript migration",
               "Playwright GitHub Actions workflow yaml",
@@ -583,7 +584,7 @@ export const plan = [
             id: "4-3",
             text: "Allure Report + .env + параллелизация",
             time: "4ч",
-            desc: "`npm install -D allure-playwright` → `reporter:[['allure-playwright']]`\n`allure.step()`, `allure.severity('critical')`, `allure.feature('Auth')`\n\n`.env`: `BASE_URL=https://...` → `npm install dotenv` → `process.env.BASE_URL`\n⚠️ `.env` в `.gitignore`! Создай `.env.example`\n\n`workers: 4` или `'50%'`. `fullyParallel: true`.\nData-driven: `for (const d of testData) { test('login ' + d.user, ...) }`",
+            desc: "Установка:\n`npm install -D allure-playwright`\n\nКонфиг: `reporter:[['allure-playwright']]`\nАннотации: `allure.step()`, `allure.severity('critical')`, `allure.feature('Auth')`\n\n`.env` файл: `BASE_URL=https://...` → `process.env.BASE_URL`\n`npm install dotenv`\n⚠️ `.env` в `.gitignore`! Создай `.env.example`\n\nПараллелизация: `workers: 4` или `'50%'`. `fullyParallel: true`.\nData-driven: `for (const d of testData) { test('login ' + d.user, ...) }`",
             s: [
               "Allure Playwright setup",
               "Playwright parallel workers .env dotenv",

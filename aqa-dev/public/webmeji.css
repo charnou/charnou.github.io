@@ -2,8 +2,8 @@
 .webmeji-container {
   position: fixed;
   bottom: 0;
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   overflow: visible;
   z-index: 9999;
 }
@@ -53,18 +53,18 @@
 
 .webmeji-house {
   position: fixed;
-  font-size: 46px;
+  font-size: 55px;
   line-height: 1;
   z-index: 9998;
   pointer-events: auto;
   cursor: pointer;
   user-select: none;
   opacity: 0;
-  transition: transform 1.5s ease-in-out, opacity 0.5s;
+  transition: transform 1.5s ease-in-out;
 }
 .webmeji-house.slide-in {
   opacity: 1;
-  transform: translate(0, 0) rotate(var(--house-rotation, 0deg)) !important;
+  transform: none !important;
 }
 
 .webmeji-indicator {
@@ -85,10 +85,10 @@
 
 @media (max-width: 768px) {
   .webmeji-container {
-    width: 32px;
-    height: 32px;
+    width: 48px;
+    height: 48px;
   }
   .webmeji-house {
-    font-size: 35px;
+    font-size: 42px;
   }
 }

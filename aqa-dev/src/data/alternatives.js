@@ -3,7 +3,7 @@ export const alternatives = [
     id: "alt-1",
     text: "Cypress: обзор и отличия от Playwright",
     time: "2ч",
-    desc: "`npm install cypress` → `npx cypress open`.\n\nОтличия: работает ВНУТРИ браузера (Playwright — снаружи). Только JS/TS. Нет Safari. Один таб. Параллелизация через платный Cloud.\n\n**Playwright**: быстрее ~30%, мульти-браузер, мульти-таб, бесплатная параллелизация.\n**Cypress**: проще старт, живая перезагрузка, удобен для SPA.\n\nНа собеседовании: 'Почему Playwright?' — будь готова ответить.",
+    desc: "Установка и запуск:\n`npm install cypress`\n`npx cypress open`\n\nОтличия: работает ВНУТРИ браузера (Playwright — снаружи). Только JS/TS. Safari только экспериментально (WebKit). Один таб (но есть `cy.origin()` для multi-domain). Параллелизация: платный Cloud или open-source (sorry-cypress, currents).\n\n**Playwright**: быстрее ~30%, мульти-браузер, мульти-таб, бесплатная параллелизация.\n**Cypress**: проще старт, живая перезагрузка, удобен для SPA, component testing.\n\nНа собеседовании: 'Почему Playwright?' — будь готова ответить.",
     s: [
       "Playwright vs Cypress подробное сравнение",
       "Cypress tutorial для начинающих",
@@ -14,7 +14,7 @@ export const alternatives = [
     id: "alt-2",
     text: "Selenium: что это и зачем знать",
     time: "1.5ч",
-    desc: "OG-фреймворк (2004). Ещё #1 в enterprise (30K+ компаний). Поддерживает Java/Python/C#/JS.\n\nПочему НЕ основной: медленнее 2x, нет auto-waiting, сложная настройка.\nЧто знать: **WebDriver Protocol**, **Selenium Grid**, Appium (мобильное).",
+    desc: "OG-фреймворк (2004). Ещё широко используется в enterprise. Поддерживает Java/Python/C#/JS.\n\n**Selenium 4**: BiDi Protocol, Selenium Manager (авто-скачивание драйверов), Relative Locators.\nПочему НЕ основной: медленнее, нет auto-waiting из коробки (нужны explicit waits), сложнее настройка.\nЧто знать: **WebDriver Protocol**, **Selenium Grid**, **BiDi**, Appium (мобильное).",
     s: [
       "Selenium vs Playwright обзор",
       "Selenium WebDriver что это зачем",
@@ -36,7 +36,7 @@ export const alternatives = [
     id: "alt-4",
     text: "Jest: unit-тесты JavaScript",
     time: "1.5ч",
-    desc: "Стандарт unit-тестирования в JS/React. Meta (Facebook) поддерживает.\n\n`test('adds numbers', () => { expect(1 + 2).toBe(3) })`\n\nРазработчики пишут unit → QA пишет e2e. Но знать unit-тесты полезно: иногда AQA пишет и их.\n\nФичи: snapshots, mocks, coverage из коробки.\nАналог: **Vitest** (быстрее, для Vite-проектов).",
+    desc: "Долгое время стандарт unit-тестирования в JS/React. Создан Meta, сейчас OpenJS Foundation. Развитие замедлилось.\n\n`test('adds numbers', () => { expect(1 + 2).toBe(3) })`\n\nРазработчики пишут unit → AQA пишет e2e. Но знать unit-тесты полезно: иногда AQA пишет и их.\n\nФичи: snapshots, mocks, coverage из коробки.\nДля новых проектов: **Vitest** (быстрее, совместим с Jest API). Jest — встретишь в существующих проектах.",
     s: [
       "Jest tutorial unit тесты",
       "Jest vs Vitest сравнение",
@@ -47,7 +47,7 @@ export const alternatives = [
     id: "alt-5",
     text: "Vitest: быстрая альтернатива Jest",
     time: "1ч",
-    desc: "Нативная интеграция с Vite. Совместим с API Jest (легко мигрировать).\n\n`import { test, expect } from 'vitest'`\n\nПреимущества: HMR для тестов, ESM из коробки, в 2-5x быстрее Jest на больших проектах.\nИспользуй если проект на Vite. Для остальных — Jest.",
+    desc: "Рекомендация для новых проектов в 2026. Совместим с API Jest (легко мигрировать).\n\n`import { test, expect } from 'vitest'`\n\nПреимущества: нативный ESM и TypeScript, HMR для тестов, в 2–5x быстрее Jest в watch-режиме.\nРаботает не только с Vite — подходит как универсальный тестраннер.\n\nЗнание Jest API = знание Vitest API (одинаковый синтаксис).",
     s: [
       "Vitest getting started",
       "Vitest vs Jest benchmark",
@@ -58,7 +58,7 @@ export const alternatives = [
     id: "alt-6",
     text: "Appium: мобильное тестирование",
     time: "2ч",
-    desc: "Автотесты нативных мобильных приложений (iOS/Android).\n\nPlaywright = только мобильный ВЕБ (эмуляция браузера).\nAppium = нативные кнопки, жесты, push-уведомления.\n\nАрхитектура: Appium Server → WebDriver → устройство/эмулятор.\nЯзыки: Java, Python, JS.\n\nДля Junior AQA: знать концепцию. Углубляться — если вакансия требует.",
+    desc: "Автотесты нативных мобильных приложений (iOS/Android).\n\nPlaywright = только мобильный ВЕБ (эмуляция браузера).\nAppium = нативные кнопки, жесты, push-уведомления.\n\n**Appium 2.x**: плагин-архитектура, драйверы устанавливаются отдельно:\n`appium driver install uiautomator2`\nЯзыки: Java, Python, JS.\nАльтернативы: **Maestro** (YAML, быстрый старт), **Detox** (React Native).\n\nДля Junior AQA: знать концепцию. Углубляться — если вакансия требует.",
     s: [
       "Appium mobile testing overview",
       "Appium vs Playwright мобильное тестирование",
@@ -69,7 +69,7 @@ export const alternatives = [
     id: "alt-7",
     text: "Docker: контейнеризация для QA",
     time: "2ч",
-    desc: "Одинаковая среда для dev/CI/prod. 'У меня работает' → невозможно.\n\n`docker run -it mcr.microsoft.com/playwright` — готовый образ с браузерами.\n\nОсновы: **Image** (шаблон), **Container** (запущенный экземпляр), **Dockerfile** (рецепт), **docker-compose** (несколько сервисов).\n\nДля Junior: понимать концепцию + уметь запускать контейнеры.",
+    desc: "Одинаковая среда для dev/CI/prod. 'У меня работает' → невозможно.\n\nГотовый образ Playwright с браузерами:\n`docker run -it mcr.microsoft.com/playwright`\n\nОсновы: **Image** (шаблон), **Container** (запущенный экземпляр), **Dockerfile** (рецепт), **docker compose** v2 (несколько сервисов, без дефиса!).\n\nДля Junior: понимать концепцию + уметь запускать контейнеры.",
     s: [
       "Docker для тестировщика что это",
       "Docker tutorial для начинающих",
@@ -80,7 +80,7 @@ export const alternatives = [
     id: "alt-8",
     text: "Postman и Newman: тестирование API",
     time: "2ч",
-    desc: "Postman — GUI для отправки HTTP-запросов и тестирования API.\nNewman — CLI-версия для CI/CD: `newman run collection.json`.\n\nCollections → Environments → Tests (JS assertions).\nПеременные: `{{base_url}}`, `{{token}}`.\n\nАльтернативы: **Insomnia**, **Bruno** (Git-friendly), **Thunder Client** (VS Code).\nPlaywright тоже умеет API-тесты: `request.get()`.",
+    desc: "Postman — GUI для отправки HTTP-запросов и тестирования API. Бесплатный план стал ограниченнее (лимиты, обязательная облачная синхронизация).\nNewman — CLI-версия для CI/CD:\n`newman run collection.json`\n\nCollections → Environments → Tests (JS assertions).\nПеременные: `{{base_url}}`, `{{token}}`.\n\nАльтернативы: **Bruno** (open-source, Git-friendly, без облака), **Insomnia**, **Hoppscotch** (веб), **Thunder Client** (VS Code).\nPlaywright тоже умеет API-тесты: `request.get()`.",
     s: [
       "Postman для тестировщика tutorial",
       "Newman CI/CD интеграция",
@@ -102,11 +102,11 @@ export const alternatives = [
     id: "alt-10",
     text: "TMS: TestRail, Qase, AI в тестировании",
     time: "1.5ч",
-    desc: "**Test Management System** — хранение тест-кейсов, запуски, отчёты.\n\n**TestRail**: корпоративный стандарт, платный.\n**Qase**: бесплатный план, интеграции с CI.\n**Zephyr**: плагин для Jira.\n\n**AI в QA**: Copilot для автокомплита тестов, ChatGPT для генерации тест-данных, AI-based visual testing (Applitools).\nAI не заменит AQA — но AQA с AI заменит AQA без AI.",
+    desc: "**Test Management System** — хранение тест-кейсов, запуски, отчёты.\n\n**TestRail**: корпоративный стандарт, платный.\n**Qase**: бесплатный план, современный UI, интеграции с CI — лучший выбор для старта.\n**Zephyr Scale**: плагин для Jira.\n\n**AI в AQA** (must-have навык 2026):\n- **GitHub Copilot** — автокомплит тестов прямо в VS Code\n- **ChatGPT / Claude** — генерация тест-данных, тест-кейсов, дебаг\n- **Playwright Codegen** — генерация тестов из записи действий\n- Visual AI: **Applitools**, **Percy** — скриншот-сравнение\n- AI test agents: **QA.tech**, **Momentic** — автоматическое исследование приложения\n\nAI не заменит AQA — но AQA с AI заменит AQA без AI.",
     s: [
       "TestRail vs Qase сравнение TMS",
-      "AI в тестировании 2026",
-      "test management system для QA",
+      "AI в тестировании автоматизации 2026",
+      "GitHub Copilot для тестов",
     ],
   },
 ];
