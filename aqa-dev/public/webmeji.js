@@ -567,7 +567,7 @@ class Creature {
     this.isJumping = true;
     this.currentPlatform = null;
     this.attachedToViewport = false;
-    this.resetAnimation();
+    this.clearAllTimers(); // must cancel animate() loop to prevent duplicates
 
     const scrollYAtStart = window.scrollY;
 
@@ -669,6 +669,10 @@ class Creature {
         this.container.style.top = `${this.positionY}px`;
         this.updateEdgeClass();
         this.resetAnimation();
+        if (this.animationFrameId) {
+          cancelAnimationFrame(this.animationFrameId);
+          this.animationFrameId = null;
+        }
         this.lastTime = performance.now();
 
         if (this.currentEdge !== 'bottom') {
@@ -1362,6 +1366,11 @@ class Creature {
         { edge: 'right', x: p.right - this.containerWidth, y: Math.max(p.top, Math.min(charY - this.containerHeight / 2, p.bottom - this.containerHeight)) },
       );
     }
+    if (p.width > this.containerWidth) {
+      candidates.push(
+        { edge: 'bottom-surface', x: Math.max(p.left, Math.min(charX - this.containerWidth / 2, p.right - this.containerWidth)), y: p.bottom },
+      );
+    }
     let best = candidates[0], bestDist = Infinity;
     for (const c of candidates) {
       const d = Math.hypot(charX - c.x - this.containerWidth / 2, charY - c.y - this.containerHeight / 2);
@@ -1409,6 +1418,15 @@ class Creature {
           type: 'platform-edge', edge: 'right',
           x: p.right - this.containerWidth,
           y: p.top + Math.random() * Math.max(0, p.height - this.containerHeight),
+          platform: p,
+        });
+      }
+      // bottom surface (hang underneath, only if wide enough)
+      if (p.width > this.containerWidth && p.bottom < window.innerHeight - this.containerHeight) {
+        options.push({
+          type: 'platform-edge', edge: 'bottom-surface',
+          x: p.left + Math.random() * Math.max(0, p.width - this.containerWidth),
+          y: p.bottom,
           platform: p,
         });
       }
@@ -1511,6 +1529,10 @@ class Creature {
     this.updateEdgeClass();
     this.applyEdgeOffset();
     this.resetAnimation();
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
     this.lastTime = performance.now();
 
     if (['top', 'left', 'right'].includes(this.currentEdge)) {
@@ -2243,10 +2265,13 @@ class Creature {
         });
         if (candidates.length) {
           const p = candidates[Math.floor(Math.random() * candidates.length)];
-          // pick random target surface: top, left, right, or bottom
+          // pick random target surface: top, left, right, or bottom-surface
           const edges = [undefined]; // undefined = top (default)
           if (p.height > this.containerHeight * 1.5) {
             edges.push('left', 'right');
+          }
+          if (p.width > this.containerWidth * 1.5) {
+            edges.push('bottom-surface');
           }
           const edge = edges[Math.floor(Math.random() * edges.length)];
           this.flyToPlatform(p, edge);
@@ -2558,7 +2583,7 @@ class Creature {
         this.positionY = maxY;
         if (this.currentPlatform) {
           // reached bottom of platform — go to underside or fall off
-          if (Math.random() < 0.4) {
+          if (Math.random() < 0.6) {
             this.transitionToPlatformEdge('bottom-surface');
           } else {
             this.detachFromPlatformEdge();
