@@ -994,6 +994,7 @@ export default function App() {
                 </motion.span>
               </div>
               <div
+                data-platform
                 style={{
                   background: "#161B22",
                   borderRadius: 10,
@@ -1059,6 +1060,7 @@ export default function App() {
                 </motion.span>
               </div>
               <div
+                data-platform
                 style={{
                   background: "#161B22",
                   borderRadius: 10,
@@ -1098,6 +1100,7 @@ export default function App() {
             {resources.map((r, i) => (
               <div
                 key={i}
+                data-platform
                 style={{
                   background: "#161B22",
                   borderRadius: 10,
@@ -1200,7 +1203,7 @@ export default function App() {
               }}>
                 {sec.title}
               </div>
-              <div style={{
+              <div data-platform style={{
                 background: "#161B22",
                 borderRadius: 10,
                 border: "1px solid #21262D",

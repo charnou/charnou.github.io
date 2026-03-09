@@ -91,6 +91,11 @@ class Creature {
     this.FALLEN_PHRASES = S.fallen || ['Ouch!'];
     this.CURSOR_PHRASES = S.cursorCatch || [];
     this.HOP_PHRASES = S.hop || [];
+    this.HOUSE_INSIDE_PHRASES = S.houseInside || [];
+    this.HOUSE_CLICK_PHRASES = S.houseClick || [];
+    this.HOUSE_CLICK_INSIDE_PHRASES = S.houseClickInside || [];
+    this.PET_PHRASES = S.petReaction || [];
+    this.WELCOME_BACK_PHRASES = S.welcomeBack || [];
 
     // store sprite configuration & randomize action sequence
     this.spriteConfig = spriteConfig;
@@ -141,6 +146,31 @@ class Creature {
       this._mouseX = e.clientX;
       this._mouseY = e.clientY;
     }, { passive: true });
+
+    // house feature
+    this.house = document.createElement('div');
+    this.house.className = 'webmeji-house';
+    this.house.textContent = '\u{1F3E0}';
+    document.body.appendChild(this.house);
+    this.isInHouse = false;
+    this._houseActive = false;
+    this._houseEdge = null;
+    this._houseX = 0;
+    this._houseY = 0;
+    this.house.addEventListener('click', () => this._onHouseClick());
+
+    // indicator dot (shows character position when off-screen)
+    this._indicator = document.createElement('div');
+    this._indicator.className = 'webmeji-indicator';
+    document.body.appendChild(this._indicator);
+    this._indicatorVisible = false;
+    this._lastVisibleTime = performance.now();
+    this._wasOffScreen = false;
+
+    // screen persistence state
+    this._homeScreenIdx = -1; // set after spawn
+    this._isOnCurrentScreen = true;
+    this._currentScreenIdx = -1; // set after spawn
 
     // hide before delayed spawn
     this.positionX = -200;
@@ -198,6 +228,10 @@ class Creature {
         this.attachedToViewport = true;
       }
 
+      // clamp to viewport to prevent spawning partially off-screen
+      this.positionX = Math.max(0, Math.min(this.positionX, this.maxPos));
+      this.positionY = Math.max(0, Math.min(this.positionY, window.innerHeight - this.containerHeight));
+
       this.container.style.left = `${this.positionX}px`;
       this.container.style.top = `${this.positionY}px`;
       this.container.style.opacity = '1';
@@ -214,6 +248,11 @@ class Creature {
       }
       this.lastTime = performance.now();
       this.animationFrameId = requestAnimationFrame(this.animate);
+
+      // init screen tracking after spawn
+      this._homeScreenIdx = this.getActiveTabButtonIndex();
+      this._currentScreenIdx = this._homeScreenIdx;
+      this._isOnCurrentScreen = true;
     }, 1000);
 
     // handle window resize to adjust max positions
@@ -237,7 +276,7 @@ class Creature {
     window.addEventListener('scroll', () => {
       const delta = window.scrollY - this.lastScrollY;
       this.lastScrollY = window.scrollY;
-      if (!this.attachedToViewport && !this.isDragging && !this.isJumping &&
+      if (!this.attachedToViewport && !this.isDragging && !this.isJumping && !this.isInHouse &&
           (!this.isFalling || this.tripAfterFallActive)) {
         this.positionY -= delta;
         this.container.style.top = `${this.positionY}px`;
@@ -248,16 +287,58 @@ class Creature {
       }
     }, { passive: true });
 
-    // tab change: fly in from the side when user switches tabs
-    this.activeTabButtonIndex = this.getActiveTabButtonIndex();
+    // tab change: sometimes follow, sometimes stay on old screen
     window.addEventListener('hashchange', () => {
-      const oldIdx = this.activeTabButtonIndex;
+      const oldScreenIdx = this._currentScreenIdx;
       requestAnimationFrame(() => { requestAnimationFrame(() => {
-        const newIdx = this.getActiveTabButtonIndex();
-        this.activeTabButtonIndex = newIdx;
-        if (oldIdx === -1 || newIdx === -1 || oldIdx === newIdx) return;
-        if (this.attachedToViewport) return;
-        this.flyIn(oldIdx < newIdx ? 'left' : 'right');
+        const newScreenIdx = this.getActiveTabButtonIndex();
+        if (oldScreenIdx === -1 || newScreenIdx === -1 || oldScreenIdx === newScreenIdx) return;
+        this._currentScreenIdx = newScreenIdx;
+
+        // in house — stay put, house is viewport-attached
+        if (this.isInHouse || this._houseActive) {
+          this._homeScreenIdx = newScreenIdx; // house moves with viewport, update screen
+          return;
+        }
+
+        // returning to character's home screen?
+        if (this._homeScreenIdx === newScreenIdx) {
+          if (!this._isOnCurrentScreen) {
+            this._isOnCurrentScreen = true;
+            this.container.style.display = '';
+            this._showWelcomeBack();
+          }
+          return;
+        }
+
+        // character is already on a different screen (not here), just update dot
+        if (!this._isOnCurrentScreen) return;
+
+        // character is on current screen, we're leaving it
+        // can only stay if on a platform element (not viewport bottom/edges)
+        const canStay = this.currentPlatform && !this.attachedToViewport;
+
+        if (!canStay) {
+          // on viewport surface — always follow to new screen
+          this._homeScreenIdx = newScreenIdx;
+          this._isOnCurrentScreen = true;
+          this.flyIn(oldScreenIdx < newScreenIdx ? 'left' : 'right');
+          return;
+        }
+
+        // 80% stay on platform, 20% follow
+        if (Math.random() < 0.80) {
+          // stay on old screen
+          this._isOnCurrentScreen = false;
+          this._offScreenSince = performance.now();
+          this._offScreenTimer = 0;
+          this.container.style.display = 'none';
+          // dot will appear via _updateIndicator
+        } else {
+          this._homeScreenIdx = newScreenIdx;
+          this._isOnCurrentScreen = true;
+          this.flyIn(oldScreenIdx < newScreenIdx ? 'left' : 'right');
+        }
       }); });
     });
 
@@ -289,14 +370,21 @@ class Creature {
   }
 
   // centralized bubble display — prevents race conditions and empty bubbles
-  showBubble(text, duration, onDone) {
+  showBubble(text, duration, onDone, force = false) {
+    // phrase lock: don't interrupt an active bubble unless forced
+    if (!force && this._bubbleUntil && performance.now() < this._bubbleUntil) {
+      onDone?.();
+      return;
+    }
     clearTimeout(this._bubbleTimer);
     clearTimeout(this._bubbleHideTimer);
+    this._bubbleUntil = performance.now() + duration;
     this.bubble.textContent = text;
     this.bubble.offsetWidth; // force reflow for CSS transition
     this.bubble.classList.add('visible');
     this._bubbleTimer = setTimeout(() => {
       this.bubble.classList.remove('visible');
+      this._bubbleUntil = 0;
       this._bubbleHideTimer = setTimeout(() => {
         this.bubble.textContent = '';
         onDone?.();
@@ -309,6 +397,7 @@ class Creature {
     clearTimeout(this._bubbleHideTimer);
     this._bubbleTimer = null;
     this._bubbleHideTimer = null;
+    this._bubbleUntil = 0;
     this.bubble.classList.remove('visible');
     this.bubble.textContent = '';
   }
@@ -322,6 +411,7 @@ class Creature {
     if (this._cursorFrameTimer) { clearInterval(this._cursorFrameTimer); this._cursorFrameTimer = null; }
     if (this._cursorFollowRAF) { cancelAnimationFrame(this._cursorFollowRAF); this._cursorFollowRAF = null; }
     if (this._cursorDetachTimer) { clearTimeout(this._cursorDetachTimer); this._cursorDetachTimer = null; }
+    if (this._houseFlightTimer) { clearInterval(this._houseFlightTimer); this._houseFlightTimer = null; }
     this.hideBubble();
     this.currentFrame = 0;
     this.frameTimer = null;
@@ -358,7 +448,7 @@ class Creature {
       if (this.isDragging) return this.container.style.cssText = `left:${this.positionX}px;top:${this.positionY}px`;
 
       const offsetX = this.currentEdge === 'left' ? -this.containerWidth/2 :
-                      this.currentEdge === 'right' ? this.containerHeight/2 : 0;
+                      this.currentEdge === 'right' ? this.containerWidth/2 : 0;
       const offsetY = this.currentEdge === 'top' ? -this.containerHeight/2 : 0;
 
       this.container.style.left = `${(this.positionX||0)+offsetX}px`;
@@ -656,14 +746,47 @@ class Creature {
 
     this.container.addEventListener('mouseenter',()=> {
         if(this.isFalling||this.isPointerDown||this.isPetting||this.isJumping||this.currentEdge!=='bottom') return;
-        this.isPetting=true;
-        this.wasActionBeforePet=this.currentAction;
-        this.startPetAnimation();
+        if (Math.random() < 0.4) {
+          // 40% chance: head-shake pet animation
+          this.isPetting=true;
+          this._petMode = 'headshake';
+          this.wasActionBeforePet=this.currentAction;
+          this.startPetAnimation();
+        } else {
+          // 60% chance: say something instead (persists after mouseleave)
+          this.isPetting=true;
+          this._petMode = 'phrase';
+          this.wasActionBeforePet=this.currentAction;
+          const pool = Math.random() < 0.6 ? this.PET_PHRASES : this.THINK_PHRASES;
+          const duration = 2000 + Math.random() * 1500;
+          if (pool.length) {
+            const phrase = pool[Math.floor(Math.random() * pool.length)];
+            this.showBubble(phrase, duration, () => {
+              // phrase finished — resume normal actions
+              if (this._petMode === 'phrase') {
+                this.isPetting = false;
+                this._petMode = null;
+                this.currentAction = this.wasActionBeforePet || 'sit';
+                this.wasActionBeforePet = null;
+                this.setNextAction();
+              }
+            });
+          }
+        }
     });
     this.container.addEventListener('mouseleave',()=> {
         if(this.isFalling||this.isPointerDown||this.isJumping||this.currentEdge==='top') return;
-        this.isPetting=false;
-        this.stopPetAnimation();
+        if (this._petMode === 'phrase') {
+          // phrase persists — don't stop, let the bubble timer handle cleanup
+          return;
+        }
+        // head-shake: stop with small delay
+        setTimeout(() => {
+          if (this._petMode !== 'headshake') return; // already changed
+          this.isPetting=false;
+          this._petMode = null;
+          this.stopPetAnimation();
+        }, 200);
     });
   }
 
@@ -721,6 +844,9 @@ class Creature {
 
     // actual drag logic
     this.startDrag = (clientX, clientY) => {
+    // can't drag character out of house
+    if (this.isInHouse) return;
+
     this.resetAnimation();
 
     if (this.animationFrameId) {
@@ -735,13 +861,19 @@ class Creature {
     this.isPetting = false;
     this.isAttachedToCursor = false;
 
+    // interrupt house flight (before entering) — can still cancel if flying toward house
+    if (this._houseActive) {
+      this._clearHouseTimers();
+      this._dismissHouse();
+    }
+
     this.currentAction = 'drag';
     this.img.style.transform = this.facing === 'left' ? 'scaleX(1)' : 'scaleX(-1)';
 
-    // 80% chance to say something when dragged
-    if (Math.random() < 0.80 && this.DRAG_PHRASES.length) {
+    // 85% chance to say something when dragged (force — always interrupts)
+    if (Math.random() < 0.85 && this.DRAG_PHRASES.length) {
       const phrase = this.DRAG_PHRASES[Math.floor(Math.random() * this.DRAG_PHRASES.length)];
-      this.showBubble(phrase, 2000 + Math.random() * 1500);
+      this.showBubble(phrase, 3000 + Math.random() * 2500, null, true);
     }
 
     if (this.dragFrameTimer) clearInterval(this.dragFrameTimer);
@@ -951,9 +1083,10 @@ class Creature {
     let validateTimer = 0;
     let elapsed = 0;
 
-    // frame animation — dynamic based on vertical direction
-    let activeCfg = fallingCfg; // start with falling for entry
+    // frame animation — use jump sprite for active flight
+    let activeCfg = jumpCfg; // start with jump (active flying pose)
     let frameIndex = 0;
+    let lastAnimSwitch = performance.now();
     this.img.src = activeCfg.frames[0];
     let frameTimer = setInterval(() => {
       frameIndex = (frameIndex + 1) % activeCfg.frames.length;
@@ -965,7 +1098,7 @@ class Creature {
     // flying shout: ~30% chance to shout once during flight
     let flyShoutTimer = 0;
     let flyShoutTriggered = false;
-    const willShoutInFlight = Math.random() < 0.40;
+    const willShoutInFlight = Math.random() < 0.50;
     const shoutAfter = 0.8 + Math.random() * 1.5; // shout 0.8-2.3s into flight
 
     const step = (time) => {
@@ -984,7 +1117,7 @@ class Creature {
       if (willShoutInFlight && !flyShoutTriggered && elapsed >= shoutAfter) {
         flyShoutTriggered = true;
         const phrase = this.FLY_PHRASES[Math.floor(Math.random() * this.FLY_PHRASES.length)];
-        this.showBubble(phrase, 2000 + Math.random() * 1500);
+        this.showBubble(phrase, 3000 + Math.random() * 2000);
       }
 
       if (phase === 'horizontal') {
@@ -1034,18 +1167,23 @@ class Creature {
             const closestX = Math.max(p.left, Math.min(charCX, p.right));
             const closestY = Math.max(p.top, Math.min(charCY, p.bottom));
             const dist = Math.hypot(charCX - closestX, charCY - closestY);
-            if (dist < 150 && Math.random() < 0.02) {
-              phase = 'targeting';
-              target = this._pickClosestPlatformEdge(p, charCX, charCY);
-              validateTimer = 0;
-              break;
+            if (dist < 200 && Math.random() < 0.08) {
+              const edgeTarget = this._pickClosestPlatformEdge(p, charCX, charCY);
+              // only grab if target is in the flight direction (not behind us)
+              const grabDx = edgeTarget.x - this.positionX;
+              if (Math.sign(grabDx) === Math.sign(vx) || Math.abs(grabDx) < 50) {
+                phase = 'targeting';
+                target = edgeTarget;
+                validateTimer = 0;
+                break;
+              }
             }
           }
         }
 
         if (!willCrash && phase === 'horizontal' && elapsed >= horizontalDuration) {
           phase = 'targeting';
-          target = this.pickFlyTarget(excludeEdge, fromSide);
+          target = this.pickFlyTarget(excludeEdge, fromSide, this.positionX);
           validateTimer = 0;
         }
       } else {
@@ -1070,8 +1208,8 @@ class Creature {
         const desiredVx = (dx / dist) * speed;
         const desiredVy = (dy / dist) * speed;
 
-        // lerp velocity for smooth turn
-        const lerpRate = 1.8;
+        // lerp velocity for smooth turn (faster when close to prevent orbiting)
+        const lerpRate = dist < 80 ? 10 : dist < 200 ? 5 : 3;
         const lerpAmount = Math.min(lerpRate * dt, 1);
         vx += (desiredVx - vx) * lerpAmount;
         vy += (desiredVy - vy) * lerpAmount;
@@ -1086,17 +1224,30 @@ class Creature {
         this.positionX += vx * dt;
         this.positionY += vy * dt;
 
-        // dynamic animation: going up = jump, going down = falling
-        const newCfg = vy < -5 ? jumpCfg : fallingCfg;
-        if (newCfg !== activeCfg) {
-          activeCfg = newCfg;
-          clearInterval(frameTimer);
-          frameIndex = 0;
-          this.img.src = activeCfg.frames[0];
-          frameTimer = setInterval(() => {
-            frameIndex = (frameIndex + 1) % activeCfg.frames.length;
-            this.img.src = activeCfg.frames[frameIndex];
-          }, activeCfg.interval);
+        // dynamic animation with wide hysteresis + min interval to prevent flicker
+        const now = performance.now();
+        if (now - lastAnimSwitch > 400) {
+          if (activeCfg === fallingCfg && vy < -40) {
+            activeCfg = jumpCfg;
+            lastAnimSwitch = now;
+            clearInterval(frameTimer);
+            frameIndex = 0;
+            this.img.src = activeCfg.frames[0];
+            frameTimer = setInterval(() => {
+              frameIndex = (frameIndex + 1) % activeCfg.frames.length;
+              this.img.src = activeCfg.frames[frameIndex];
+            }, activeCfg.interval);
+          } else if (activeCfg === jumpCfg && vy > 25) {
+            activeCfg = fallingCfg;
+            lastAnimSwitch = now;
+            clearInterval(frameTimer);
+            frameIndex = 0;
+            this.img.src = activeCfg.frames[0];
+            frameTimer = setInterval(() => {
+              frameIndex = (frameIndex + 1) % activeCfg.frames.length;
+              this.img.src = activeCfg.frames[frameIndex];
+            }, activeCfg.interval);
+          }
         }
 
         if (Math.abs(vx) > 5) this.setFacingFromDelta(vx);
@@ -1107,18 +1258,43 @@ class Creature {
           validateTimer = 0;
           if ((target.type === 'platform' || target.type === 'platform-edge') && target.platform?.el) {
             if (!target.platform.el.isConnected || target.platform.el.getBoundingClientRect().width === 0) {
-              target = this.pickFlyTarget(excludeEdge, fromSide);
+              const newTarget = this.pickFlyTarget(excludeEdge, fromSide, this.positionX);
+              // only accept if new target doesn't reverse horizontal direction
+              const newDx = newTarget.x - this.positionX;
+              if (Math.sign(newDx) === Math.sign(vx) || Math.abs(newDx) < 50) {
+                target = newTarget;
+              } else {
+                // fallback: land at viewport bottom below current position
+                target = { type: 'bottom', x: this.positionX, y: window.innerHeight - this.containerHeight, platform: null };
+              }
             } else {
               const r = target.platform.el.getBoundingClientRect();
               target.platform = { el: target.platform.el, left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height };
+              // update target coords but cap max shift to prevent mid-flight reversals
+              let newX, newY;
               if (target.type === 'platform') {
-                target.x = Math.max(r.left, Math.min(target.x, r.right - this.containerWidth));
-                target.y = Math.max(0, r.top - this.containerHeight);
+                newX = Math.max(r.left, Math.min(target.x, r.right - this.containerWidth));
+                newY = Math.max(0, r.top - this.containerHeight);
+              } else if (target.edge === 'left') {
+                newX = r.left; newY = Math.max(r.top, Math.min(target.y, r.bottom - this.containerHeight));
+              } else if (target.edge === 'right') {
+                newX = r.right - this.containerWidth; newY = Math.max(r.top, Math.min(target.y, r.bottom - this.containerHeight));
               } else {
-                // update platform-edge target position from refreshed rect
-                if (target.edge === 'left') { target.x = r.left; target.y = Math.max(r.top, Math.min(target.y, r.bottom - this.containerHeight)); }
-                else if (target.edge === 'right') { target.x = r.right - this.containerWidth; target.y = Math.max(r.top, Math.min(target.y, r.bottom - this.containerHeight)); }
-                else { target.y = r.bottom; target.x = Math.max(r.left, Math.min(target.x, r.right - this.containerWidth)); }
+                newY = r.bottom; newX = Math.max(r.left, Math.min(target.x, r.right - this.containerWidth));
+              }
+              const shift = Math.hypot(newX - target.x, newY - target.y);
+              if (shift < 100) {
+                target.x = newX;
+                target.y = newY;
+              } else {
+                // platform shifted too much (scroll/layout change) — re-pick forward target
+                const newTarget = this.pickFlyTarget(excludeEdge, fromSide, this.positionX);
+                const newDx = newTarget.x - this.positionX;
+                if (Math.sign(newDx) === Math.sign(vx) || Math.abs(newDx) < 50) {
+                  target = newTarget;
+                } else {
+                  target = { type: 'bottom', x: this.positionX, y: window.innerHeight - this.containerHeight, platform: null };
+                }
               }
             }
           }
@@ -1159,8 +1335,8 @@ class Creature {
   }
 
   // pick a random fly target: platform, viewport bottom, or edge (excluding entry side)
-  pickFlyTarget(excludeEdge, fromSide) {
-    const options = [];
+  pickFlyTarget(excludeEdge, fromSide, forwardMinX) {
+    let options = [];
 
     // visible platforms
     this.scanPlatforms();
@@ -1229,6 +1405,15 @@ class Creature {
       options.push({ type: 'edge', edge, x, y, platform: null });
     }
 
+    // filter out backward targets (prevent U-turns during flyIn)
+    if (forwardMinX !== undefined && fromSide) {
+      const tolerance = 50;
+      const forward = fromSide === 'left'
+        ? options.filter(o => o.x >= forwardMinX - tolerance)
+        : options.filter(o => o.x <= forwardMinX + this.containerWidth + tolerance);
+      if (forward.length > 0) options = forward;
+    }
+
     if (!fromSide || options.length <= 1) {
       return options[Math.floor(Math.random() * options.length)];
     }
@@ -1284,10 +1469,10 @@ class Creature {
       this.currentEdge = 'bottom';
     }
 
-    this.container.style.left = `${this.positionX}px`;
-    this.container.style.top = `${this.positionY}px`;
     this.lastScrollY = window.scrollY;
+    this._landedAt = performance.now(); // cooldown before next fly
     this.updateEdgeClass();
+    this.applyEdgeOffset();
     this.resetAnimation();
     this.lastTime = performance.now();
 
@@ -1341,7 +1526,7 @@ class Creature {
       }
       this.container.style.top=`${this.positionY}px`;
       this.lastScrollY = window.scrollY;
-      return this.playTripAfterFall();
+      return this.softLand();
     }
 
     const startTime=performance.now();
@@ -1360,6 +1545,41 @@ class Creature {
       this.container.style.top = `${this.positionY}px`;
 
       if (contentY < endY) {
+          // edge grab during fall: check for nearby platform edges
+          if (Math.random() < 0.06) {
+            this.scanPlatforms();
+            const charCX = this.positionX + this.containerWidth / 2;
+            const charCY = this.positionY + this.containerHeight / 2;
+            for (const p of this.platforms) {
+              if (p.top < 0 || p.bottom > window.innerHeight) continue;
+              // only grab side edges (not top/bottom surfaces) during fall
+              if (p.height < this.containerHeight * 1.5) continue;
+              const nearLeft = Math.abs(charCX - p.left) < 80 && charCY >= p.top && charCY <= p.bottom;
+              const nearRight = Math.abs(charCX - p.right) < 80 && charCY >= p.top && charCY <= p.bottom;
+              if (nearLeft || nearRight) {
+                clearInterval(this.frameTimer);
+                this.frameTimer = null;
+                this.isFalling = false;
+                this.tripAfterFallActive = false;
+                const edge = nearLeft ? 'left' : 'right';
+                const ey = Math.max(p.top, Math.min(charCY - this.containerHeight / 2, p.bottom - this.containerHeight));
+                this.positionX = edge === 'left' ? p.left : p.right - this.containerWidth;
+                this.positionY = ey;
+                this.currentEdge = edge;
+                this.currentPlatform = { el: p.el, left: p.left, right: p.right, top: p.top, bottom: p.bottom, width: p.width, height: p.height };
+                this.attachedToViewport = false;
+                this.updateEdgeClass();
+                this.applyEdgeOffset();
+                this.lastScrollY = window.scrollY;
+                this._landedAt = performance.now();
+                this.resetAnimation();
+                this.lastTime = performance.now();
+                this.startEdgeIdle();
+                this.animationFrameId = requestAnimationFrame(this.animate);
+                return;
+              }
+            }
+          }
           requestAnimationFrame(step);
       } else {
           clearInterval(this.frameTimer);
@@ -1375,10 +1595,27 @@ class Creature {
           }
           this.container.style.top = `${this.positionY}px`;
           this.lastScrollY = window.scrollY;
-          this.playTripAfterFall();
+          if (distance < 40) {
+            this.softLand();
+          } else {
+            this.playTripAfterFall();
+          }
       }
     };
     requestAnimationFrame(step);
+  }
+
+  // soft landing for small falls — no trip animation
+  softLand() {
+    this.isFalling = false;
+    this.tripAfterFallActive = false;
+    this._landedAt = performance.now();
+    this.resetAnimation();
+    this.lastTime = performance.now();
+    const standFrame = this.spriteConfig.stand?.frames?.[0] || this.spriteConfig.walk.frames[0];
+    this.img.src = standFrame;
+    this.setNextAction();
+    this.animationFrameId = requestAnimationFrame(this.animate);
   }
 
   // play fallen/trip animation after landing
@@ -1397,7 +1634,7 @@ class Creature {
     // 90% chance to say ouch when fallen
     if (Math.random() < 0.90 && this.FALLEN_PHRASES.length) {
       const phrase = this.FALLEN_PHRASES[Math.floor(Math.random() * this.FALLEN_PHRASES.length)];
-      this.showBubble(phrase, 2000 + Math.random() * 1000);
+      this.showBubble(phrase, 3000 + Math.random() * 1500);
     }
 
     this._tripFrameTimer = setInterval(() => {
@@ -1422,6 +1659,7 @@ class Creature {
     if(this.isDragging) return;
     this.isFalling = false;
     this.isPetting = false;
+    this._landedAt = performance.now();
     // refresh position from DOM if on a platform (scroll may have shifted it during trip)
     if (this.currentPlatform && this.currentPlatform.el) {
       const r = this.currentPlatform.el.getBoundingClientRect();
@@ -1437,9 +1675,9 @@ class Creature {
     this.lastTime = performance.now();
 
     // 30% chance to say a tired phrase when getting up
-    if (Math.random() < 0.30 && this.TIRED_PHRASES.length) {
+    if (Math.random() < 0.35 && this.TIRED_PHRASES.length) {
       const phrase = this.TIRED_PHRASES[Math.floor(Math.random() * this.TIRED_PHRASES.length)];
-      this.showBubble(phrase, 2500 + Math.random() * 1500);
+      this.showBubble(phrase, 3500 + Math.random() * 2000);
     }
 
     this.currentAction = 'sit';
@@ -1467,7 +1705,7 @@ class Creature {
     this.img.src = standFrame;
 
     const phrase = this.SHOUT_PHRASES[Math.floor(Math.random() * this.SHOUT_PHRASES.length)];
-    const holdDuration = 3000 + Math.random() * 2500;
+    const holdDuration = 4000 + Math.random() * 3000;
     this.showBubble(phrase, holdDuration, onComplete);
   }
 
@@ -1509,10 +1747,17 @@ class Creature {
       const dy = targetY - this.positionY;
       const dist = Math.hypot(dx, dy);
 
-      // switch anim based on direction
-      const newCfg = dy < -5 ? jumpCfg : fallingCfg;
-      if (newCfg !== activeCfg) {
-        activeCfg = newCfg;
+      // switch anim with wide hysteresis
+      if (activeCfg === fallingCfg && dy < -40) {
+        activeCfg = jumpCfg;
+        frame = 0;
+        clearInterval(this._flyToCursorTimer);
+        this._flyToCursorTimer = setInterval(() => {
+          frame = (frame + 1) % activeCfg.frames.length;
+          this.img.src = activeCfg.frames[frame];
+        }, activeCfg.interval);
+      } else if (activeCfg === jumpCfg && dy > 25) {
+        activeCfg = fallingCfg;
         frame = 0;
         clearInterval(this._flyToCursorTimer);
         this._flyToCursorTimer = setInterval(() => {
@@ -1558,7 +1803,7 @@ class Creature {
     // show catch phrase
     if (this.CURSOR_PHRASES.length) {
       const phrase = this.CURSOR_PHRASES[Math.floor(Math.random() * this.CURSOR_PHRASES.length)];
-      this.showBubble(phrase, 2500 + Math.random() * 1500);
+      this.showBubble(phrase, 3500 + Math.random() * 2000);
     }
 
     // use drag sprite while clinging
@@ -1641,9 +1886,9 @@ class Creature {
     const startTime = performance.now();
 
     // 20% chance to show hop phrase
-    if (Math.random() < 0.2 && this.HOP_PHRASES.length) {
+    if (Math.random() < 0.3 && this.HOP_PHRASES.length) {
       const phrase = this.HOP_PHRASES[Math.floor(Math.random() * this.HOP_PHRASES.length)];
-      this.showBubble(phrase, 1200);
+      this.showBubble(phrase, 2000);
     }
 
     const step = (time) => {
@@ -1673,11 +1918,259 @@ class Creature {
     requestAnimationFrame(step);
   }
 
+  // house feature ------------------------------------------------------------------
+  summonHouse() {
+    if (this._houseActive) return;
+    this._houseActive = true;
+    this.currentAction = 'goingHome';
+
+    // pick random edge and position
+    const edges = ['left', 'right', 'top', 'bottom'];
+    const edge = edges[Math.floor(Math.random() * edges.length)];
+    this._houseEdge = edge;
+
+    const houseSize = 50;
+    let x, y, hiddenTransform, rotation;
+
+    if (edge === 'left') {
+      x = 10;
+      y = 100 + Math.random() * (window.innerHeight - 200);
+      hiddenTransform = 'translateX(-100%)';
+      rotation = '90deg';
+    } else if (edge === 'right') {
+      x = window.innerWidth - houseSize - 10;
+      y = 100 + Math.random() * (window.innerHeight - 200);
+      hiddenTransform = 'translateX(100%)';
+      rotation = '-90deg';
+    } else if (edge === 'top') {
+      x = 100 + Math.random() * (window.innerWidth - 200);
+      y = 10;
+      hiddenTransform = 'translateY(-100%)';
+      rotation = '180deg';
+    } else {
+      x = 100 + Math.random() * (window.innerWidth - 200);
+      y = window.innerHeight - houseSize - 10;
+      hiddenTransform = 'translateY(100%)';
+      rotation = '0deg';
+    }
+
+    this._houseX = x;
+    this._houseY = y;
+
+    this.house.style.left = `${x}px`;
+    this.house.style.top = `${y}px`;
+    const fullHidden = rotation !== '0deg' ? `${hiddenTransform} rotate(${rotation})` : hiddenTransform;
+    this.house.style.transform = fullHidden;
+    this.house.style.filter = '';
+    this.house.style.setProperty('--house-rotation', rotation);
+    this.house.offsetWidth; // force reflow
+    this.house.classList.add('slide-in');
+
+    // after delay, fly to house
+    this._houseDelayTimer = setTimeout(() => {
+      this._flyToHouse();
+    }, 3000 + Math.random() * 4000); // 3-7s delay before flying to house
+  }
+
+  _flyToHouse() {
+    if (this.isDragging || !this._houseActive) return;
+
+    this.resetAnimation();
+    this.isJumping = true;
+
+    const fallingCfg = this.spriteConfig.falling;
+    const jumpCfg = this.spriteConfig.jump || fallingCfg;
+    if (!fallingCfg) { this._enterHouse(); return; }
+
+    let activeCfg = jumpCfg;
+    this.img.src = activeCfg.frames[0];
+    let frame = 0;
+    this._houseFlightTimer = setInterval(() => {
+      frame = (frame + 1) % activeCfg.frames.length;
+      this.img.src = activeCfg.frames[frame];
+    }, activeCfg.interval);
+
+    const speed = this.spriteConfig.jumpspeed * 1.5; // same as normal flyIn
+    let lastTime = performance.now();
+    const targetX = this._houseX;
+    const targetY = this._houseY;
+
+    const step = (time) => {
+      if (this.isDragging || !this._houseActive) {
+        clearInterval(this._houseFlightTimer); this._houseFlightTimer = null;
+        this.isJumping = false;
+        if (!this._houseActive) return;
+        this._dismissHouse();
+        return;
+      }
+
+      const dt = Math.min((time - lastTime) / 1000, 0.05);
+      lastTime = time;
+
+      const dx = targetX - this.positionX;
+      const dy = targetY - this.positionY;
+      const dist = Math.hypot(dx, dy);
+
+      // hysteresis anim switching: jump when going up, falling when going down
+      if (activeCfg === fallingCfg && dy < -40) {
+        activeCfg = jumpCfg;
+        frame = 0;
+        clearInterval(this._houseFlightTimer);
+        this._houseFlightTimer = setInterval(() => {
+          frame = (frame + 1) % activeCfg.frames.length;
+          this.img.src = activeCfg.frames[frame];
+        }, activeCfg.interval);
+      } else if (activeCfg === jumpCfg && dy > 25) {
+        activeCfg = fallingCfg;
+        frame = 0;
+        clearInterval(this._houseFlightTimer);
+        this._houseFlightTimer = setInterval(() => {
+          frame = (frame + 1) % activeCfg.frames.length;
+          this.img.src = activeCfg.frames[frame];
+        }, activeCfg.interval);
+      }
+
+      if (dist < 25) {
+        clearInterval(this._houseFlightTimer); this._houseFlightTimer = null;
+        this.isJumping = false;
+        this._enterHouse();
+        return;
+      }
+
+      const moveX = (dx / dist) * speed * dt;
+      const moveY = (dy / dist) * speed * dt;
+      this.positionX += moveX;
+      this.positionY += moveY;
+      this.container.style.left = `${this.positionX}px`;
+      this.container.style.top = `${this.positionY}px`;
+
+      if (dx !== 0) {
+        this.facing = dx < 0 ? 'left' : 'right';
+        this.updateImageDirection();
+      }
+
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  _enterHouse() {
+    this.isInHouse = true;
+    this.isJumping = false;
+    this.currentAction = 'inHouse';
+    this.attachedToViewport = true; // house is viewport-fixed, don't scroll-compensate
+    this.currentPlatform = null;
+    this.img.style.opacity = '0'; // hide only the image, keep bubble visible
+    this.img.style.pointerEvents = 'none';
+
+    // show phrases periodically while inside
+    const stayDuration = 90000 + Math.random() * 60000; // ~1.5-2.5 minutes
+    let phraseCount = 0;
+    const maxPhrases = Math.floor(stayDuration / 4000);
+
+    const showHousePhrase = () => {
+      if (!this.isInHouse || phraseCount >= maxPhrases) return;
+      phraseCount++;
+      if (this.HOUSE_INSIDE_PHRASES.length) {
+        const phrase = this.HOUSE_INSIDE_PHRASES[Math.floor(Math.random() * this.HOUSE_INSIDE_PHRASES.length)];
+        this.showBubble(phrase, 3500 + Math.random() * 2000);
+      }
+      this._housePhraseTimer = setTimeout(showHousePhrase, 3000 + Math.random() * 3000);
+    };
+
+    // position bubble near house
+    this.positionX = this._houseX;
+    this.positionY = this._houseY - 10;
+    this.container.style.left = `${this.positionX}px`;
+    this.container.style.top = `${this.positionY}px`;
+
+    this._housePhraseTimer = setTimeout(showHousePhrase, 1000 + Math.random() * 2000);
+
+    // exit after stay duration
+    this._houseExitTimer = setTimeout(() => {
+      this._exitHouse();
+    }, stayDuration);
+  }
+
+  _exitHouse() {
+    if (!this.isInHouse) return;
+    this.isInHouse = false;
+
+    if (this._housePhraseTimer) { clearTimeout(this._housePhraseTimer); this._housePhraseTimer = null; }
+    if (this._houseExitTimer) { clearTimeout(this._houseExitTimer); this._houseExitTimer = null; }
+    this.hideBubble();
+
+    // show character near house
+    this.img.style.opacity = '';
+    this.img.style.pointerEvents = '';
+    this.positionX = this._houseX;
+    this.positionY = this._houseY;
+    this.container.style.left = `${this.positionX}px`;
+    this.container.style.top = `${this.positionY}px`;
+
+    this.currentEdge = 'bottom';
+    this.attachedToViewport = true;
+    this.currentPlatform = null;
+    this.updateEdgeClass();
+
+    const standFrame = this.spriteConfig.stand?.frames?.[0] || this.spriteConfig.walk.frames[0];
+    this.img.src = standFrame;
+
+    this.resetAnimation();
+    this.lastTime = performance.now();
+
+    // dismiss house after short delay
+    this._houseDismissTimer = setTimeout(() => {
+      this._dismissHouse();
+    }, 1000 + Math.random() * 1000);
+
+    // fall to bottom / nearest surface
+    this.fallToBottom();
+    this.animationFrameId = requestAnimationFrame(this.animate);
+  }
+
+  _dismissHouse() {
+    this.house.classList.remove('slide-in');
+    // reset after transition (1.5s CSS transition + buffer)
+    setTimeout(() => {
+      this._houseActive = false;
+      this._houseEdge = null;
+      this.house.style.opacity = '0';
+    }, 1700);
+  }
+
+  _onHouseClick() {
+    if (!this._houseActive) return;
+
+    if (this.isInHouse) {
+      // creature is inside — show rest phrase from house position (force — user clicked)
+      if (this.HOUSE_CLICK_INSIDE_PHRASES.length) {
+        const phrase = this.HOUSE_CLICK_INSIDE_PHRASES[Math.floor(Math.random() * this.HOUSE_CLICK_INSIDE_PHRASES.length)];
+        this.showBubble(phrase, 2500 + Math.random() * 1000, null, true);
+      }
+    } else {
+      // creature is outside/flying — say from character position (force — user clicked)
+      if (this.HOUSE_CLICK_PHRASES.length) {
+        const phrase = this.HOUSE_CLICK_PHRASES[Math.floor(Math.random() * this.HOUSE_CLICK_PHRASES.length)];
+        this.showBubble(phrase, 2500 + Math.random() * 1000, null, true);
+      }
+    }
+  }
+
+  // clean up house timers
+  _clearHouseTimers() {
+    if (this._houseDelayTimer) { clearTimeout(this._houseDelayTimer); this._houseDelayTimer = null; }
+    if (this._houseFlightTimer) { clearInterval(this._houseFlightTimer); this._houseFlightTimer = null; }
+    if (this._housePhraseTimer) { clearTimeout(this._housePhraseTimer); this._housePhraseTimer = null; }
+    if (this._houseExitTimer) { clearTimeout(this._houseExitTimer); this._houseExitTimer = null; }
+    if (this._houseDismissTimer) { clearTimeout(this._houseDismissTimer); this._houseDismissTimer = null; }
+  }
+
   // action selection and animation --------------------------------------------------
   // pick next action based on edge, jump chance, or forced actions
   // If on an edge choose edge behavior -> Random chance to jump -> Forced walk / forced think -> Pick next action from shuffled list
   setNextAction() {
-    if (this.isDragging || this.isFalling ) return;
+    if (this.isDragging || this.isFalling || this.isInHouse || this.isJumping) return;
 
     this.resetAnimation();
 
@@ -1692,7 +2185,9 @@ class Creature {
         return;
     }
 
-    if (!this.isJumping && this.isOnSurface()) {
+    const flyCooldown = performance.now() - (this._landedAt || 0) < 5000;
+
+    if (!this.isJumping && this.isOnSurface() && !flyCooldown) {
       if (Math.random() < this.spriteConfig.JUMP_CHANCE) { // decicion on wether to jump or not
         const edges = ['top', 'left', 'right']
           .filter(e => this.spriteConfig.ALLOWANCES.includes(e));
@@ -1704,7 +2199,7 @@ class Creature {
         }
       }
       // chance to fly to another visible platform (any surface)
-      if (Math.random() < 0.12) {
+      if (Math.random() < 0.16) {
         this.scanPlatforms();
         const candidates = this.platforms.filter(p => {
           if (this.currentPlatform && p.el === this.currentPlatform.el) return false;
@@ -1724,9 +2219,15 @@ class Creature {
       }
     }
 
-    // chance to fly to cursor (only if mouse is known, on bottom surface, visible)
-    if (Math.random() < 0.04 && this._mouseX >= 0 && this.currentEdge === 'bottom' && this.isVisibleToUser()) {
+    // chance to fly to cursor (only if mouse is known, on bottom surface, visible, not in cooldown)
+    if (!flyCooldown && Math.random() < 0.04 && this._mouseX >= 0 && this.currentEdge === 'bottom' && this.isVisibleToUser()) {
       this.flyToCursor();
+      return;
+    }
+
+    // chance to summon house (3%, only if not active, on bottom, visible, cooldown passed)
+    if (!this._houseActive && !flyCooldown && Math.random() < 0.03 && this.currentEdge === 'bottom' && this.isVisibleToUser()) {
+      this.summonHouse();
       return;
     }
 
@@ -1737,7 +2238,7 @@ class Creature {
     }
 
     // chance to shout encouragement (only if user can see us)
-    if (Math.random() < 0.10 && this.currentEdge === 'bottom' && this.isVisibleToUser()) {
+    if (Math.random() < 0.14 && this.currentEdge === 'bottom' && this.isVisibleToUser()) {
       this.shout(() => {
         this.forceWalkAfter = true;
         this.setNextAction();
@@ -1837,12 +2338,12 @@ class Creature {
       this.img.src = frames[0];
 
       // ~35% chance to show a thought bubble while sitting (only if visible)
-      if (action === 'sit' && Math.random() < 0.35 && this.isVisibleToUser()) {
+      if (action === 'sit' && Math.random() < 0.40 && this.isVisibleToUser()) {
         const thinkDelay = 800 + Math.random() * 1500; // show after 0.8-2.3s
         this._thinkTimer = setTimeout(() => {
           if (this.currentAction !== 'sit') return;
           const phrase = this.THINK_PHRASES[Math.floor(Math.random() * this.THINK_PHRASES.length)];
-          this.showBubble(phrase, 2500 + Math.random() * 2000);
+          this.showBubble(phrase, 3500 + Math.random() * 2500);
         }, thinkDelay);
       }
 
@@ -1894,7 +2395,29 @@ class Creature {
     if (!this.lastTime) this.lastTime = time;
     const delta = (time - this.lastTime) / 1000;
     this.lastTime = time;
-    if (this.isDragging || this.isFalling || this.isAttachedToCursor) {
+    // if on a different screen, skip movement but update indicator and check if should come over
+    if (!this._isOnCurrentScreen) {
+      this._updateIndicator();
+      this._offScreenTimer = (this._offScreenTimer || 0) + delta;
+      if (this._offScreenTimer > 5) { // check every 5 seconds
+        this._offScreenTimer = 0;
+        // chance increases with time away: starts at 5%, grows to ~50% after 2 minutes
+        const awaySeconds = (performance.now() - (this._offScreenSince || performance.now())) / 1000;
+        const comeChance = Math.min(0.50, 0.05 + awaySeconds * 0.004);
+        if (Math.random() < comeChance) {
+          const oldHome = this._homeScreenIdx;
+          this._isOnCurrentScreen = true;
+          this._homeScreenIdx = this._currentScreenIdx;
+          this.container.style.display = '';
+          // fly in from the direction of the old screen
+          this.flyIn(oldHome < this._currentScreenIdx ? 'left' : 'right');
+        }
+      }
+      this.animationFrameId = requestAnimationFrame(this.animate);
+      return;
+    }
+    if (this.isDragging || this.isFalling || this.isAttachedToCursor || this.isInHouse) {
+        this._updateIndicator();
         this.animationFrameId = requestAnimationFrame(this.animate);
         return;
     }
@@ -2033,6 +2556,75 @@ class Creature {
       }
     }
 
+    // update indicator dot
+    this._updateIndicator();
+
     this.animationFrameId = requestAnimationFrame(this.animate);
+  }
+
+  // indicator dot: shows where character is when off-screen
+  _updateIndicator() {
+    const onScreen = this._isOnCurrentScreen;
+    const visible = this.isVisibleToUser();
+
+    if (onScreen && visible) {
+      // character is visible — hide dot, track welcome back
+      if (this._indicatorVisible) {
+        this._indicator.classList.remove('visible');
+        this._indicatorVisible = false;
+      }
+      // welcome back after being off-screen for a while
+      if (this._wasOffScreen) {
+        this._wasOffScreen = false;
+        const offDuration = performance.now() - (this._lastVisibleTime || 0);
+        if (offDuration > 10000 && Math.random() < 0.30 && this.WELCOME_BACK_PHRASES.length) {
+          const phrase = this.WELCOME_BACK_PHRASES[Math.floor(Math.random() * this.WELCOME_BACK_PHRASES.length)];
+          this.showBubble(phrase, 3000 + Math.random() * 1500);
+        }
+      }
+      this._lastVisibleTime = performance.now();
+      return;
+    }
+
+    // character is off-screen — show dot
+    this._wasOffScreen = true;
+    const inset = 12;
+    let dotX, dotY;
+
+    if (!onScreen) {
+      // character is on a different screen — dot at midpoint of the relevant edge
+      const dir = this._homeScreenIdx < this._currentScreenIdx ? 'left' : 'right';
+      if (dir === 'left') {
+        dotX = inset;
+        dotY = window.innerHeight / 2;
+      } else {
+        dotX = window.innerWidth - inset;
+        dotY = window.innerHeight / 2;
+      }
+    } else {
+      // character is on this screen but scrolled/walked out of viewport
+      dotX = Math.max(inset, Math.min(this.positionX + this.containerWidth / 2, window.innerWidth - inset));
+      dotY = Math.max(inset, Math.min(this.positionY + this.containerHeight / 2, window.innerHeight - inset));
+      // clamp to edges
+      if (this.positionX < 0) dotX = inset;
+      else if (this.positionX > window.innerWidth) dotX = window.innerWidth - inset;
+      if (this.positionY < 0) dotY = inset;
+      else if (this.positionY > window.innerHeight) dotY = window.innerHeight - inset;
+    }
+
+    this._indicator.style.left = `${dotX - 4}px`;
+    this._indicator.style.top = `${dotY - 4}px`;
+    if (!this._indicatorVisible) {
+      this._indicator.classList.add('visible');
+      this._indicatorVisible = true;
+    }
+  }
+
+  // show welcome back phrase
+  _showWelcomeBack() {
+    if (Math.random() < 0.70 && this.WELCOME_BACK_PHRASES.length) {
+      const phrase = this.WELCOME_BACK_PHRASES[Math.floor(Math.random() * this.WELCOME_BACK_PHRASES.length)];
+      this.showBubble(phrase, 3000 + Math.random() * 1500);
+    }
   }
 }

@@ -51,10 +51,44 @@
   transform-origin: center;
 }
 
+.webmeji-house {
+  position: fixed;
+  font-size: 46px;
+  line-height: 1;
+  z-index: 9998;
+  pointer-events: auto;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0;
+  transition: transform 1.5s ease-in-out, opacity 0.5s;
+}
+.webmeji-house.slide-in {
+  opacity: 1;
+  transform: translate(0, 0) rotate(var(--house-rotation, 0deg)) !important;
+}
+
+.webmeji-indicator {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff8c00;
+  box-shadow: 0 0 6px 2px rgba(255,140,0,0.6);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.webmeji-indicator.visible {
+  opacity: 1;
+}
+
 @media (max-width: 768px) {
   .webmeji-container {
     width: 32px;
     height: 32px;
   }
+  .webmeji-house {
+    font-size: 35px;
+  }
 }
-
