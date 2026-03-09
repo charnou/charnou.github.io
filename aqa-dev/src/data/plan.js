@@ -22,7 +22,7 @@ export const plan = [
             id: "1-2",
             text: "Виды тестирования: функциональное, нефункциональное, smoke, sanity, regression",
             time: "3ч",
-            desc: "Функциональное — ЧТО делает система. Нефункциональное — КАК (скорость, нагрузка).\n\nSmoke — поверхностная проверка после билда (5–10 мин). Если упал — билд бракуется.\nSanity — проверка конкретного фикса.\nRegression — ВСЕ тесты после изменений. Именно regression чаще всего автоматизируют — это твоя основная работа как AQA.\nExploratory — творческий поиск багов без скрипта.",
+            desc: "Функциональное — ЧТО делает система. Нефункциональное — КАК (скорость, нагрузка).\n\n**Smoke** — поверхностная проверка после билда (5–10 мин). Если упал — билд бракуется.\n**Sanity** — проверка конкретного фикса.\n**Regression** — ВСЕ тесты после изменений. Именно regression чаще всего автоматизируют — это твоя основная работа как AQA.\n**Exploratory** — творческий поиск багов без скрипта.",
             s: [
               "виды тестирования ПО список с примерами",
               "smoke vs sanity vs regression разница",
@@ -32,7 +32,7 @@ export const plan = [
             id: "1-3",
             text: "Уровни: unit, integration, e2e, acceptance",
             time: "2ч",
-            desc: "Unit — отдельные функции (пишут разработчики). Integration — взаимодействие модулей. E2E — полный пользовательский путь от начала до конца — это то, что ТЫ будешь автоматизировать. Acceptance — соответствие бизнес-требованиям, часто с участием PO.",
+            desc: "**Unit** — отдельные функции (пишут разработчики). **Integration** — взаимодействие модулей. **E2E** — полный пользовательский путь от начала до конца — это то, что ТЫ будешь автоматизировать. **Acceptance** — соответствие бизнес-требованиям, часто с участием PO.",
             s: [
               "уровни тестирования пирамида",
               "unit integration e2e acceptance примеры",
@@ -52,7 +52,7 @@ export const plan = [
             id: "1-5",
             text: "Техники тест-дизайна",
             time: "3ч",
-            desc: "Классы эквивалентности: поле возраст 18–65 → 3 класса: <18, 18–65, >65. Из каждого берём 1 значение.\n\nГраничные значения: для 18–65 тестируем 17, 18, 19, 64, 65, 66. Баги чаще всего на границах!\n\nPairwise: 3 параметра × 3 значения = 27 комбинаций, pairwise сокращает до 9–12.\n\nТаблица решений: для логических условий (если A И B, то C).",
+            desc: "Классы эквивалентности: поле возраст 18–65 → 3 класса: <18, 18–65, >65. Из каждого берём 1 значение.\n\nГраничные значения: для 18–65 тестируем 17, 18, 19, 64, 65, 66. Баги чаще всего на границах!\n\n**Pairwise**: 3 параметра × 3 значения = 27 комбинаций, pairwise сокращает до 9–12.\n\nТаблица решений: для логических условий (если A И B, то C).",
             s: [
               "техники тест дизайна задачи примеры",
               "граничные значения классы эквивалентности",
@@ -72,7 +72,7 @@ export const plan = [
             id: "1-7",
             text: "Баг-репорты: severity vs priority",
             time: "2ч",
-            desc: "Структура: Заголовок → Окружение → Шаги → Фактический результат → Ожидаемый → Скриншот.\n\nSeverity (техническая): Critical > Major > Minor > Trivial\nPriority (бизнес): High > Medium > Low\n\nВажно: Critical баг у 0.01% юзеров = Low priority. Опечатка на главной = Minor severity но High priority.\n\nПример заголовка: '[Корзина] Товар не удаляется при нажатии кнопки Удалить'",
+            desc: "Структура: Заголовок → Окружение → Шаги → Фактический результат → Ожидаемый → Скриншот.\n\n**Severity** (техническая): Critical > Major > Minor > Trivial\n**Priority** (бизнес): High > Medium > Low\n\nВажно: Critical баг у 0.01% юзеров = Low priority. Опечатка на главной = Minor severity но High priority.\n\nПример заголовка: '[Корзина] Товар не удаляется при нажатии кнопки Удалить'",
             s: [
               "как писать баг репорт пример",
               "severity vs priority QA таблица примеры",
@@ -92,7 +92,7 @@ export const plan = [
             id: "1-9",
             text: "SDLC и STLC",
             time: "2ч",
-            desc: "SDLC: Требования → Анализ → Дизайн → Разработка → Тестирование → Деплой → Поддержка\n\nSTLC: Анализ требований → План тестирования → Тест-кейсы → Подготовка среды → Выполнение → Closure\n\nМодели: Waterfall (устарела), V-Model (каждому этапу — свой уровень тестов), Agile (95% команд сейчас).",
+            desc: "SDLC: Требования → Анализ → Дизайн → Разработка → Тестирование → Деплой → Поддержка\n\nSTLC: Анализ требований → План тестирования → Тест-кейсы → Подготовка среды → Выполнение → Closure\n\nМодели: **Waterfall** (устарела), V-Model (каждому этапу — свой уровень тестов), Agile (95% команд сейчас).",
             s: [
               "SDLC STLC для тестировщика",
               "модели разработки waterfall agile",
@@ -102,7 +102,7 @@ export const plan = [
             id: "1-10",
             text: "Agile/Scrum основы",
             time: "2ч",
-            desc: "Роли: Product Owner (что), Scrum Master (как), Team (делаем)\nАртефакты: Product Backlog, Sprint Backlog, Increment\nЦеремонии: Planning, Daily Standup (15 мин), Review, Retrospective\n\nСпринт = 2 недели. User Story: 'Как [роль] я хочу [действие] чтобы [цель]'.\nStory Points — оценка сложности.\n\nТестировщик: присутствует на ВСЕХ церемониях, уточняет требования, пишет тесты параллельно с разработкой.",
+            desc: "Роли: **Product Owner** (что), **Scrum Master** (как), Team (делаем)\nАртефакты: Product Backlog, Sprint Backlog, Increment\nЦеремонии: Planning, Daily Standup (15 мин), Review, Retrospective\n\n**Спринт** = 2 недели. **User Story**: 'Как [роль] я хочу [действие] чтобы [цель]'.\nStory Points — оценка сложности.\n\nТестировщик: присутствует на ВСЕХ церемониях, уточняет требования, пишет тесты параллельно с разработкой.",
             s: [
               "Scrum для тестировщика подробно",
               "agile scrum церемонии роли артефакты",
@@ -112,7 +112,7 @@ export const plan = [
             id: "1-11",
             text: "Jira: аккаунт, доска, баг",
             time: "2ч",
-            desc: "1. atlassian.com → Start free → создай проект\n2. Разберись с Kanban-доской: To Do → In Progress → Done\n3. Типы задач: Story, Bug, Task, Epic\n4. Создай 2–3 учебных бага с полной структурой\n5. JQL: project = X AND type = Bug AND status = Open\n\nJira — стандарт индустрии (~80% вакансий). Альтернативы: YouTrack, Linear, Trello.",
+            desc: "1. atlassian.com → Start free → создай проект\n2. Разберись с Kanban-доской: To Do → In Progress → Done\n3. Типы задач: `Story`, `Bug`, `Task`, `Epic`\n4. Создай 2–3 учебных бага с полной структурой\n5. JQL: project = X AND type = Bug AND status = Open\n\nJira — стандарт индустрии (~80% вакансий). Альтернативы: YouTrack, Linear, Trello.",
             s: [
               "Jira для тестировщика с нуля",
               "как создать баг в Jira tutorial",
@@ -128,7 +128,7 @@ export const plan = [
             id: "1-12",
             text: "Установить Node.js, VS Code",
             time: "1.5ч",
-            desc: "1. nodejs.org → скачай LTS (не Current!). Проверка: node -v, npm -v\n2. code.visualstudio.com → установи\n3. Расширения: ESLint, Prettier, JS code snippets, Material Icon Theme\n4. Settings: включи Format On Save\n5. Создай папку qa-learning → hello.js → console.log('Hello QA!') → node hello.js\n\nВидишь вывод? Окружение готово!",
+            desc: "1. nodejs.org → скачай LTS (не Current!). Проверка: `node -v`, `npm -v`\n2. code.visualstudio.com → установи\n3. Расширения: ESLint, Prettier, JS code snippets, Material Icon Theme\n4. Settings: включи Format On Save\n5. Создай папку qa-learning → `hello.js` → `console.log('Hello QA!')` → `node hello.js`\n\nВидишь вывод? Окружение готово!",
             s: [
               "установка Node.js VS Code пошагово",
               "VS Code настройка JavaScript 2025",
@@ -138,7 +138,7 @@ export const plan = [
             id: "1-13",
             text: "Переменные: let, const, var",
             time: "1.5ч",
-            desc: "const — нельзя переприсвоить. ИСПОЛЬЗУЙ ПО УМОЛЧАНИЮ.\nlet — можно переприсвоить. Блочная область видимости.\nvar — УСТАРЕВШИЙ, не используй! Функциональная область, hoisting.\n\nПравило: всегда const. Нужно менять → let. Никогда var.\nНейминг: camelCase (userName), UPPER_SNAKE для констант (BASE_URL).",
+            desc: "const — нельзя переприсвоить. ИСПОЛЬЗУЙ ПО УМОЛЧАНИЮ.\nlet — можно переприсвоить. Блочная область видимости.\nvar — УСТАРЕВШИЙ, не используй! Функциональная область, hoisting.\n\nПравило: всегда `const`. Нужно менять → `let`. Никогда `var`.\nНейминг: `camelCase` (`userName`), `UPPER_SNAKE` для констант (`BASE_URL`).",
             s: [
               "let const var JavaScript разница",
               "learn.javascript.ru переменные",
@@ -148,7 +148,7 @@ export const plan = [
             id: "1-14",
             text: "Типы данных",
             time: "2ч",
-            desc: "Примитивы: string 'hello', number 42, boolean true/false, null (пусто явно), undefined (не задано)\nСсылочные: object {key:'val'}, array [1,2,3] — тоже объект!\n\ntypeof 'hi' → 'string'; typeof null → 'object' (баг JS!)\nArray.isArray([1,2]) → true\n\nВажно для тестирования: проверка типов в API-ответах.",
+            desc: "Примитивы: `string` `'hello'`, `number` `42`, `boolean` `true/false`, `null` (пусто явно), `undefined` (не задано)\nСсылочные: `object {key:'val'}`, `array [1,2,3]` — тоже объект!\n\n`typeof 'hi'` → 'string'; `typeof null` → 'object' (баг JS!)\n`Array.isArray([1,2])` → true\n\nВажно для тестирования: проверка типов в API-ответах.",
             s: [
               "типы данных JavaScript подробно",
               "typeof JavaScript все значения",
@@ -158,7 +158,7 @@ export const plan = [
             id: "1-15",
             text: "Операторы",
             time: "1.5ч",
-            desc: "=== строгое равенство (ВСЕГДА используй!) vs == нестрогое ('5'==5 → true)\n&& (И), || (ИЛИ), ! (НЕ)\nТернарный: const status = age >= 18 ? 'adult' : 'minor'\nOptional chaining: user?.address?.city (не упадёт если null)\n?? nullish coalescing: name ?? 'Anonymous'",
+            desc: "`===` строгое равенство (ВСЕГДА используй!) vs `==` нестрогое (`'5'==5` → true)\n`&&` (И), `||` (ИЛИ), `!` (НЕ)\nТернарный: `const status = age >= 18 ? 'adult' : 'minor'`\nOptional chaining: `user?.address?.city` (не упадёт если null)\n`??` nullish coalescing: `name ?? 'Anonymous'`",
             s: [
               "операторы JavaScript шпаргалка",
               "=== vs == JavaScript разница",
@@ -168,7 +168,7 @@ export const plan = [
             id: "1-16",
             text: "Условия: if/else, switch",
             time: "1.5ч",
-            desc: "if (condition) { } else if (other) { } else { }\nswitch(status) { case 200: break; default: }\n\nTruthy/Falsy: 0, '', null, undefined, NaN → false. ВСЁ остальное true (включая '0', [], {}).\nif (username) — проверяет что не пустой/null.",
+            desc: "`if (condition) { } else if (other) { } else { }`\n`switch(status) { case 200: break; default: }`\n\nTruthy/Falsy: `0`, `''`, `null`, `undefined`, `NaN` → false. ВСЁ остальное true (включая `'0'`, `[]`, `{}`).\n`if (username)` — проверяет что не пустой/null.",
             s: [
               "условия JavaScript truthy falsy",
               "if else switch JavaScript примеры",
@@ -178,14 +178,14 @@ export const plan = [
             id: "1-17",
             text: "Циклы",
             time: "2ч",
-            desc: "for (let i=0; i<10; i++) {} — классический\nwhile (condition) {} — пока true\nfor (const item of array) {} — ЗНАЧЕНИЯ массива, используй чаще всего\nfor (const key in object) {} — КЛЮЧИ объекта\n\nbreak — выйти, continue — пропустить итерацию.\n⚠️ Не используй for...in для массивов!",
+            desc: "`for (let i=0; i<10; i++) {}` — классический\n`while (condition) {}` — пока true\n`for (const item of array) {}` — ЗНАЧЕНИЯ массива, используй чаще всего\n`for (const key in object) {}` — КЛЮЧИ объекта\n\n`break` — выйти, `continue` — пропустить итерацию.\n⚠️ Не используй `for...in` для массивов!",
             s: ["циклы JavaScript все виды", "for of vs for in разница"],
           },
           {
             id: "1-18",
             text: "Функции",
             time: "2ч",
-            desc: "function greet(name) { return `Hello, ${name}`; }\nconst greet = (name) => `Hello, ${name}`; // arrow — используй чаще\nconst process = (data) => { return data.map(x => x*2); }; // с {} нужен return\n\nПараметры по умолчанию: function greet(name = 'World') {}\n\nВ Playwright: test('name', async ({ page }) => { ... }); — arrow function повсюду.",
+            desc: "`function greet(name) { return 'Hello, ' + name; }`\n`const greet = (name) => 'Hello, ' + name;` // arrow — используй чаще\n`const process = (data) => { return data.map(x => x*2); };` // с {} нужен `return`\n\nПараметры по умолчанию: `function greet(name = 'World') {}`\n\nВ Playwright: `test('name', async ({ page }) => { ... });` — arrow function повсюду.",
             s: [
               "стрелочные функции JavaScript подробно",
               "функции JavaScript learn.javascript.ru",
@@ -195,7 +195,7 @@ export const plan = [
             id: "1-19",
             text: "Массивы: map, filter, find, reduce",
             time: "3ч",
-            desc: "const nums = [1,2,3,4,5];\nnums.map(n => n*2) → [2,4,6,8,10] // трансформация\nnums.filter(n => n%2===0) → [2,4] // фильтрация\nnums.find(n => n>3) → 4 // первый подходящий\nnums.reduce((acc,n) => acc+n, 0) → 15 // свёртка\nnums.some(n => n>4) → true // есть ли хоть один\nnums.every(n => n>0) → true // все ли\nnums.includes(3) → true\npush/pop (конец), shift/unshift (начало), slice (копия), splice (мутация)\n\nВ тестировании: обработка массивов из API-ответов.",
+            desc: "`const nums = [1,2,3,4,5];`\n`nums.map(n => n*2)` → [2,4,6,8,10] // трансформация\n`nums.filter(n => n%2===0)` → [2,4] // фильтрация\n`nums.find(n => n>3)` → 4 // первый подходящий\n`nums.reduce((acc,n) => acc+n, 0)` → 15 // свёртка\n`nums.some(n => n>4)` → true // есть ли хоть один\n`nums.every(n => n>0)` → true // все ли\n`nums.includes(3)` → true\n`push`/`pop` (конец), `shift`/`unshift` (начало), `slice` (копия), `splice` (мутация)\n\nВ тестировании: обработка массивов из API-ответов.",
             s: [
               "методы массивов JavaScript все с примерами",
               "map filter reduce JavaScript подробно",
@@ -205,7 +205,7 @@ export const plan = [
             id: "1-20",
             text: "Объекты и деструктуризация",
             time: "2ч",
-            desc: "const user = { name:'Anna', age:25, address:{ city:'Minsk' } };\nuser.name → 'Anna'; user['name'] → то же\n\nconst { name, age } = user; // деструктуризация\nconst { city } = user.address;\nconst updated = { ...user, age:26 }; // spread\n\nObject.keys(user) → ['name','age','address']\nObject.values, Object.entries\n\nВ тестировании: работа с JSON-ответами API — это объекты и массивы объектов.",
+            desc: "`const user = { name:'Anna', age:25, address:{ city:'Minsk' } };`\n`user.name` → `'Anna'`; `user['name']` → то же\n\n`const { name, age } = user;` // деструктуризация\n`const { city } = user.address;`\n`const updated = { ...user, age:26 };` // spread\n\n`Object.keys(user)` → `['name','age','address']`\n`Object.values`, `Object.entries`\n\nВ тестировании: работа с JSON-ответами API — это объекты и массивы объектов.",
             s: [
               "объекты JavaScript деструктуризация",
               "spread operator JavaScript примеры",
@@ -216,7 +216,10 @@ export const plan = [
             text: "Template literals",
             time: "0.5ч",
             desc: "Бэктики: `Hello, ${name}! Sum: ${2+3}`\nМногострочные строки. Используются повсюду в тестах.",
-            s: ["template literals JavaScript"],
+            s: [
+              "template literals JavaScript",
+              "шаблонные строки JavaScript примеры",
+            ],
           },
           {
             id: "1-22",
@@ -245,7 +248,7 @@ export const plan = [
             id: "2-1",
             text: "HTML: теги, атрибуты, DOM",
             time: "3ч",
-            desc: "Для AQA нужно понимать DOM чтобы находить элементы.\n\nКлючевые теги: div, span, input, button, a, form, table, select, ul/li\nАтрибуты-локаторы: id (уникальный!), class, name, data-testid (специально для тестов!), placeholder, type\n\nОткрой сайт → F12 → Elements → изучай структуру. Ctrl+Shift+C → наведи на элемент → увидишь HTML.",
+            desc: "Для AQA нужно понимать DOM чтобы находить элементы.\n\nКлючевые теги: `div`, `span`, `input`, `button`, `a`, `form`, `table`, `select`, `ul`/`li`\nАтрибуты-локаторы: `id` (уникальный!), `class`, `name`, `data-testid` (специально для тестов!), `placeholder`, `type`\n\nОткрой сайт → F12 → Elements → изучай структуру. Ctrl+Shift+C → наведи на элемент → увидишь HTML.",
             s: [
               "HTML для тестировщика автоматизатора",
               "data-testid атрибут зачем нужен",
@@ -255,7 +258,7 @@ export const plan = [
             id: "2-2",
             text: "CSS-селекторы для локаторов",
             time: "2ч",
-            desc: "#myId — по id | .myClass — по классу | [name='email'] — по атрибуту | [data-testid='login'] — для тестов\ndiv > p — прямой потомок | div p — любой потомок\n:first-child, :nth-child(2), :not(.disabled)\n\nXPath (когда CSS не хватает): //div[@id='main']//button[text()='Submit']\n\nПрактика: DevTools → Console → document.querySelectorAll('.class')",
+            desc: "`#myId` — по id | `.myClass` — по классу | `[name='email']` — по атрибуту | `[data-testid='login']` — для тестов\n`div > p` — прямой потомок | `div p` — любой потомок\n`:first-child`, `:nth-child(2)`, `:not(.disabled)`\n\nXPath (когда CSS не хватает): `//div[@id='main']//button[text()='Submit']`\n\nПрактика: DevTools → Console → `document.querySelectorAll('.class')`",
             s: [
               "CSS селекторы для автоматизации",
               "CSS selector vs XPath что лучше",
@@ -265,7 +268,7 @@ export const plan = [
             id: "2-3",
             text: "Git: основные команды",
             time: "3ч",
-            desc: "git init → git add . → git commit -m 'feat: add tests' → git push origin main\n\nВетки: git checkout -b feature/login → работай → add → commit → push → PR → merge\n\ngit status — состояние | git log --oneline — история | git diff — изменения | git pull — получить обновления\n\nCommit convention: feat: fix: test: docs:",
+            desc: "`git init` → `git add .` → `git commit -m 'feat: add tests'` → `git push origin main`\n\nВетки: `git checkout -b feature/login` → работай → add → commit → push → PR → merge\n\n`git status` — состояние | `git log --oneline` — история | `git diff` — изменения | `git pull` — получить обновления\n\nCommit convention: `feat:` `fix:` `test:` `docs:`",
             s: [
               "git для начинающих пошагово",
               "git команды шпаргалка на русском",
@@ -285,8 +288,13 @@ export const plan = [
             id: "2-5",
             text: ".gitignore, README.md",
             time: "1ч",
-            desc: ".gitignore: node_modules/ .env test-results/ playwright-report/ *.log\nREADME.md: # заголовок, **жирный**, - список, ```code```",
-            s: ["gitignore шаблон Node.js", "markdown шпаргалка"],
+            desc: "`.gitignore`: `node_modules/` `.env` `test-results/` `playwright-report/` `*.log`\n`README.md`: # заголовок, **жирный**, - список, ```code```",
+            s: [
+              "gitignore шаблон Node.js",
+              "markdown шпаргалка",
+              "README.md best practices GitHub",
+              ".gitignore шаблон node проект",
+            ],
           },
           {
             id: "2-6",
@@ -322,7 +330,7 @@ export const plan = [
             id: "2-9",
             text: "Заголовки HTTP, JSON",
             time: "2ч",
-            desc: "Content-Type: application/json — формат тела\nAuthorization: Bearer <token> — аутентификация\n\nJSON: {\"name\":\"Anna\",\"age\":25}\nJSON.parse(string) → объект | JSON.stringify(obj) → строка\n90% API используют JSON.",
+            desc: "`Content-Type: application/json` — формат тела\n`Authorization: Bearer <token>` — аутентификация\n\nJSON: `{\"name\":\"Anna\",\"age\":25}`\n`JSON.parse(string)` → объект | `JSON.stringify(obj)` → строка\n90% API используют JSON.",
             s: [
               "HTTP заголовки для тестировщика",
               "JSON формат для начинающих",
@@ -332,7 +340,7 @@ export const plan = [
             id: "2-10",
             text: "REST API принципы",
             time: "1.5ч",
-            desc: "Ресурсы по URL: /users, /users/1\nHTTP-методы = действия | Stateless | JSON\nEndpoint = метод + URL | Swagger/OpenAPI — документация API",
+            desc: "Ресурсы по URL: `/users`, `/users/1`\nHTTP-методы = действия | Stateless | JSON\nEndpoint = метод + URL | Swagger/OpenAPI — документация API",
             s: [
               "REST API что это простыми словами",
               "Swagger OpenAPI что это",
@@ -358,7 +366,7 @@ export const plan = [
             id: "2-12",
             text: "Postman: коллекции, переменные, тесты",
             time: "4ч",
-            desc: "Коллекция — папка запросов. Переменные: {{base_url}} вместо хардкода.\nPre-request: генерация данных перед запросом.\nTests: pm.response.to.have.status(200); pm.expect(json.data).to.have.lengthOf(6);\nRunner — запуск всей коллекции.\n\nСоздай коллекцию из 10–15 запросов к reqres.in и restful-booker с тестами к каждому.",
+            desc: "Коллекция — папка запросов. Переменные: `{{base_url}}` вместо хардкода.\nPre-request: генерация данных перед запросом.\nTests: `pm.response.to.have.status(200);` `pm.expect(json.data).to.have.lengthOf(6);`\nRunner — запуск всей коллекции.\n\nСоздай коллекцию из 10–15 запросов к reqres.in и restful-booker с тестами к каждому.",
             s: [
               "Postman коллекции переменные тесты",
               "pm.expect Postman все проверки",
@@ -368,7 +376,7 @@ export const plan = [
             id: "2-13",
             text: "async/await, Promises",
             time: "3ч",
-            desc: "Promise — будущий результат: pending → fulfilled/rejected\nasync function getUsers() { const res = await fetch(url); const data = await res.json(); }\n\nawait приостанавливает до результата. Только внутри async.\ntry/catch для ошибок.\n\nВ Playwright ВСЁ через await: await page.goto(url); await page.click('button');",
+            desc: "Promise — будущий результат: pending → fulfilled/rejected\n`async function getUsers() { const res = await fetch(url); const data = await res.json(); }`\n\n`await` приостанавливает до результата. Только внутри `async`.\n`try/catch` для ошибок.\n\nВ **Playwright** ВСЁ через `await`: `await page.goto(url);` `await page.click('button');`",
             s: [
               "async await JavaScript подробно",
               "промисы learn.javascript.ru",
@@ -378,7 +386,7 @@ export const plan = [
             id: "2-14",
             text: "Модули, npm, package.json",
             time: "2ч",
-            desc: "npm init -y → package.json\nnpm install axios → dependencies\nexport function sum(a,b){return a+b} → import {sum} from './math.js'\nscripts: {\"test\":\"npx playwright test\"} → npm test\nnode_modules → .gitignore!",
+            desc: "`npm init -y` → `package.json`\n`npm install axios` → dependencies\n`export function sum(a,b){return a+b}` → `import {sum} from './math.js'`\nscripts: `\"test\":\"npx playwright test\"` → `npm test`\n`node_modules` → `.gitignore`!",
             s: [
               "npm package.json для начинающих",
               "import export JavaScript модули",
@@ -388,7 +396,7 @@ export const plan = [
             id: "2-15",
             text: "API-тесты на JavaScript",
             time: "3ч",
-            desc: "npm install axios.\nconst res = await axios.get('https://reqres.in/api/users');\nconsole.assert(res.status === 200);\nconsole.assert(res.data.data.length === 6);\n\nНапиши 5–7 тестов: GET список, GET один, POST создание, PUT обновление, DELETE, 404.",
+            desc: "`npm install axios`.\n`const res = await axios.get('https://reqres.in/api/users');`\n`console.assert(res.status === 200);`\n`console.assert(res.data.data.length === 6);`\n\nНапиши 5–7 тестов: GET список, GET один, POST создание, PUT обновление, DELETE, 404.",
             s: [
               "axios JavaScript GET POST примеры",
               "API тесты JavaScript без фреймворка",
@@ -398,7 +406,7 @@ export const plan = [
             id: "2-16",
             text: "SQL: SELECT, INSERT, UPDATE, DELETE",
             time: "4ч",
-            desc: "SELECT name, email FROM users WHERE age > 18 ORDER BY name LIMIT 10;\nSELECT COUNT(*) FROM users WHERE city = 'Minsk';\nINSERT INTO users (name) VALUES ('Anna');\nUPDATE users SET age = 26 WHERE id = 1; ⚠️ без WHERE обновит ВСЕ!\nDELETE FROM users WHERE id = 1; ⚠️ без WHERE удалит ВСЕ!",
+            desc: "`SELECT name, email FROM users WHERE age > 18 ORDER BY name LIMIT 10;`\n`SELECT COUNT(*) FROM users WHERE city = 'Minsk';`\n`INSERT INTO users (name) VALUES ('Anna');`\n`UPDATE users SET age = 26 WHERE id = 1;` ⚠️ без `WHERE` обновит ВСЕ!\n`DELETE FROM users WHERE id = 1;` ⚠️ без `WHERE` удалит ВСЕ!",
             s: [
               "SQL для начинающих SELECT WHERE",
               "SQL INSERT UPDATE DELETE примеры",
@@ -408,7 +416,7 @@ export const plan = [
             id: "2-17",
             text: "SQL: JOIN + практика",
             time: "4ч",
-            desc: "INNER JOIN — только совпадения:\nSELECT o.id, u.name FROM orders o JOIN users u ON o.user_id = u.id;\nLEFT JOIN — все из левой + совпадения из правой (NULL если нет).\n\nПрактика: sqlbolt.com (все уроки) + sql-ex.ru (10–15 задач).\nМинимум: SELECT, WHERE, ORDER, JOIN, GROUP BY, COUNT/SUM/AVG.",
+            desc: "`INNER JOIN` — только совпадения:\n`SELECT o.id, u.name FROM orders o JOIN users u ON o.user_id = u.id;`\n`LEFT JOIN` — все из левой + совпадения из правой (`NULL` если нет).\n\nПрактика: sqlbolt.com (все уроки) + sql-ex.ru (10–15 задач).\nМинимум: `SELECT`, `WHERE`, `ORDER`, `JOIN`, `GROUP BY`, `COUNT`/`SUM`/`AVG`.",
             s: [
               "SQL JOIN для начинающих с картинками",
               "sqlbolt уроки sql-ex.ru задачи",
@@ -431,27 +439,29 @@ export const plan = [
             id: "3-1",
             text: "Установить Playwright",
             time: "1ч",
-            desc: "mkdir project && cd project\nnpm init playwright@latest → JS или TS → tests → Yes → Yes\nПодожди скачивания браузеров (~500MB)\nnpx playwright test → примеры пройдут\nnpx playwright show-report → HTML-отчёт",
+            desc: "`mkdir project && cd project`\n`npm init playwright@latest` → JS или TS → tests → Yes → Yes\nПодожди скачивания браузеров (~500MB)\n`npx playwright test` → примеры пройдут\n`npx playwright show-report` → HTML-отчёт",
             s: [
               "Playwright установка пошагово",
               "npm init playwright tutorial",
+              "Playwright getting started tutorial 2025",
             ],
           },
           {
             id: "3-2",
             text: "Первый тест",
             time: "2ч",
-            desc: "test('has title', async ({ page }) => {\n  await page.goto('https://playwright.dev/');\n  await expect(page).toHaveTitle(/Playwright/);\n});\n\ntest('click link', async ({ page }) => {\n  await page.goto('https://playwright.dev/');\n  await page.getByRole('link', {name:'Get started'}).click();\n  await expect(page.getByRole('heading', {name:'Installation'})).toBeVisible();\n});\n\nawait ОБЯЗАТЕЛЬНО перед каждым действием.",
+            desc: "`test('has title', async ({ page }) => {`\n  `await page.goto('https://playwright.dev/');`\n  `await expect(page).toHaveTitle(/Playwright/);`\n`});`\n\n`test('click link', async ({ page }) => {`\n  `await page.goto('https://playwright.dev/');`\n  `await page.getByRole('link', {name:'Get started'}).click();`\n  `await expect(page.getByRole('heading', {name:'Installation'})).toBeVisible();`\n`});`\n\n`await` ОБЯЗАТЕЛЬНО перед каждым действием.",
             s: [
               "Playwright первый тест подробно",
               "Playwright page.goto click expect",
+              "Playwright test example tutorial",
             ],
           },
           {
             id: "3-3",
             text: "Локаторы",
             time: "3ч",
-            desc: "🥇 getByRole('button', {name:'Submit'}) — лучший!\n🥈 getByText('Add to cart'), getByLabel('Email'), getByPlaceholder('Enter email')\n🥉 getByTestId('login-btn') — ищет data-testid\n⚙️ page.locator('#id'), page.locator('.class')\n\nПриоритет: Role > Text > TestId > CSS > XPath\nnpx playwright codegen url — покажет какие локаторы генерирует",
+            desc: "🥇 `getByRole('button', {name:'Submit'})` — лучший!\n🥈 `getByText('Add to cart')`, `getByLabel('Email')`, `getByPlaceholder('Enter email')`\n🥉 `getByTestId('login-btn')` — ищет data-testid\n⚙️ `page.locator('#id')`, `page.locator('.class')`\n\nПриоритет: `Role` > `Text` > `TestId` > `CSS` > `XPath`\n`npx playwright codegen url` — покажет какие локаторы генерирует",
             s: [
               "Playwright locators все виды",
               "getByRole getByText best practices",
@@ -461,7 +471,7 @@ export const plan = [
             id: "3-4",
             text: "Assertions",
             time: "2ч",
-            desc: "await expect(locator).toBeVisible() / toBeHidden()\nawait expect(locator).toHaveText('Dashboard') / toContainText('error')\nawait expect(page).toHaveURL(/dashboard/) / toHaveTitle(/App/)\nawait expect(locator).toBeEnabled() / toBeDisabled() / toBeChecked()\nawait expect(locator).toHaveValue('test@test.com')\nawait expect(locator).toHaveCount(6)\n\nВсе assertions АВТОМАТИЧЕСКИ ждут (до timeout).",
+            desc: "`await expect(locator).toBeVisible()` / `toBeHidden()`\n`await expect(locator).toHaveText('Dashboard')` / `toContainText('error')`\n`await expect(page).toHaveURL(/dashboard/)` / `toHaveTitle(/App/)`\n`await expect(locator).toBeEnabled()` / `toBeDisabled()` / `toBeChecked()`\n`await expect(locator).toHaveValue('test@test.com')`\n`await expect(locator).toHaveCount(6)`\n\nВсе **assertions** АВТОМАТИЧЕСКИ ждут (до timeout).",
             s: [
               "Playwright assertions полный список",
               "expect toBeVisible toHaveText Playwright",
@@ -471,7 +481,7 @@ export const plan = [
             id: "3-5",
             text: "Формы, ожидания, скриншоты",
             time: "4ч",
-            desc: "page.fill('#email', 'test@test.com'); page.click('button');\npage.selectOption('#country', 'US'); page.check('#agree');\npage.keyboard.press('Enter');\n\nAuto-waiting: Playwright сам ждёт. waitForSelector, waitForResponse — для сложных случаев.\n⚠️ waitForTimeout — АНТИПАТТЕРН!\n\nConfig: screenshot:'only-on-failure', video:'retain-on-failure', trace:'on-first-retry'\nnpx playwright codegen url — генерация тестов",
+            desc: "`page.fill('#email', 'test@test.com');` `page.click('button');`\n`page.selectOption('#country', 'US');` `page.check('#agree');`\n`page.keyboard.press('Enter');`\n\nAuto-waiting: **Playwright** сам ждёт. `waitForSelector`, `waitForResponse` — для сложных случаев.\n⚠️ `waitForTimeout` — АНТИПАТТЕРН!\n\nConfig: `screenshot:'only-on-failure'`, `video:'retain-on-failure'`, `trace:'on-first-retry'`\n`npx playwright codegen url` — генерация тестов",
             s: [
               "Playwright формы fill click select",
               "Playwright auto-waiting trace viewer",
@@ -485,6 +495,7 @@ export const plan = [
             s: [
               "Playwright tests saucedemo example",
               "saucedemo automation tutorial",
+              "saucedemo Playwright автотесты пример",
             ],
           },
         ],
@@ -497,7 +508,7 @@ export const plan = [
             id: "3-7",
             text: "Page Object Model",
             time: "3ч",
-            desc: "Каждая страница = класс:\nclass LoginPage {\n  constructor(page) {\n    this.page = page;\n    this.email = page.getByPlaceholder('Username');\n    this.password = page.getByPlaceholder('Password');\n    this.loginBtn = page.getByRole('button', {name:'Login'});\n  }\n  async login(user, pass) {\n    await this.email.fill(user); await this.password.fill(pass); await this.loginBtn.click();\n  }\n}\n\nТесты читаются как сценарии: await loginPage.login('user','pass');",
+            desc: "Каждая страница = класс:\n`class LoginPage {`\n  `constructor(page) {`\n    `this.page = page;`\n    `this.email = page.getByPlaceholder('Username');`\n    `this.password = page.getByPlaceholder('Password');`\n    `this.loginBtn = page.getByRole('button', {name:'Login'});`\n  `}`\n  `async login(user, pass) {`\n    `await this.email.fill(user); await this.password.fill(pass); await this.loginBtn.click();`\n  `}`\n`}`\n\nТесты читаются как сценарии: `await loginPage.login('user','pass');`",
             s: [
               "Page Object Model Playwright пример",
               "POM паттерн зачем нужен",
@@ -517,7 +528,7 @@ export const plan = [
             id: "3-9",
             text: "Fixtures и конфигурация",
             time: "3ч",
-            desc: "Fixtures: test.extend({ loginPage: async({page},use) => { await use(new LoginPage(page)); } });\n\nplaywright.config: baseURL, timeout:30000, retries:1, workers:4, reporter:'html'\nprojects: chromium, firefox, webkit",
+            desc: "**Fixtures**: `test.extend({ loginPage: async({page},use) => { await use(new LoginPage(page)); } });`\n\n`playwright.config`: `baseURL`, `timeout:30000`, `retries:1`, `workers:4`, `reporter:'html'`\n`projects`: `chromium`, `firefox`, `webkit`",
             s: [
               "Playwright fixtures custom example",
               "playwright.config все параметры",
@@ -527,10 +538,11 @@ export const plan = [
             id: "3-10",
             text: "API-тестирование в Playwright",
             time: "4ч",
-            desc: "test('GET users', async ({ request }) => {\n  const res = await request.get('/users');\n  expect(res.ok()).toBeTruthy();\n  const json = await res.json();\n  expect(json.data).toHaveLength(6);\n});\n\ntest('POST create', async ({ request }) => {\n  const res = await request.post('/users', { data: {name:'Anna'} });\n  expect(res.status()).toBe(201);\n});\n\nКомбинирование: API создаёт данные → UI проверяет.\ndescribe, beforeEach, afterEach для группировки.\nТеги: @smoke, @regression → --grep @smoke",
+            desc: "`test('GET users', async ({ request }) => {`\n  `const res = await request.get('/users');`\n  `expect(res.ok()).toBeTruthy();`\n  `const json = await res.json();`\n  `expect(json.data).toHaveLength(6);`\n`});`\n\n`test('POST create', async ({ request }) => {`\n  `const res = await request.post('/users', { data: {name:'Anna'} });`\n  `expect(res.status()).toBe(201);`\n`});`\n\nКомбинирование: **API** создаёт данные → UI проверяет.\n`describe`, `beforeEach`, `afterEach` для группировки.\nТеги: `@smoke`, `@regression` → `--grep @smoke`",
             s: [
               "Playwright API testing tutorial",
               "Playwright API UI hybrid test",
+              "Playwright API testing request fixture",
             ],
           },
         ],
@@ -550,7 +562,7 @@ export const plan = [
             id: "4-1",
             text: "TypeScript основы",
             time: "3ч",
-            desc: "let name: string = 'Anna'; let age: number = 25;\ninterface User { id: number; name: string; email: string; age?: number; }\ntype Status = 'active' | 'inactive';\nenum Role { Admin='ADMIN', User='USER' }\nfunction greet(name: string): string { return `Hello, ${name}`; }\n\nPlaywright + TS = отличный автокомплит для всего API.",
+            desc: "`let name: string = 'Anna'; let age: number = 25;`\n`interface User { id: number; name: string; email: string; age?: number; }`\n`type Status = 'active' | 'inactive';`\n`enum Role { Admin='ADMIN', User='USER' }`\n`function greet(name: string): string { return 'Hello, ' + name; }`\n\n**Playwright** + TS = отличный автокомплит для всего API.",
             s: [
               "TypeScript для начинающих основы",
               "TypeScript interface enum tutorial",
@@ -560,20 +572,23 @@ export const plan = [
             id: "4-2",
             text: "Переписать тесты на TS + GitHub Actions CI",
             time: "5ч",
-            desc: "Переименуй .js→.ts, добавь типы к PO (Page, Locator из @playwright/test).\n\nCI: .github/workflows/playwright.yml:\nname: Tests\non: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps: checkout → setup-node → npm ci → playwright install --with-deps → test → upload-artifact\n\nТеперь тесты запускаются автоматически!",
+            desc: "Переименуй `.js`→`.ts`, добавь типы к PO (`Page`, `Locator` из `@playwright/test`).\n\n**CI**: .github/workflows/playwright.yml:\nname: Tests\non: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps: `checkout` → `setup-node` → `npm ci` → `playwright install --with-deps` → `test` → `upload-artifact`\n\nТеперь тесты запускаются автоматически!",
             s: [
               "Playwright TypeScript migration",
               "Playwright GitHub Actions workflow yaml",
+              "GitHub Actions Playwright CI yaml example",
             ],
           },
           {
             id: "4-3",
             text: "Allure Report + .env + параллелизация",
             time: "4ч",
-            desc: "npm install -D allure-playwright → reporter:[['allure-playwright']]\nallure.step(), allure.severity('critical'), allure.feature('Auth')\n\n.env: BASE_URL=https://... → npm install dotenv → process.env.BASE_URL\n⚠️ .env в .gitignore! Создай .env.example\n\nworkers: 4 или '50%'. fullyParallel: true.\nData-driven: for (const d of testData) { test(`login ${d.user}`, ...) }",
+            desc: "`npm install -D allure-playwright` → `reporter:[['allure-playwright']]`\n`allure.step()`, `allure.severity('critical')`, `allure.feature('Auth')`\n\n`.env`: `BASE_URL=https://...` → `npm install dotenv` → `process.env.BASE_URL`\n⚠️ `.env` в `.gitignore`! Создай `.env.example`\n\n`workers: 4` или `'50%'`. `fullyParallel: true`.\nData-driven: `for (const d of testData) { test('login ' + d.user, ...) }`",
             s: [
               "Allure Playwright setup",
               "Playwright parallel workers .env dotenv",
+              "Allure report Playwright настройка",
+              "data driven testing Playwright",
             ],
           },
         ],
@@ -586,10 +601,11 @@ export const plan = [
             id: "4-4",
             text: "Финальный проект на GitHub",
             time: "12ч",
-            desc: "Структура: tests/ui/ + tests/api/ + pages/ + fixtures/ + .github/workflows/ + README.md\n\n15–20 UI тестов (saucedemo): логин, каталог, корзина, checkout, сортировка, ошибки.\n5–10 API тестов (reqres/restful-booker): CRUD, авторизация, негативные.\n\nPOM, fixtures, @smoke/@regression, CI/CD, Allure.\nЭто — твоё ПОРТФОЛИО.",
+            desc: "Структура: `tests/ui/` + `tests/api/` + `pages/` + `fixtures/` + `.github/workflows/` + `README.md`\n\n15–20 UI тестов (saucedemo): логин, каталог, корзина, checkout, сортировка, ошибки.\n5–10 API тестов (reqres/restful-booker): CRUD, авторизация, негативные.\n\n**POM**, fixtures, @smoke/@regression, **CI/CD**, **Allure**.\nЭто — твоё ПОРТФОЛИО.",
             s: [
               "Playwright project structure best practices",
               "QA automation portfolio GitHub example",
+              "Playwright test framework architecture GitHub",
             ],
           },
           {
@@ -606,10 +622,11 @@ export const plan = [
             id: "4-6",
             text: "Подготовка к собеседованиям",
             time: "6ч",
-            desc: "Топ-15 вопросов: QA/QC/Testing? Пирамида? Smoke/sanity/regression? Severity/priority? POM зачем? Какие локаторы? Flaky test? Playwright vs Cypress? CI/CD? async/await? Git branch/PR? SQL JOIN? Agile/Scrum? Расскажи проект.\n\nJS-вопросы: let/const/var, closure, this, Promise, event loop, === vs ==\n\nMock-интервью: с другом, YouTube записи, AI.\nВопросы ТЕБЕ: стек? размер QA-команды? менторство? продукт? CI/CD?",
+            desc: "Топ-15 вопросов: QA/QC/Testing? Пирамида? Smoke/sanity/regression? Severity/priority? **POM** зачем? Какие локаторы? Flaky test? **Playwright** vs Cypress? **CI/CD**? **async/await**? Git branch/PR? SQL JOIN? Agile/Scrum? Расскажи проект.\n\nJS-вопросы: `let`/`const`/`var`, closure, `this`, `Promise`, event loop, `===` vs `==`\n\nMock-интервью: с другом, YouTube записи, AI.\nВопросы ТЕБЕ: стек? размер QA-команды? менторство? продукт? CI/CD?",
             s: [
               "вопросы собеседование Junior QA Automation",
               "JavaScript вопросы собеседование junior",
+              "QA automation interview questions Playwright",
             ],
           },
           {

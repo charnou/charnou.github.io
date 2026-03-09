@@ -190,6 +190,9 @@ class Creature {
         p.top >= this.containerHeight && p.top < window.innerHeight
       );
 
+      // recalc maxPos in case viewport changed since constructor
+      this.maxPos = window.innerWidth - this.containerWidth;
+
       const roll = Math.random();
       if (visible.length && roll < 0.4) {
         // spawn on a visible platform
@@ -202,7 +205,7 @@ class Creature {
         this.attachedToViewport = false;
       } else if (roll < 0.75) {
         // spawn on viewport bottom
-        this.positionX = Math.random() * this.maxPos;
+        this.positionX = Math.random() * Math.max(0, this.maxPos);
         this.positionY = window.innerHeight - this.containerHeight;
         this.currentEdge = 'bottom';
         this.attachedToViewport = true;
@@ -211,22 +214,25 @@ class Creature {
         const edges = ['top', 'left', 'right'].filter(e => this.spriteConfig.ALLOWANCES.includes(e));
         const edge = edges.length ? edges[Math.floor(Math.random() * edges.length)] : 'bottom';
         if (edge === 'top') {
-          this.positionX = Math.random() * this.maxPos;
+          this.positionX = Math.random() * Math.max(0, this.maxPos);
           this.positionY = 0;
         } else if (edge === 'left') {
           this.positionX = 0;
-          this.positionY = Math.random() * (window.innerHeight - this.containerHeight);
+          this.positionY = Math.random() * Math.max(0, window.innerHeight - this.containerHeight);
         } else if (edge === 'right') {
-          this.positionX = this.maxPos;
-          this.positionY = Math.random() * (window.innerHeight - this.containerHeight);
+          this.positionX = Math.max(0, this.maxPos);
+          this.positionY = Math.random() * Math.max(0, window.innerHeight - this.containerHeight);
         } else {
-          this.positionX = Math.random() * this.maxPos;
+          this.positionX = Math.random() * Math.max(0, this.maxPos);
           this.positionY = window.innerHeight - this.containerHeight;
           this.currentEdge = 'bottom';
         }
         if (edge !== 'bottom') this.currentEdge = edge;
         this.attachedToViewport = true;
       }
+      // clamp to viewport bounds
+      this.positionX = Math.max(0, Math.min(this.positionX, Math.max(0, this.maxPos)));
+      this.positionY = Math.max(0, Math.min(this.positionY, window.innerHeight - this.containerHeight));
 
       // clamp to viewport to prevent spawning partially off-screen
       this.positionX = Math.max(0, Math.min(this.positionX, this.maxPos));
@@ -315,18 +321,35 @@ class Creature {
         if (!this._isOnCurrentScreen) return;
 
         // character is on current screen, we're leaving it
-        // can only stay if on a platform element (not viewport bottom/edges)
-        const canStay = this.currentPlatform && !this.attachedToViewport;
+        // cooldown: don't fly immediately after landing
+        const flyCd = performance.now() - (this._landedAt || 0) < 5000;
 
-        if (!canStay) {
-          // on viewport surface — always follow to new screen
+        // attached to viewport (screen edge) — ALWAYS stay, viewport moves with user
+        if (this.attachedToViewport && !this.currentPlatform) {
+          this._homeScreenIdx = newScreenIdx; // viewport follows user
+          return;
+        }
+
+        const canStay = this.currentPlatform;
+
+        if (!canStay && !flyCd) {
+          // floating/unknown state — follow to new screen
           this._homeScreenIdx = newScreenIdx;
           this._isOnCurrentScreen = true;
           this.flyIn(oldScreenIdx < newScreenIdx ? 'left' : 'right');
           return;
         }
 
-        // 80% stay on platform, 20% follow
+        if (flyCd) {
+          // just landed — always stay, don't fly again
+          this._isOnCurrentScreen = false;
+          this._offScreenSince = performance.now();
+          this._offScreenTimer = 0;
+          this.container.style.display = 'none';
+          return;
+        }
+
+        // 80% stay, 20% follow
         if (Math.random() < 0.80) {
           // stay on old screen
           this._isOnCurrentScreen = false;
@@ -449,7 +472,7 @@ class Creature {
 
       const offsetX = this.currentEdge === 'left' ? -this.containerWidth/2 :
                       this.currentEdge === 'right' ? this.containerWidth/2 : 0;
-      const offsetY = this.currentEdge === 'top' ? -this.containerHeight/2 : 0;
+      const offsetY = this.currentEdge === 'top' ? -this.containerHeight/4 : 0;
 
       this.container.style.left = `${(this.positionX||0)+offsetX}px`;
       this.container.style.top  = `${(this.positionY||0)+offsetY}px`;
@@ -473,18 +496,18 @@ class Creature {
     let endY = startY;
 
     switch (targetEdge) {
-        case 'top':
-            endY = 0;
-            endX = Math.random() * (window.innerWidth - this.containerWidth); // random horizontal
-            break;
-        case 'left':
-            endX = 0;
-            endY = Math.random() * (window.innerHeight - this.containerHeight); // random vertical
-            break;
-        case 'right':
-            endX = window.innerWidth - this.containerWidth;
-            endY = Math.random() * (window.innerHeight - this.containerHeight); // random vertical
-            break;
+      case 'top':
+        endY = 0;
+        endX = Math.random() * (window.innerWidth - this.containerWidth);
+        break;
+      case 'left':
+        endX = 0;
+        endY = Math.random() * (window.innerHeight - this.containerHeight);
+        break;
+      case 'right':
+        endX = window.innerWidth - this.containerWidth;
+        endY = Math.random() * (window.innerHeight - this.containerHeight);
+        break;
     }
 
     const dx = endX - startX;
@@ -502,38 +525,37 @@ class Creature {
     this.img.src = jumpConfig.frames[frameIndex];
 
     const frameTimer = setInterval(() => {
-        frameIndex = (frameIndex + 1) % totalFrames;
-        this.img.src = jumpConfig.frames[frameIndex];
+      frameIndex = (frameIndex + 1) % totalFrames;
+      this.img.src = jumpConfig.frames[frameIndex];
     }, jumpConfig.interval);
 
-    // animation loop for jump movement
     const step = (time) => {
-        if (this.isDragging) {
-            clearInterval(frameTimer); 
-            this.isJumping = false;    
-            return;                    
-        }
+      if (this.isDragging) {
+        clearInterval(frameTimer);
+        this.isJumping = false;
+        return;
+      }
 
-        const elapsed = (time - startTime) / 1000;
-        const t = Math.min(elapsed / duration, 1); // progress 0-1
+      const elapsed = (time - startTime) / 1000;
+      const t = Math.min(elapsed / duration, 1);
 
-        this.positionX = startX + dx * t;
-        this.positionY = startY + dy * t;
+      this.positionX = startX + dx * t;
+      this.positionY = startY + dy * t;
 
-        if (dx !== 0) this.setFacingFromDelta(dx);
+      if (dx !== 0) this.setFacingFromDelta(dx);
 
-        this.container.style.left = `${this.positionX}px`;
-        this.container.style.top = `${this.positionY}px`;
+      this.container.style.left = `${this.positionX}px`;
+      this.container.style.top = `${this.positionY}px`;
 
-        if (t < 1) {
-            requestAnimationFrame(step);
-        } else {
-            clearInterval(frameTimer); 
-            this.isJumping = false;
-            this.currentEdge = targetEdge;
-            this.updateEdgeClass();
-            this.startEdgeIdle(); // start idle after landing
-        }
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else {
+        clearInterval(frameTimer);
+        this.isJumping = false;
+        this.currentEdge = targetEdge;
+        this.updateEdgeClass();
+        this.startEdgeIdle();
+      }
     };
     requestAnimationFrame(step);
   }
@@ -947,8 +969,16 @@ class Creature {
     this.platforms = Array.from(els).map(el => {
       const r = el.getBoundingClientRect();
       return { el, left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height };
-    }).filter(p => p.width > 0)
+    }).filter(p => p.width > 0 && p.height > 0 && el_visible(p.el) && !el_sticky(p.el))
       .sort((a, b) => a.top - b.top);
+
+    function el_visible(el) {
+      const s = window.getComputedStyle(el);
+      return s.display !== 'none' && s.visibility !== 'hidden' && s.opacity !== '0';
+    }
+    function el_sticky(el) {
+      return window.getComputedStyle(el).position === 'sticky';
+    }
   }
 
   findSurfaceBelow(centerX, feetY) {
@@ -988,9 +1018,16 @@ class Creature {
       return;
     }
     const r = el.getBoundingClientRect();
-    if (r.width === 0) {
+    if (r.width === 0 || r.height === 0 ||
+        r.bottom < -200 || r.top > window.innerHeight + 200 ||
+        r.right < -200 || r.left > window.innerWidth + 200) {
       this.currentPlatform = null;
       this.currentEdge = 'bottom';
+      this.attachedToViewport = true;
+      this.positionY = window.innerHeight - this.containerHeight;
+      this.positionX = Math.max(0, Math.min(this.positionX, window.innerWidth - this.containerWidth));
+      this.container.style.left = `${this.positionX}px`;
+      this.container.style.top = `${this.positionY}px`;
       this.updateEdgeClass();
       this.fallToBottom();
       return;
@@ -1012,8 +1049,7 @@ class Creature {
       this.positionY = r.bottom;
       this.positionX = Math.max(r.left, Math.min(this.positionX, r.right - this.containerWidth));
     }
-    this.container.style.left = `${this.positionX}px`;
-    this.container.style.top = `${this.positionY}px`;
+    this.applyEdgeOffset();
   }
 
   // tab change detection ---------------------------------------------------
@@ -1058,8 +1094,8 @@ class Creature {
     const speed = this.spriteConfig.jumpspeed * 1.5;
     const excludeEdge = fromSide;
 
-    // ~25% chance to crash into the opposite wall instead of targeting
-    const willCrash = Math.random() < 0.25;
+    // ~10% chance to crash into the opposite wall instead of targeting
+    const willCrash = Math.random() < 0.10;
 
     // start off-screen, random Y in middle 60% of viewport
     const startX = fromSide === 'left' ? -this.containerWidth * 2 : window.innerWidth + this.containerWidth;
@@ -1082,6 +1118,7 @@ class Creature {
     let target = null;
     let validateTimer = 0;
     let elapsed = 0;
+    let decisionX = null; // X at the moment of decision — no going back past this
 
     // frame animation — use jump sprite for active flight
     let activeCfg = jumpCfg; // start with jump (active flying pose)
@@ -1167,13 +1204,14 @@ class Creature {
             const closestX = Math.max(p.left, Math.min(charCX, p.right));
             const closestY = Math.max(p.top, Math.min(charCY, p.bottom));
             const dist = Math.hypot(charCX - closestX, charCY - closestY);
-            if (dist < 200 && Math.random() < 0.08) {
+            if (dist < 200 && Math.random() < 0.15) {
               const edgeTarget = this._pickClosestPlatformEdge(p, charCX, charCY);
               // only grab if target is in the flight direction (not behind us)
               const grabDx = edgeTarget.x - this.positionX;
               if (Math.sign(grabDx) === Math.sign(vx) || Math.abs(grabDx) < 50) {
                 phase = 'targeting';
                 target = edgeTarget;
+                decisionX = this.positionX;
                 validateTimer = 0;
                 break;
               }
@@ -1183,7 +1221,8 @@ class Creature {
 
         if (!willCrash && phase === 'horizontal' && elapsed >= horizontalDuration) {
           phase = 'targeting';
-          target = this.pickFlyTarget(excludeEdge, fromSide, this.positionX);
+          decisionX = this.positionX;
+          target = this.pickFlyTarget(excludeEdge, fromSide, decisionX, this.positionX, this.positionY);
           validateTimer = 0;
         }
       } else {
@@ -1258,7 +1297,7 @@ class Creature {
           validateTimer = 0;
           if ((target.type === 'platform' || target.type === 'platform-edge') && target.platform?.el) {
             if (!target.platform.el.isConnected || target.platform.el.getBoundingClientRect().width === 0) {
-              const newTarget = this.pickFlyTarget(excludeEdge, fromSide, this.positionX);
+              const newTarget = this.pickFlyTarget(excludeEdge, fromSide, decisionX, this.positionX, this.positionY);
               // only accept if new target doesn't reverse horizontal direction
               const newDx = newTarget.x - this.positionX;
               if (Math.sign(newDx) === Math.sign(vx) || Math.abs(newDx) < 50) {
@@ -1288,7 +1327,7 @@ class Creature {
                 target.y = newY;
               } else {
                 // platform shifted too much (scroll/layout change) — re-pick forward target
-                const newTarget = this.pickFlyTarget(excludeEdge, fromSide, this.positionX);
+                const newTarget = this.pickFlyTarget(excludeEdge, fromSide, decisionX, this.positionX, this.positionY);
                 const newDx = newTarget.x - this.positionX;
                 if (Math.sign(newDx) === Math.sign(vx) || Math.abs(newDx) < 50) {
                   target = newTarget;
@@ -1317,7 +1356,7 @@ class Creature {
     const candidates = [
       { edge: 'top', x: Math.max(p.left, Math.min(charX - this.containerWidth / 2, p.right - this.containerWidth)), y: Math.max(0, p.top - this.containerHeight) },
     ];
-    if (p.height > this.containerHeight * 1.5) {
+    if (p.height > this.containerHeight) {
       candidates.push(
         { edge: 'left', x: p.left, y: Math.max(p.top, Math.min(charY - this.containerHeight / 2, p.bottom - this.containerHeight)) },
         { edge: 'right', x: p.right - this.containerWidth, y: Math.max(p.top, Math.min(charY - this.containerHeight / 2, p.bottom - this.containerHeight)) },
@@ -1331,11 +1370,15 @@ class Creature {
     if (best.edge === 'top') {
       return { type: 'platform', x: best.x, y: best.y, platform: p };
     }
+    if (best.edge === 'bottom-surface') {
+      return { type: 'platform-edge', edge: 'bottom-surface', x: best.x, y: best.y, platform: p };
+    }
     return { type: 'platform-edge', edge: best.edge, x: best.x, y: best.y, platform: p };
   }
 
   // pick a random fly target: platform, viewport bottom, or edge (excluding entry side)
-  pickFlyTarget(excludeEdge, fromSide, forwardMinX) {
+  // charX/charY = current character position for distance-weighted selection
+  pickFlyTarget(excludeEdge, fromSide, forwardMinX, charX, charY) {
     let options = [];
 
     // visible platforms
@@ -1353,7 +1396,7 @@ class Creature {
         platform: p,
       });
       // platform sides (only if tall enough)
-      if (p.height > this.containerHeight * 1.5) {
+      if (p.height > this.containerHeight) {
         // left side
         options.push({
           type: 'platform-edge', edge: 'left',
@@ -1366,13 +1409,6 @@ class Creature {
           type: 'platform-edge', edge: 'right',
           x: p.right - this.containerWidth,
           y: p.top + Math.random() * Math.max(0, p.height - this.containerHeight),
-          platform: p,
-        });
-        // bottom surface
-        options.push({
-          type: 'platform-edge', edge: 'bottom-surface',
-          x: p.left + Math.random() * Math.max(0, p.width - this.containerWidth),
-          y: p.bottom,
           platform: p,
         });
       }
@@ -1418,12 +1454,13 @@ class Creature {
       return options[Math.floor(Math.random() * options.length)];
     }
 
-    // distance-weighted selection: closer to entry side = higher chance
-    const entryX = fromSide === 'left' ? 0 : window.innerWidth;
-    const maxDist = window.innerWidth;
+    // distance-weighted selection: closer to character = much higher chance
+    const cx = charX !== undefined ? charX : (fromSide === 'left' ? 0 : window.innerWidth);
+    const cy = charY !== undefined ? charY : window.innerHeight * 0.5;
     const weights = options.map(opt => {
-      const dist = Math.abs(opt.x - entryX);
-      return Math.max(0.1, 1 - dist / maxDist);
+      const dist = Math.hypot(opt.x - cx, opt.y - cy);
+      // steep inverse: nearby platforms get much higher weight
+      return 1 / (1 + dist / 80);
     });
     const totalWeight = weights.reduce((s, w) => s + w, 0);
     let r = Math.random() * totalWeight;
@@ -1546,16 +1583,15 @@ class Creature {
 
       if (contentY < endY) {
           // edge grab during fall: check for nearby platform edges
-          if (Math.random() < 0.06) {
+          if (Math.random() < 0.10) {
             this.scanPlatforms();
             const charCX = this.positionX + this.containerWidth / 2;
             const charCY = this.positionY + this.containerHeight / 2;
             for (const p of this.platforms) {
               if (p.top < 0 || p.bottom > window.innerHeight) continue;
-              // only grab side edges (not top/bottom surfaces) during fall
-              if (p.height < this.containerHeight * 1.5) continue;
-              const nearLeft = Math.abs(charCX - p.left) < 80 && charCY >= p.top && charCY <= p.bottom;
-              const nearRight = Math.abs(charCX - p.right) < 80 && charCY >= p.top && charCY <= p.bottom;
+              if (p.height < this.containerHeight) continue;
+              const nearLeft = Math.abs(charCX - p.left) < 100 && charCY >= p.top && charCY <= p.bottom;
+              const nearRight = Math.abs(charCX - p.right) < 100 && charCY >= p.top && charCY <= p.bottom;
               if (nearLeft || nearRight) {
                 clearInterval(this.frameTimer);
                 this.frameTimer = null;
@@ -2176,13 +2212,13 @@ class Creature {
 
     // platform-specific edge behavior (on side/bottom of a platform element)
     if (this.currentPlatform && this.currentEdge !== 'bottom') {
-        this.platformEdgeAction();
-        return;
+      this.platformEdgeAction();
+      return;
     }
 
     if (['top', 'left', 'right'].includes(this.currentEdge)) {
-        this.edgeAction();
-        return;
+      this.edgeAction();
+      return;
     }
 
     const flyCooldown = performance.now() - (this._landedAt || 0) < 5000;
@@ -2210,7 +2246,7 @@ class Creature {
           // pick random target surface: top, left, right, or bottom
           const edges = [undefined]; // undefined = top (default)
           if (p.height > this.containerHeight * 1.5) {
-            edges.push('left', 'right', 'bottom-surface');
+            edges.push('left', 'right');
           }
           const edge = edges[Math.floor(Math.random() * edges.length)];
           this.flyToPlatform(p, edge);
@@ -2379,14 +2415,14 @@ class Creature {
     if(this.frameTimer) clearInterval(this.frameTimer);
 
     this.frameTimer=setInterval(()=>{
-        this.currentFrame=f=(f+1)%frames.length;
-        this.img.src=frames[f];
-        if(f===frames.length-1 && ++playCount>=loops){
-            clearInterval(this.frameTimer);
-            this.frameTimer=null;
-            this.currentAction=null;
-            this.actionCompletionTimer=setTimeout(onComplete,0);
-        }
+      this.currentFrame=f=(f+1)%frames.length;
+      this.img.src=frames[f];
+      if(f===frames.length-1 && ++playCount>=loops){
+        clearInterval(this.frameTimer);
+        this.frameTimer=null;
+        this.currentAction=null;
+        this.actionCompletionTimer=setTimeout(onComplete,0);
+      }
     }, interval);
   }
 

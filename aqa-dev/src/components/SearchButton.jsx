@@ -4,6 +4,7 @@ export function SearchButton({ q }) {
       href={`https://www.google.com/search?q=${encodeURIComponent(q)}`}
       target="_blank"
       rel="noopener noreferrer"
+      className="glow-btn"
       style={{
         display: "inline-flex",
         width: "fit-content",
@@ -19,6 +20,7 @@ export function SearchButton({ q }) {
         cursor: "pointer",
         textDecoration: "none",
         maxWidth: "100%",
+        "--gc": "#58A6FF20",
       }}
     >
       <svg
@@ -37,10 +39,12 @@ export function SearchButton({ q }) {
         />
       </svg>
       <span
+        className="lava-s"
         style={{
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
+          backgroundImage: "linear-gradient(90deg,#58A6FF,#6DB4FF,#4C96FF,#58A6FF)",
         }}
       >
         {q}

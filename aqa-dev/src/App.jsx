@@ -186,28 +186,123 @@ export default function App() {
 
   const mn = "'JetBrains Mono',monospace";
 
+  // lava lamp color variants for each base hex color
+  const lavaGrad = (hex) => {
+    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    const lighter = `rgb(${Math.min(255,r+40)},${Math.min(255,g+40)},${Math.min(255,b+40)})`;
+    const warmer = `rgb(${Math.min(255,r+30)},${Math.max(0,g-20)},${Math.max(0,b-30)})`;
+    const deeper = `rgb(${Math.max(0,r-25)},${Math.max(0,g-15)},${Math.max(0,b-10)})`;
+    return `linear-gradient(90deg,${hex},${lighter},${warmer},${deeper},${lighter},${hex})`;
+  };
+  const lavaSub = (hex) => {
+    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    const l = `rgb(${Math.min(255,r+15)},${Math.min(255,g+15)},${Math.min(255,b+15)})`;
+    const w = `rgb(${Math.min(255,r+10)},${Math.max(0,g-8)},${Math.max(0,b-10)})`;
+    return `linear-gradient(90deg,${hex},${l},${w},${hex})`;
+  };
+
+  const synColors = { kw: "#569CD6", str: "#CE9178", num: "#B5CEA8", bi: "#569CD6", obj: "#4EC9B0", op: "#D4D4D4", fn: "#DCDCAA", plain: "#E6EDF3" };
+  const synRe = /('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"|`[^`]*`|\b(?:const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|new|class|import|export|from|async|await|try|catch|throw|typeof|instanceof|of|in|default)\b|\b(?:true|false|null|undefined|NaN|this)\b|\b(?:console|document|window|Math|Promise|Array|Object|String|Number|Error|JSON|Date|RegExp|Map|Set)\b|\b\d+(?:\.\d+)?\b|=>|===|!==|\.{3}|&&|\|\||\?\?)/g;
+  const kwSet = new Set(["const","let","var","function","return","if","else","for","while","do","switch","case","break","continue","new","class","import","export","from","async","await","try","catch","throw","typeof","instanceof","of","in","default"]);
+  const biSet = new Set(["true","false","null","undefined","NaN","this"]);
+  const objSet = new Set(["console","document","window","Math","Promise","Array","Object","String","Number","Error","JSON","Date","RegExp","Map","Set"]);
+  const synHL = (code, key) => {
+    const spans = []; let last = 0; let m;
+    synRe.lastIndex = 0;
+    while ((m = synRe.exec(code)) !== null) {
+      if (m.index > last) spans.push(<span key={`${key}p${last}`} style={{ color: synColors.plain }}>{code.slice(last, m.index)}</span>);
+      const t = m[0]; let c = synColors.plain;
+      if (/^['"`]/.test(t)) c = synColors.str;
+      else if (kwSet.has(t)) c = synColors.kw;
+      else if (biSet.has(t)) c = synColors.bi;
+      else if (objSet.has(t)) c = synColors.obj;
+      else if (/^\d/.test(t)) c = synColors.num;
+      else if (/^(=>|===|!==|\.{3}|&&|\|\||\?\?)$/.test(t)) c = synColors.op;
+      spans.push(<span key={`${key}t${m.index}`} style={{ color: c }}>{t}</span>);
+      last = synRe.lastIndex;
+    }
+    if (last < code.length) spans.push(<span key={`${key}e`} style={{ color: synColors.plain }}>{code.slice(last)}</span>);
+    return spans.length ? spans : code;
+  };
+  const abbrRe = /(?<![a-zA-Z])([A-Z][A-Z0-9]{1,}(?:\/[A-Z0-9]+)*)(?![a-zA-Z])/g;
+  const hlAbbr = (text, key) => {
+    const res = []; let last = 0; let m;
+    abbrRe.lastIndex = 0;
+    while ((m = abbrRe.exec(text)) !== null) {
+      if (m.index > last) res.push(text.slice(last, m.index));
+      res.push(<span key={`${key}${m.index}`} style={{ color: "#B1BAC4" }}>{m[0]}</span>);
+      last = abbrRe.lastIndex;
+    }
+    if (last === 0) return text;
+    if (last < text.length) res.push(text.slice(last));
+    return res;
+  };
+  const fmtText = (text, key) => {
+    const parts = text.split(/(\*\*[^*]+\*\*)/g);
+    return parts.flatMap((p, i) => {
+      if (p.startsWith("**") && p.endsWith("**")) {
+        return <span key={`${key}b${i}`} style={{ color: "#E6EDF3", fontWeight: 500, borderBottom: "1px dotted #484F58" }}>{p.slice(2, -2)}</span>;
+      }
+      return hlAbbr(p, `${key}a${i}`);
+    });
+  };
+  const fmtCode = (code) => {
+    if (code.length < 35 || !code.includes('{')) return code;
+    // don't expand single-statement blocks (e.g. function foo() { return x; })
+    const inner = code.slice(code.indexOf('{') + 1, code.lastIndexOf('}'));
+    if ((inner.match(/;/g) || []).length < 2) return code;
+    let r = '', ind = 0;
+    for (let i = 0; i < code.length; i++) {
+      const ch = code[i];
+      if (ch === '{') {
+        ind++;
+        const sp = r.length > 0 && !r.endsWith(' ') && !r.endsWith('\n') ? ' ' : '';
+        r += sp + '{\n' + '  '.repeat(ind);
+        while (i + 1 < code.length && code[i + 1] === ' ') i++;
+      } else if (ch === '}') {
+        ind = Math.max(0, ind - 1);
+        if (!r.endsWith('\n')) r += '\n';
+        r += '  '.repeat(ind) + '}';
+      } else if (ch === ';' && ind > 0 && i + 1 < code.length && code[i + 1] !== '}' && code[i + 1] !== '\n') {
+        r += ';\n' + '  '.repeat(ind);
+        while (i + 1 < code.length && code[i + 1] === ' ') i++;
+      } else if (ch === ' ' && r.endsWith('\n')) {
+        // skip leading spaces after newline (we add our own indentation)
+      } else {
+        r += ch;
+      }
+    }
+    return r;
+  };
   const formatDesc = (text) => {
     if (!text) return text;
     const parts = text.split(/(`[^`]+`)/g);
     return parts.map((p, i) => {
       if (p.startsWith("`") && p.endsWith("`")) {
+        const raw = p.slice(1, -1);
+        const fmt = fmtCode(raw);
+        const isBlock = fmt !== raw;
         return (
           <code
             key={i}
             style={{
               fontFamily: mn,
               background: "#1C2128",
-              padding: "1px 5px",
-              borderRadius: 3,
-              color: "#E6EDF3",
+              padding: isBlock ? "6px 10px" : "1px 5px",
+              borderRadius: isBlock ? 5 : 3,
               fontSize: 11,
+              display: isBlock ? "block" : "inline",
+              whiteSpace: isBlock ? "pre" : "normal",
+              margin: isBlock ? "4px 0" : undefined,
+              overflowX: isBlock ? "auto" : undefined,
+              lineHeight: isBlock ? "18px" : undefined,
             }}
           >
-            {p.slice(1, -1)}
+            {synHL(fmt, `c${i}`)}
           </code>
         );
       }
-      return p;
+      return <span key={i}>{fmtText(p, `t${i}`)}</span>;
     });
   };
 
@@ -249,6 +344,7 @@ export default function App() {
         style={{
           borderRadius: 7,
           background: d ? c + "06" : "transparent",
+          transition: "background .4s ease",
         }}
       >
         <div
@@ -274,7 +370,7 @@ export default function App() {
             }}
           >
             <div
-              className={d ? "check-pop" : undefined}
+              className={d ? "lava-glow" : undefined}
               style={{
                 width: 17,
                 height: 17,
@@ -286,6 +382,7 @@ export default function App() {
                 alignItems: "center",
                 justifyContent: "center",
                 transition: "background .2s, border .2s",
+                "--gc": c + "60",
               }}
             >
               {d && (
@@ -306,29 +403,33 @@ export default function App() {
               flex: 1,
               fontSize: 13,
               lineHeight: "19px",
-              color: d ? "#484F58" : "#C9D1D9",
+              color: d ? "#6E7681" : "#C9D1D9",
               textDecoration: d ? "line-through" : "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              flexWrap: "wrap",
             }}
           >
             {t.text}
+            {notes[t.id] && (
+              <svg
+                width={10}
+                height={10}
+                viewBox="0 0 24 24"
+                fill="none"
+                style={{ flexShrink: 0, opacity: 0.6 }}
+              >
+                <path
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931z"
+                  stroke={c}
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
           </span>
-          {notes[t.id] && (
-            <svg
-              width={12}
-              height={12}
-              viewBox="0 0 24 24"
-              fill="none"
-              style={{ flexShrink: 0 }}
-            >
-              <path
-                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931z"
-                stroke="#484F58"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          )}
           <span
             style={{
               fontSize: 10,
@@ -366,7 +467,7 @@ export default function App() {
                   style={{
                     fontSize: 12,
                     lineHeight: "17px",
-                    color: "#8B949E",
+                    color: "#9CA3AF",
                     margin: "0 0 8px",
                     whiteSpace: "pre-line",
                   }}
@@ -431,8 +532,8 @@ export default function App() {
         margin: "8px 0",
       }}
     >
-      <div style={{ fontSize: 13, lineHeight: "20px", color: m.c }}>
-        {m.text}
+      <div style={{ fontSize: 13, lineHeight: "20px" }}>
+        <span className="lava-s" style={{ backgroundImage: lavaSub(m.c) }}>{m.text}</span>
       </div>
     </div>
   );
@@ -463,7 +564,7 @@ export default function App() {
         paddingBottom: 20,
       }}
     >
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');*{box-sizing:border-box;margin:0;padding:0}html{scrollbar-gutter:stable}::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#161B22}::-webkit-scrollbar-thumb{background:#30363D;border-radius:3px}@keyframes checkPop{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}.check-pop{animation:checkPop .25s ease}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');*{box-sizing:border-box;margin:0;padding:0}html{scrollbar-gutter:stable}::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#161B22}::-webkit-scrollbar-thumb{background:#30363D;border-radius:3px}@keyframes checkPop{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}.check-pop{animation:checkPop .25s ease}@keyframes lavaFlow{0%{background-position:0% 50%}20%{background-position:80% 50%}40%{background-position:160% 50%}60%{background-position:260% 50%}80%{background-position:340% 50%}100%{background-position:400% 50%}}.lava{background-size:400% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:lavaFlow 18s ease-in-out infinite alternate}.lava-s{background-size:400% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:lavaFlow 25s ease-in-out infinite alternate}@keyframes lavaGlow{0%,100%{filter:brightness(1);box-shadow:0 0 3px var(--gc,transparent)}35%{filter:brightness(1.15);box-shadow:0 0 8px var(--gc,transparent)}65%{filter:brightness(0.92);box-shadow:0 0 4px var(--gc,transparent)}}.lava-glow{animation:checkPop .25s ease,lavaGlow 12s ease-in-out infinite}@keyframes glowPulse{0%,100%{box-shadow:0 0 2px var(--gc,transparent)}50%{box-shadow:0 0 6px var(--gc,transparent)}}.glow-btn{animation:glowPulse 6s ease-in-out infinite}@keyframes lavaPulse{0%,100%{filter:brightness(1) drop-shadow(0 0 1px var(--gc,transparent))}40%{filter:brightness(1.15) drop-shadow(0 0 3px var(--gc,transparent))}70%{filter:brightness(0.9) drop-shadow(0 0 1px var(--gc,transparent))}}`}</style>
 
       {/* Header */}
       <div
@@ -523,6 +624,7 @@ export default function App() {
                     backgroundSize: "400%",
                     width: `${pct}%`,
                     transition: "width .5s",
+                    animation: pct < 100 ? "lavaFlow 18s ease-in-out infinite alternate" : "none",
                   }}
                 />
               </div>
@@ -618,12 +720,11 @@ export default function App() {
                         justifyContent: "center",
                         fontSize: 14,
                         fontWeight: 700,
-                        color: mo.color,
                         fontFamily: mn,
                         flexShrink: 0,
                       }}
                     >
-                      {mo.month}
+                      <span className="lava" style={{ backgroundImage: lavaGrad(mo.color) }}>{mo.month}</span>
                     </div>
                     <div style={{ flex: 1 }}>
                       <div
@@ -647,7 +748,7 @@ export default function App() {
                         flexShrink: 0,
                       }}
                     >
-                      <svg width={38} height={38} viewBox="0 0 38 38">
+                      <svg width={38} height={38} viewBox="0 0 38 38" style={{ "--gc": mo.color + "40", animation: st.p > 0 && st.p < 100 ? "lavaPulse 12s ease-in-out infinite" : "none" }}>
                         <circle
                           cx={19}
                           cy={19}
@@ -723,14 +824,15 @@ export default function App() {
                                 }}
                               >
                                 <span
+                                  className="lava"
                                   style={{
                                     fontSize: 10,
                                     fontWeight: 600,
                                     fontFamily: mn,
-                                    color: mo.color,
-                                    background: mo.color + "15",
+                                    backgroundImage: lavaGrad(mo.color),
                                     padding: "2px 6px",
                                     borderRadius: 3,
+                                    position: "relative",
                                   }}
                                 >
                                   {w.week}
@@ -874,9 +976,9 @@ export default function App() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.05 }}
               transition={{
-                layout: { type: "spring", stiffness: 30, damping: 12, mass: 2 },
-                opacity: { duration: 0.6, ease: "easeInOut" },
-                scale: { duration: 0.5, ease: "easeInOut" },
+                layout: { type: "spring", stiffness: 14, damping: 11, mass: 4 },
+                opacity: { duration: 0.25, ease: "easeOut" },
+                scale: { duration: 0.2, ease: "easeOut" },
               }}
               style={{
                 display: "flex",
@@ -889,11 +991,12 @@ export default function App() {
             >
               <div style={{ flex: 1, minWidth: 0 }}>
                 <span
+                  className="lava-s"
                   style={{
                     fontWeight: 600,
-                    color: isLearned ? "#3CC78C" : "#58A6FF",
                     fontSize: 12,
                     fontFamily: mn,
+                    backgroundImage: isLearned ? lavaSub("#3CC78C") : lavaSub("#58A6FF"),
                   }}
                 >
                   {g.t}
@@ -910,7 +1013,7 @@ export default function App() {
               </div>
               <div
                 onClick={(e) => tgk(g.t, e)}
-                className={isLearned ? "check-pop" : undefined}
+                className={isLearned ? "lava-glow" : undefined}
                 style={{
                   width: 17,
                   height: 17,
@@ -923,6 +1026,7 @@ export default function App() {
                   justifyContent: "center",
                   cursor: "pointer",
                   transition: "background .2s, border .2s",
+                  "--gc": "#3CC78C60",
                 }}
               >
                 {isLearned && (
@@ -1193,10 +1297,10 @@ export default function App() {
 
           return sections.map((sec, si) => (
             <div key={si} style={{ marginBottom: 14 }}>
-              <div style={{
+              <div className="lava-s" style={{
                 fontSize: 10,
                 fontWeight: 600,
-                color: sec.color,
+                backgroundImage: lavaSub(sec.color),
                 textTransform: "uppercase",
                 letterSpacing: 1,
                 marginBottom: 6,
@@ -1212,36 +1316,41 @@ export default function App() {
                 {sec.items.map((t) => (
                   <div
                     key={t.id}
-                    onClick={() => goToTask(t.id)}
                     style={{
                       padding: "8px 0",
                       borderBottom: "1px solid #21262D",
-                      cursor: "pointer",
                     }}
                   >
                     <div style={{
-                      fontSize: 12,
-                      fontWeight: 600,
+                      fontSize: 13,
                       color: "#C9D1D9",
-                      marginBottom: 4,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}>
-                      <span>{t.text}</span>
-                      <svg width={10} height={10} viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0, opacity: 0.4 }}>
-                        <path d="M4.5 2L8.5 6L4.5 10" stroke="#8B949E" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    <div style={{
-                      fontSize: 12,
-                      color: "#8B949E",
-                      lineHeight: "17px",
+                      lineHeight: "19px",
                       whiteSpace: "pre-line",
                       paddingLeft: 10,
-                      borderLeft: `2px solid ${sec.color}40`,
+                      borderLeft: `2px solid ${sec.color}60`,
+                      marginBottom: 6,
                     }}>
                       {notes[t.id]}
+                    </div>
+                    <div
+                      onClick={() => goToTask(t.id)}
+                      style={{
+                        fontSize: 11,
+                        color: "#8B949E",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                        cursor: "pointer",
+                        paddingLeft: 10,
+                      }}
+                    >
+                      <svg width={9} height={9} viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, opacity: 0.6 }}>
+                        <path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931z" stroke="#8B949E" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <span style={{ borderBottom: "1px dotted #484F58" }}>{t.text}</span>
+                      <svg width={8} height={8} viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0, opacity: 0.3 }}>
+                        <path d="M4.5 2L8.5 6L4.5 10" stroke="#484F58" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
                     </div>
                   </div>
                 ))}

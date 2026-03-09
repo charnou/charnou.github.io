@@ -24,7 +24,9 @@
       "Bash(xargs grep -l -i \"note\")",
       "WebFetch(domain:www.pyxofy.com)",
       "WebFetch(domain:dev.to)",
-      "WebFetch(domain:web.dev)"
+      "WebFetch(domain:web.dev)",
+      "Bash(python3:*)",
+      "Bash(grep -v \"^[0-9]*:        //\")"
     ]
   }
 }
