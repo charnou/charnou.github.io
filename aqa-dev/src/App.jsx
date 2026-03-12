@@ -1295,7 +1295,58 @@ export default function App() {
             sections.push({ title: "Советы", color: "#F778BA", items: advItems });
           }
 
-          return sections.map((sec, si) => (
+          const downloadNotes = () => {
+            let text = "AQA ROADMAP — КОНСПЕКТ\n";
+            text += "=".repeat(40) + "\n";
+            text += `Дата: ${new Date().toLocaleDateString("ru-RU")}\n`;
+            text += `Всего заметок: ${Object.keys(notes).length}\n\n`;
+
+            sections.forEach((sec) => {
+              text += "\n" + "─".repeat(40) + "\n";
+              text += sec.title.toUpperCase() + "\n";
+              text += "─".repeat(40) + "\n\n";
+              sec.items.forEach((t) => {
+                text += `${t.text}\n- - -\n`;
+                text += notes[t.id] + "\n\n";
+              });
+            });
+
+            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `aqa-conspect-${new Date().toISOString().slice(0, 10)}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+          };
+
+          return <>
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
+              <button
+                onClick={downloadNotes}
+                style={{
+                  background: "none",
+                  border: "1px solid #30363D",
+                  borderRadius: 8,
+                  color: "#8B949E",
+                  fontSize: 11,
+                  padding: "5px 12px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                  transition: "border-color 0.2s, color 0.2s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#58A6FF"; e.currentTarget.style.color = "#C9D1D9"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#30363D"; e.currentTarget.style.color = "#8B949E"; }}
+              >
+                <svg width={12} height={12} viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Скачать конспект
+              </button>
+            </div>
+            {sections.map((sec, si) => (
             <div key={si} style={{ marginBottom: 14 }}>
               <div className="lava-s" style={{
                 fontSize: 10,
@@ -1356,7 +1407,8 @@ export default function App() {
                 ))}
               </div>
             </div>
-          ));
+          ))}
+          </>;
         })()}
 
        </motion.div>
