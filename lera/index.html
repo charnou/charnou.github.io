@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Твоё здоровье — разбор ситуации</title>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300;0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F3EE;
+    --bg-card: #FFFFFF;
+    --bg-accent: #EDE7DF;
+    --text: #3D3330;
+    --text-soft: #6B5E59;
+    --text-muted: #9B8E88;
+    --accent: #7B8F6A;
+    --accent-light: #E8EDE4;
+    --accent-dark: #5A6E4A;
+    --warm: #C48B5C;
+    --warm-light: #F5EBE0;
+    --rose: #B07A7A;
+    --rose-light: #F2E4E4;
+    --blue: #6A7F8F;
+    --blue-light: #E4EBF0;
+    --violet: #8B7AAF;
+    --violet-light: #EDE4F2;
+    --shadow: 0 2px 20px rgba(61, 51, 48, 0.06);
+    --shadow-hover: 0 4px 30px rgba(61, 51, 48, 0.1);
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; font-size: 16px; min-height: 100vh; scrollbar-color: var(--rose) var(--bg-accent); }
+  ::-webkit-scrollbar { width: 14px; }
+  ::-webkit-scrollbar-track { background: var(--bg-accent); border-radius: 100px; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--rose), var(--warm)); border-radius: 100px; border: 2px solid var(--bg-accent); min-height: 120px; }
+  ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #C47A7A, var(--warm)); }
+  .top-strip { height: 4px; background: linear-gradient(90deg, var(--accent), var(--warm), var(--rose), var(--blue), var(--violet)); }
+  .container { max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; }
+  header { text-align: center; margin-bottom: 48px; }
+  header .leaf { display: inline-block; font-size: 32px; margin-bottom: 12px; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  h1 { font-family: 'Literata', serif; font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 8px; letter-spacing: -0.3px; }
+  header p { color: var(--text-soft); font-size: 15px; max-width: 500px; margin: 0 auto; }
+  .section { background: var(--bg-card); border-radius: var(--radius); padding: 32px; margin-bottom: 24px; box-shadow: var(--shadow); transition: box-shadow 0.3s ease; position: relative; overflow: hidden; }
+  .section:hover { box-shadow: var(--shadow-hover); }
+  .section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .section.green::before { background: var(--accent); }
+  .section.warm::before { background: var(--warm); }
+  .section.rose::before { background: var(--rose); }
+  .section.blue::before { background: var(--blue); }
+  .section.violet::before { background: var(--violet); }
+  .section-icon { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; font-size: 20px; margin-bottom: 16px; }
+  .green .section-icon { background: var(--accent-light); }
+  .warm .section-icon { background: var(--warm-light); }
+  .rose .section-icon { background: var(--rose-light); }
+  .blue .section-icon { background: var(--blue-light); }
+  .violet .section-icon { background: var(--violet-light); }
+  h2 { font-family: 'Literata', serif; font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+  .section p { margin-bottom: 14px; color: var(--text-soft); }
+  .section p:last-child { margin-bottom: 0; }
+  .hl { padding: 14px 18px; border-radius: 12px; margin: 16px 0; font-size: 15px; line-height: 1.7; }
+  .hl-green { background: var(--accent-light); color: var(--accent-dark); }
+  .hl-warm { background: var(--warm-light); color: #8B6340; }
+  .hl-rose { background: var(--rose-light); color: #8B5555; }
+  .hl-blue { background: var(--blue-light); color: #4A6070; }
+  .hl-violet { background: var(--violet-light); color: #5E4F7A; }
+  .med-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 16px 0; }
+  .med-card { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; background: var(--bg); border-radius: 12px; }
+  .med-emoji { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .med-info { flex: 1; }
+  .med-name { font-weight: 600; font-size: 15px; color: var(--text); }
+  .med-desc { font-size: 14px; color: var(--text-muted); margin-top: 2px; line-height: 1.6; }
+  .idea-card { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; background: var(--bg); border-radius: 12px; margin-bottom: 12px; }
+  .idea-card:last-child { margin-bottom: 0; }
+  .idea-tag { flex-shrink: 0; padding: 3px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; white-space: nowrap; }
+  .tag-top { background: #D4EDDA; color: #2D6A4F; }
+  .tag-alt { background: var(--blue-light); color: var(--blue); }
+  .tag-easy { background: var(--warm-light); color: #8B6340; }
+  .idea-info { flex: 1; }
+  .idea-name { font-weight: 600; font-size: 15px; color: var(--text); margin-bottom: 4px; }
+  .idea-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+  .talk-points { margin: 16px 0; }
+  .talk-point { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--bg-accent); }
+  .talk-point:last-child { border-bottom: none; }
+  .talk-num { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+  .blue .talk-num { background: var(--blue-light); color: var(--blue); }
+  .talk-text { font-size: 15px; color: var(--text-soft); line-height: 1.65; }
+  .support-banner { background: linear-gradient(135deg, var(--accent-light), var(--warm-light)); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 24px; text-align: center; font-size: 15px; color: var(--text-soft); line-height: 1.75; box-shadow: var(--shadow); }
+  .support-banner .emoji { font-size: 24px; display: block; margin-bottom: 8px; }
+  .support-banner strong { color: var(--text); }
+  .friends-section { background: linear-gradient(135deg, #FFF8F0, #FFF0F5, #F0F4FF); border-radius: var(--radius); padding: 32px; margin-bottom: 24px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+  .friends-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--warm), var(--rose), var(--violet)); }
+  .friends-section p { color: var(--text-soft); margin-bottom: 14px; }
+  .friends-quote { font-family: 'Literata', serif; font-style: italic; font-size: 17px; color: var(--text); line-height: 1.75; margin: 16px 0; padding-left: 18px; border-left: 3px solid var(--rose); }
+  .bottom-note { text-align: center; padding: 32px 20px; color: var(--text-muted); font-size: 15px; line-height: 1.8; }
+  .bottom-note .heart { font-size: 24px; display: block; margin-bottom: 10px; }
+  /* Self-reflection questions */
+  .q-card {
+    padding: 16px 20px;
+    background: var(--bg);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .q-card:last-child { margin-bottom: 0; }
+  .q-icon { font-size: 18px; flex-shrink: 0; margin-top: 3px; }
+  .q-text { font-size: 15px; color: var(--text-soft); line-height: 1.65; }
+  .q-text strong { color: var(--text); }
+  .q-text em { color: var(--text-muted); font-style: normal; font-size: 13px; display: block; margin-top: 4px; }
+
+  /* Floating flowers */
+  .flower {
+    position: fixed;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    font-size: 14px;
+    animation: flowerFall linear forwards;
+    filter: saturate(0.7) brightness(1.1);
+  }
+  @keyframes flowerFall {
+    0% { opacity: 0; transform: translateX(0) translateY(0) rotate(0deg) scale(0.7); }
+    8% { opacity: 0.6; }
+    50% { opacity: 0.5; transform: translateX(40px) translateY(45vh) rotate(180deg) scale(1); }
+    85% { opacity: 0.3; }
+    100% { opacity: 0; transform: translateX(-20px) translateY(95vh) rotate(360deg) scale(0.6); }
+  }
+  @media (max-width: 600px) {
+    .container { padding: 24px 16px 60px; }
+    .section, .friends-section { padding: 24px 20px; }
+    h1 { font-size: 24px; }
+    h2 { font-size: 18px; }
+    .idea-card { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="top-strip"></div>
+<div class="container">
+
+  <header>
+    <div class="leaf">🌿</div>
+    <h1>Разбор твоей ситуации</h1>
+    <p>Что происходит, почему так, и что можно предложить врачу</p>
+  </header>
+
+  <div class="support-banner">
+    <span class="emoji">🤍</span>
+    <strong>Ты молодец, что не стала терпеть дальше и пришла за помощью.</strong><br>
+    Это требует настоящей смелости — особенно когда годами привыкаешь справляться в одиночку.
+  </div>
+
+  <div class="section green">
+    <div class="section-icon">🌙</div>
+    <h2>Бессонница и частые пробуждения</h2>
+    <p>То, что ты описываешь — не получалось заснуть по 3–5 часов, пробуждения до 10 раз за ночь — это картина хронической инсомнии. Она часто сопровождает тревожные и депрессивные расстройства и является не отдельной проблемой, а частью общей картины.</p>
+    <p>Мирзатен (миртазапин) — очень логичный выбор: в малых дозах он обладает выраженным седативным эффектом. То, что ты стала быстрее засыпать — это уже работает. Ты это заслужила.</p>
+    <div class="hl hl-green">
+      <strong>Почему ещё просыпаешься?</strong> Две недели — ранний срок. Миртазапин улучшает засыпание быстро, но стабилизация архитектуры сна (чтобы не просыпаться) может занять 3–4 недели. Кроме того, тревожные сны сами по себе будят — и пока тревога не снизится глубже, пробуждения могут оставаться.
+    </div>
+  </div>
+
+  <div class="section warm">
+    <div class="section-icon">💭</div>
+    <h2>Тревожные сны — почему такие яркие</h2>
+    <p>Сны с гибелью близких, войной, утоплением, невозможностью успеть — это классические тревожные сновидения. Они отражают то напряжение, которое нервная система копит днём и пытается «переработать» ночью.</p>
+    <p>При хронической тревоге мозг находится в состоянии гипервозбуждения даже во сне. Это нарушает нормальную фазу REM-сна: вместо того чтобы спокойно обрабатывать эмоции, мозг «застревает» в тревожных сценариях, и сны становятся чрезвычайно яркими и эмоционально заряженными.</p>
+    <div class="hl hl-warm">
+      <strong>Важный нюанс:</strong> СИОЗС (сертралин) могут на первых неделях усиливать яркость сновидений. Это временный эффект. По мере снижения базовой тревоги сны должны стать спокойнее. А если нет — ниже есть конкретное решение, которое можно предложить врачу.
+    </div>
+  </div>
+
+  <div class="section rose">
+    <div class="section-icon">🫁</div>
+    <h2>Утренняя одышка и панические атаки</h2>
+    <p>Пробуждение с сильной одышкой, болью при дыхании и ощущением «сейчас умру» — невролог был прав, это панические атаки. Важная деталь: у тебя они возникали именно при пробуждении.</p>
+    <p>Это <em>ночные/утренние панические атаки</em>. На выходе из сна нервная система резко переключается — и у людей с высоким фоновым уровнем тревоги этот переход запускает каскад: выброс кортизола и адреналина, учащение дыхания, спазм дыхательных мышц. Тело буквально просыпается в режиме «опасность».</p>
+    <div class="hl hl-rose">
+      <strong>Тот факт, что полноценные панические атаки прекратились — серьёзный прогресс.</strong> Сертралин постепенно снижает базовый уровень тревоги, и порог срабатывания паники повышается. Лёгкая одышка после тяжёлого сна — «остаточные» реакции, и они тоже уйдут.
+    </div>
+  </div>
+
+  <div class="support-banner">
+    <span class="emoji">🌸</span>
+    Панические атаки отступили. Сон стал приходить быстрее. Это не случайность —<br>
+    <strong>это твоё тело начинает отпускать то, что копилось годами.</strong>
+  </div>
+
+  <div class="section rose">
+    <div class="section-icon">🤍</div>
+    <h2>Нервные срывы и стремление к физической боли</h2>
+    <p>Кусать себя до крови, впиваться ногтями в кожу, думать о ноже — всё это формы самоповреждения. Это не «слабость» и не «странность». Когда внутренняя эмоциональная боль становится невыносимой, а других способов с ней справиться нет — психика ищет хоть какой-то выход. Физическая боль на короткое время переключает внимание и даёт иллюзию контроля.</p>
+    <p>Тяжело вставать с кровати, частый плач, эмоциональное истощение — всё это вместе с нарушениями сна складывается в единую картину, с которой твой психотерапевт и работает.</p>
+    <div class="hl hl-rose">
+      <strong>Обязательно расскажи врачу</strong> — и про ногти, и про желание причинить себе боль. Не преуменьшай. Врачу важно это знать — это влияет на тактику лечения. Ты заслуживаешь более бережных способов справляться с тем, что внутри. И они существуют — терапия поможет их найти.
+    </div>
+  </div>
+
+  <div class="support-banner">
+    <span class="emoji">🌱</span>
+    Всё, что ты переживаешь — это не приговор и не «такой характер».<br>
+    <strong>Это состояние, которое лечится. И ты уже в процессе.</strong>
+  </div>
+
+  <div class="section blue">
+    <div class="section-icon">💊</div>
+    <h2>Твои текущие препараты</h2>
+    <div class="med-grid">
+      <div class="med-card">
+        <div class="med-emoji">🔵</div>
+        <div class="med-info">
+          <div class="med-name">Позитива (сертралин) — 1 месяц</div>
+          <div class="med-desc">СИОЗС — основной антидепрессант. Снижает тревогу, панику, депрессию. Полный эффект к 6–8 неделе. Терапевтический диапазон — 50–200 мг; если ты на стартовой дозе, часть проблем может уйти при увеличении.</div>
+        </div>
+      </div>
+      <div class="med-card">
+        <div class="med-emoji">🟢</div>
+        <div class="med-info">
+          <div class="med-name">Мирзатен (миртазапин) ¼ таблетки — 2 недели</div>
+          <div class="med-desc">Антидепрессант с сильным седативным эффектом в малых дозах. Именно он помог тебе быстрее засыпать. ¼ таблетки — это ~3.75 мг (минимум). Стандартная «снотворная» доза — 7.5 мг (½ таблетки).</div>
+        </div>
+      </div>
+      <div class="med-card">
+        <div class="med-emoji">🟡</div>
+        <div class="med-info">
+          <div class="med-name">Оксетол (окскарбазепин) — 2 недели</div>
+          <div class="med-desc">Стабилизатор настроения. Сглаживает эмоциональные «пики» — срывы, импульсивность, резкие перепады. Работает как эмоциональный буфер.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section violet">
+    <div class="section-icon">💡</div>
+    <h2>Идеи, которые можно предложить врачу</h2>
+    <p>Это не назначения — это конкретные варианты для обсуждения на приёме.</p>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-top">Топ</div>
+      <div class="idea-info">
+        <div class="idea-name">Празозин — прицельно против кошмаров</div>
+        <div class="idea-desc">Альфа-1 блокатор. Изначально препарат от давления, но в малых дозах (1–2 мг на ночь) доказанно снижает интенсивность и частоту тревожных снов. Подавляет норадреналин во время сна — именно он «раскручивает» тревожные сценарии. Самое специфическое средство, которое существует именно от кошмаров.</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-top">Топ</div>
+      <div class="idea-info">
+        <div class="idea-name">Миртазапин: увеличить до ½ таблетки (7.5 мг)</div>
+        <div class="idea-desc">Ты на ¼ таблетки (~3.75 мг). Парадокс миртазапина: в малых дозах он <em>более</em> седативный, чем в больших, но 3.75 мг может быть просто недостаточно для поддержания сна всю ночь. 7.5 мг — стандартная «снотворная» доза, которая лучше держит непрерывность сна.</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-top">Топ</div>
+      <div class="idea-info">
+        <div class="idea-name">Титрация сертралина вверх</div>
+        <div class="idea-desc">Уточни, на какой ты дозе и есть ли план повышения. Терапевтический диапазон 50–200 мг. Если на стартовой — часть оставшихся симптомов (тревога, паника, кошмары, руминация) может отступить при увеличении. Это стандартный шаг, не экстренная мера. Эффект каждого повышения раскрывается через 2–3 недели.</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-alt">Идея</div>
+      <div class="idea-info">
+        <div class="idea-name">SOS-средство «в кармане» на случай сильной тревоги</div>
+        <div class="idea-desc">Попросить врача выписать что-то для экстренного купирования панических эпизодов — средство, которое можно принять при сильном приступе и не ждать. Бывают варианты с риском зависимости (бензодиазепины — строго ситуативно) и без (бета-блокаторы — снимают физические симптомы: одышку, сердцебиение, дрожь). Даже сам факт, что «таблетка есть с собой» — часто снижает тревогу ожидания.</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-alt">Идея</div>
+      <div class="idea-info">
+        <div class="idea-name">Перенос времени приёма сертралина</div>
+        <div class="idea-desc">Если принимаешь вечером — сертралин может усиливать яркость снов и ночную активность мозга. Перенос на утро иногда решает проблему с кошмарами. Если принимаешь утром и весь день «ватная» — наоборот, вечерний приём может убрать дневную усталость. Спросить врача, что лучше в твоём случае.</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-alt">Идея</div>
+      <div class="idea-info">
+        <div class="idea-name">Базовые анализы крови</div>
+        <div class="idea-desc">Сдать: <strong>ферритин</strong> (не просто «железо» — именно ферритин, он информативнее), <strong>витамин D</strong>, <strong>ТТГ + свободный Т4</strong> (щитовидка), <strong>общий анализ крови</strong>. Дефицит железа и гипотиреоз — две самых частых соматических причины хронической усталости у молодых женщин, и они маскируются под депрессию. Если что-то из этого не в норме — коррекция может дать ощутимый эффект сама по себе.</div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-easy">Учесть</div>
+      <div class="idea-info">
+        <div class="idea-name">Окскарбазепин — уточнить дозу и план</div>
+        <div class="idea-desc">Терапевтический диапазон окскарбазепина 600–1200 мг/сут. Если ты на стартовой дозе 2 недели — он ещё не вышел на рабочий уровень. Спросить: есть ли план титрации? Когда ожидать эффект? Адекватен ли он для моей ситуации или стоит рассмотреть другие стабилизаторы настроения?</div>
+      </div>
+    </div>
+
+    <div class="hl hl-violet">
+      <strong>Самый «точечный» ход прямо сейчас:</strong> празозин от кошмаров + увеличение миртазапина для непрерывности сна + уточнить план титрации по сертралину и окскарбазепину. А ниже — карта направлений по симптомам, чтобы знать стратегию.
+    </div>
+  </div>
+
+  <div class="section warm">
+    <div class="section-icon">🧭</div>
+    <h2>Полная карта: симптом → что лечить → в каком направлении двигаться</h2>
+    <p>Здесь без конкретных названий — только направления, группы и стратегии. Чтобы ты понимала, какие механизмы за что отвечают, и могла обсудить с врачом именно <em>направление</em>, а он уже подберёт конкретный препарат.</p>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-top" style="background: var(--rose-light); color: #8B5555;">Кошмары</div>
+      <div class="idea-info">
+        <div class="idea-name">Тревожные сны, ощущение реальности, пробуждение с паникой</div>
+        <div class="idea-desc">
+          <strong>Что происходит:</strong> во время REM-фазы (фаза сновидений) мозг перерабатывает дневные эмоции. При хронической тревоге норадреналин остаётся повышенным даже во сне → мозг генерирует «аварийные сценарии» вместо нейтральных снов. Сны кажутся реальными, потому что мозг в этот момент работает почти как наяву.<br><br>
+          <strong>Направление лечения:</strong> нужно снизить норадренергическую активность именно в REM-фазе. Для этого существует специальная группа препаратов — <em>альфа-адреноблокаторы</em>. Это единственная группа с прямой доказательной базой против кошмаров (не просто «снотворное»).<br><br>
+          <strong>Что учесть:</strong> антидепрессанты из группы СИОЗС (которые ты уже принимаешь) в первые недели могут сами усиливать яркость сновидений — это временно. Также стоит обсудить с врачом время приёма: утренний приём иногда снижает влияние на сны. Седативный антидепрессант (миртазапин) подавляет REM-фазу, что теоретически должно уменьшать сновидения — если на текущей дозе этого не происходит, это аргумент за коррекцию.<br><br>
+          <strong>Вопрос врачу:</strong> «Есть ли что-то прицельно от кошмаров? Не снотворное, а именно то, что снижает тревожность сновидений?»
+        </div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-top" style="background: var(--accent-light); color: var(--accent-dark);">Сон</div>
+      <div class="idea-info">
+        <div class="idea-name">Частые пробуждения, фрагментированный сон, ощущение что не спала</div>
+        <div class="idea-desc">
+          <strong>Что происходит:</strong> засыпание и удержание сна — разные механизмы. Ты уже засыпаешь быстрее (миртазапин работает), но просыпаешься 5 раз за ночь — значит, мозг не может удержать глубокие фазы сна. Каждое пробуждение «обнуляет» цикл, и ты не добираешь до восстановительных стадий.<br><br>
+          <strong>Направления:</strong><br>
+          • <em>Увеличение текущего седативного АД</em> — возможно, текущая доза слишком мала для удержания сна на всю ночь<br>
+          • <em>Другие седативные антидепрессанты</em> — существуют АД, которые специализируются именно на поддержании непрерывности сна, а не только засыпании<br>
+          • <em>Низкодозовые атипичные антипсихотики</em> — off-label для тревожной инсомнии, когда обычные средства не справляются<br>
+          • <em>Чистые снотворные (Z-препараты)</em> — как временный «мост» на 2–4 недели, пока основная терапия набирает силу. Есть риск привыкания, поэтому только короткий курс<br><br>
+          <strong>Ключевой вопрос врачу:</strong> «Я засыпаю нормально, но просыпаюсь через каждые 2–3 часа. Это проблема засыпания или удержания сна? И что можно сделать именно для второго?»
+        </div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-alt" style="background: var(--blue-light); color: var(--blue);">Тревога</div>
+      <div class="idea-info">
+        <div class="idea-name">Постоянное напряжение, невозможность расслабиться, тревога «на фоне»</div>
+        <div class="idea-desc">
+          <strong>Что происходит:</strong> серотониновая система «не дотягивает» — либо доза текущего антидепрессанта ещё не оптимальна, либо серотонина одного недостаточно и нужно подключить другие нейромедиаторные системы.<br><br>
+          <strong>Направления:</strong><br>
+          • <em>Повышение дозы текущего СИОЗС</em> — самый логичный первый шаг, если ты на стартовой дозе<br>
+          • <em>Добавление анксиолитика без риска зависимости</em> — препараты, работающие через ГАМК-систему или серотониновые рецепторы. Снимают и психическую, и физическую тревогу<br>
+          • <em>Смена класса антидепрессанта</em> (план Б) — если СИОЗС на максимуме и не справляется, существуют антидепрессанты с двойным механизмом (серотонин + норадреналин), которые бывают эффективнее при тревоге + усталости<br><br>
+          <strong>Вопрос врачу:</strong> «На какой я дозе относительно терапевтического диапазона? Есть ли план повышения? Если максимум не поможет — какой следующий шаг?»
+        </div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-alt" style="background: #FFE8E8; color: #A05050;">SOS</div>
+      <div class="idea-info">
+        <div class="idea-name">Острые приступы — когда «накрывает» прямо сейчас</div>
+        <div class="idea-desc">
+          <strong>Что происходит:</strong> симпатическая нервная система резко активируется → выброс адреналина → сердцебиение, одышка, дрожь, ощущение «умру». Основная терапия снижает частоту таких эпизодов, но пока она выходит на полную мощность — нужен «огнетушитель».<br><br>
+          <strong>Два направления:</strong><br>
+          • <em>Препараты, снимающие психическую тревогу</em> — работают быстро (15–30 мин), надёжно обрывают панику. Минус: при регулярном приёме возникает зависимость. Поэтому — строго ситуативно, «таблетка в кармане»<br>
+          • <em>Препараты, снимающие телесные симптомы</em> — не трогают психику, но быстро убирают физику: сердцебиение, дрожь, одышку. Не вызывают зависимости. Особенно подходят для утренних эпизодов с одышкой<br><br>
+          <strong>Вопрос врачу:</strong> «Можно ли иметь при себе что-то на случай сильного приступа — пока основная терапия выходит на режим?»
+        </div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-alt" style="background: var(--violet-light); color: #5E4F7A;">Срывы</div>
+      <div class="idea-info">
+        <div class="idea-name">Эмоциональные «взрывы», импульсивность, самоповреждение, резкие перепады</div>
+        <div class="idea-desc">
+          <strong>Что происходит:</strong> эмоциональная дисрегуляция — мозг не справляется с интенсивностью переживаний и «сбрасывает давление» через импульсивные действия. Самоповреждение — попытка переключить невыносимую внутреннюю боль на контролируемую физическую.<br><br>
+          <strong>Направления:</strong><br>
+          • <em>Стабилизаторы настроения / антиконвульсанты</em> — один уже есть (окскарбазепин), но вопрос в адекватности дозы. Если не хватает — в этой группе есть альтернативы с разными профилями: одни лучше при депрессивном полюсе, другие — при импульсивности<br>
+          • <em>Низкодозовые атипичные антипсихотики</em> — иногда добавляют для дополнительной стабилизации при выраженной эмоциональной дисрегуляции<br>
+          <strong>Вопрос врачу:</strong> «Достаточна ли текущая доза стабилизатора? Если нет — что менять?»
+        </div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-easy" style="background: #E8E4F2; color: #5E4F7A;">Тело</div>
+      <div class="idea-info">
+        <div class="idea-name">Одышка, сердцебиение, мышечное напряжение, ком в горле, дрожь</div>
+        <div class="idea-desc">
+          <strong>Что происходит:</strong> всё это — следствие хронически повышенного тонуса симпатической нервной системы. Тело застряло в режиме «бей или беги», даже когда реальной угрозы нет.<br><br>
+          <strong>Направления:</strong><br>
+          • <em>Бета-блокаторы</em> — быстро убирают именно физические симптомы, не влияя на психику. Не вызывают сонливости, можно утром. Особенно актуальны для утренней одышки<br>
+          • <em>Миорелаксанты с седативным эффектом</em> — снимают мышечное напряжение, иногда добавляют на ночь для расслабления<br>
+          • <em>Долгосрочно</em> — по мере того как основная тревога снизится (через СИОЗС), телесные проявления уйдут сами. Но на переходный период «помощь телу» может сильно облегчить жизнь<br><br>
+          <strong>Вопрос врачу:</strong> «Можно ли что-то для снятия именно физических симптомов тревоги — одышки и напряжения — пока основная терапия набирает силу?»
+        </div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-easy" style="background: #FFF3CD; color: #856404;">Мысли</div>
+      <div class="idea-info">
+        <div class="idea-name">Навязчивые мысли, «мысленная жвачка», застревание в негативных сценариях</div>
+        <div class="idea-desc">
+          <strong>Что происходит:</strong> руминация — мозг «зацикливается» на тревожных или депрессивных мыслях и не может переключиться. Это отдельный механизм, который связан с серотонином, но требует более интенсивного воздействия.<br><br>
+          <strong>Направления:</strong><br>
+          • <em>Повышение СИОЗС</em> — для навязчивых мыслей обычно нужны более высокие дозы, чем для обычной депрессии. Если руминация не уходит на текущей дозе — это аргумент за повышение<br>
+          • <em>Усиление антидепрессанта</em> — иногда добавляют препарат из другой группы, который усиливает серотонергический эффект и помогает «разблокировать» мыслительные петли<br>
+          <strong>Вопрос врачу:</strong> «Мысли застревают в негативных сценариях и я не могу переключиться. Это лечится тем же антидепрессантом или нужно что-то дополнительное?»
+        </div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-easy" style="background: var(--warm-light); color: #8B6340;">Усталость</div>
+      <div class="idea-info">
+        <div class="idea-name">«Ватная голова», нет сил, трудно встать, постоянная разбитость</div>
+        <div class="idea-desc">
+          <strong>Три возможных причины — и каждая лечится по-разному:</strong><br><br>
+          <em>1. Неглубокий сон</em> — если сон фрагментированный, тело не успевает восстанавливаться. Решается улучшением ночной схемы (см. выше).<br><br>
+          <em>2. Побочка антидепрессанта</em> — в первые 4–6 недель СИОЗС может давать вялость. Часто проходит само. Если нет — можно обсудить смену времени приёма или коррекцию дозы.<br><br>
+          <em>3. Соматика</em> — дефицит железа (ферритин!) и гипотиреоз — две самых частых «скрытых» причины хронической усталости у молодых женщин. Они маскируются под депрессию и не уйдут от антидепрессантов. Обязательно сдать анализы, если давно не проверяла.<br><br>
+          <strong>Вопрос врачу:</strong> «Моя усталость — это от плохого сна, от лекарств, или стоит проверить кровь? Что исключить в первую очередь?»
+        </div>
+      </div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-tag tag-easy" style="background: #E0F0E0; color: #3D6B3D;">Побочки</div>
+      <div class="idea-info">
+        <div class="idea-name">На что обратить внимание в процессе лечения</div>
+        <div class="idea-desc">
+          <strong>Вес и аппетит:</strong> седативный антидепрессант (миртазапин) может повышать аппетит — на малой дозе эффект минимален, но при увеличении следить. Если вес становится проблемой — существуют альтернативные седативные АД без этого эффекта.<br><br>
+          <strong>Эмоциональное притупление:</strong> через несколько недель на СИОЗС тревога может уйти, но вместе с ней — радость и интерес. Всё «ровно», но пусто. Это НЕ норма и НЕ значит, что АД не работает — значит, что нужна коррекция дозы или добавление препарата, который возвращает эмоциональную окраску.<br><br>
+          <strong>Сексуальная функция:</strong> СИОЗС часто снижают либидо и чувствительность. Если это мешает — сказать врачу, есть способы коррекции.<br><br>
+          <strong>Главное правило:</strong> не терпеть побочки молча и не бросать препараты самостоятельно. Любая проблема решается коррекцией — снижением дозы, сменой времени приёма, добавкой, заменой.
+        </div>
+      </div>
+    </div>
+
+    <div class="hl hl-warm">
+      <strong>Как пользоваться этой картой:</strong> не нужно обсуждать всё сразу. Выбери 2–3 пункта, которые беспокоят больше всего, и начни с них. Врач оценит, что менять первым. Эта карта — не рецепт, а меню для разговора. Ты приходишь с направлениями — врач подбирает конкретные решения.
+    </div>
+  </div>
+
+  <div class="section rose">
+    <div class="section-icon">🔎</div>
+    <h2>Что стоит исключить — диагнозы, о которых стоит спросить</h2>
+    <p>Текущий рабочий диагноз — тревожно-депрессивное расстройство. Но картина сложнее. Вот что стоит обсудить с врачом, чтобы убедиться, что лечение бьёт в правильную мишень.</p>
+
+    <div class="q-card">
+      <div class="q-icon">⚡</div>
+      <div class="q-text"><strong>Комплексное ПТСР (C-PTSD)</strong><em>Бессонница с детства, кошмары с темами смерти/войны/утопления, самоповреждение как способ регуляции, эмоциональные «взрывы» — всё это укладывается в картину комплексной травмы. В отличие от обычного ПТСР, C-PTSD формируется не от одного события, а от длительного неблагополучия (детство, среда, отношения). Если это так — это меняет стратегию лечения. Спросить врача: «Рассматриваете ли вы травматический компонент?»</em></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-icon">🌊</div>
+      <div class="q-text"><strong>Эмоционально неустойчивое расстройство (пограничные черты)</strong><em>Интенсивные эмоции, самоповреждение, импульсивность, страх быть брошенной, нестабильность самооценки — если что-то из этого откликается, это не «приговор», а указание на то, какое лечение будет самым эффективным. Не все врачи озвучивают этот диагноз — можно спросить напрямую: «Не рассматриваете ли вы черты эмоциональной нестабильности?»</em></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-icon">🔄</div>
+      <div class="q-text"><strong>Биполярный спектр</strong><em>Сам факт, что врач назначил окскарбазепин (стабилизатор настроения) — может означать, что он рассматривает биполярный спектр. Это важно знать: при биполярном расстройстве СИОЗС без стабилизатора могут вызвать «раскачку» настроения. Спросить врача: «Почему именно окскарбазепин? Вы рассматриваете биполярное расстройство?»</em></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-icon">😮‍💨</div>
+      <div class="q-text"><strong>Обструктивное апноэ сна</strong><em>Утренняя одышка списана на панику — но апноэ сна тоже даёт: пробуждения среди ночи, утреннюю одышку, разбитость, ощущение что не спала. Особенно если есть заложенность носа, храп, или если спишь на спине. Это соматическая причина, которая не уйдёт от антидепрессантов. Нужна ночная пульсоксиметрия или полисомнография для исключения.</em></div>
+    </div>
+
+    <div class="hl hl-rose">
+      <strong>Зачем это знать:</strong> разные диагнозы → разное лечение. Если за всей симптоматикой стоит травма — ключ не в дозе сертралина, а в проработке травмы. Если биполярный спектр — СИОЗС без стабилизатора опасен. Если апноэ — никакие таблетки не дадут нормальный сон. Чем точнее диагноз, тем быстрее станет лучше.
+    </div>
+  </div>
+
+  <div class="section blue">
+    <div class="section-icon">📋</div>
+    <h2>Чеклист для приёма у врача</h2>
+    <p>Можешь просто открыть эту страницу на телефоне и показать врачу — или зачитать по пунктам.</p>
+    <div class="talk-points">
+      <div class="talk-point">
+        <div class="talk-num">1</div>
+        <div class="talk-text"><strong>Тревожные сны остаются</strong> — содержание, частота, ощущаются как реальные. Это побочка СИОЗС или ещё не «дошедшее» лечение? Есть ли что-то прицельно от кошмаров?</div>
+      </div>
+      <div class="talk-point">
+        <div class="talk-num">2</div>
+        <div class="talk-text"><strong>Просыпаюсь 5 раз за ночь</strong> — обсудить увеличение миртазапина до ½ таблетки (7.5 мг). Проблема в засыпании или в удержании сна?</div>
+      </div>
+      <div class="talk-point">
+        <div class="talk-num">3</div>
+        <div class="talk-text"><strong>Самоповреждение продолжается</strong> — впивание ногтями, желание причинить себе боль.</div>
+      </div>
+      <div class="talk-point">
+        <div class="talk-num">4</div>
+        <div class="talk-text"><strong>Постоянная усталость</strong> — это побочка сертралина, неглубокий сон, или соматика? Есть ли план титрации вверх?</div>
+      </div>
+      <div class="talk-point">
+        <div class="talk-num">5</div>
+        <div class="talk-text"><strong>Утренняя одышка</strong> — это точно паника или стоит исключить апноэ сна? Нужна ли пульсоксиметрия?</div>
+      </div>
+      <div class="talk-point">
+        <div class="talk-num">6</div>
+        <div class="talk-text"><strong>Почему окскарбазепин?</strong> — рассматриваете ли вы биполярный спектр? На какой я дозе и есть ли план повышения?</div>
+      </div>
+      <div class="talk-point">
+        <div class="talk-num">7</div>
+        <div class="talk-text"><strong>Травматический компонент</strong> — рассматриваете ли C-PTSD или пограничные черты?</div>
+      </div>
+      <div class="talk-point">
+        <div class="talk-num">8</div>
+        <div class="talk-text"><strong>SOS-средство</strong> — можно ли иметь что-то при себе на случай сильного приступа тревоги на переходный период?</div>
+      </div>
+      <div class="talk-point">
+        <div class="talk-num">9</div>
+        <div class="talk-text"><strong>Базовые анализы</strong> — ферритин, витамин D, ТТГ + Т4, ОАК. Исключить соматику.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section green">
+    <div class="section-icon">🧩</div>
+    <h2>Общая картина — что с тобой происходит</h2>
+    <p>Бессонница с детства, панические атаки, тревожные сны, срывы, самоповреждение, трудности с подъёмом — это не набор отдельных проблем. Это проявления единого процесса: нервная система, которая долго работала в режиме перегрузки. Возможно, за этим стоит тревожно-депрессивное расстройство, возможно — комплексная травма, возможно — что-то из биполярного спектра. Точный диагноз определит врач — но направление уже ясно, и лечение работает.</p>
+    <p>Это состояние — не ты. Это то, что с тобой случилось, и то, что поддаётся лечению.</p>
+    <p>За первый месяц лечения уже есть ощутимые сдвиги: засыпание стало легче, панические атаки отступили. Это не «показалось» — это реальный отклик на терапию. Мозгу нужно время перестроиться. Нейрохимические изменения идут постепенно — не за дни, а за недели.</p>
+    <div class="hl hl-green">
+      <strong>Ожидание на ближайшие 2–4 недели:</strong> Дальнейшее улучшение сна, снижение интенсивности кошмаров, меньше дневной усталости, более ровные эмоции. Если через 4 недели прогресса нет — врач скорректирует. Ты не одна в этом процессе.
+    </div>
+  </div>
+
+  <div class="support-banner">
+    <span class="emoji">✨</span>
+    Ты не «сломанная». Ты — человек, который долго нёс слишком много в одиночку.<br>
+    <strong>Теперь можно опустить часть этого груза. Рядом есть кто поможет.</strong>
+  </div>
+
+  <div class="section violet">
+    <div class="section-icon">🪞</div>
+    <h2>Вопросы, которые стоит задать себе</h2>
+    <p>Не для того, чтобы найти «правильные» ответы — а чтобы лучше понять себя. Можешь подумать о них перед приёмом у терапевта, записать в заметки, или просто посидеть с ними наедине.</p>
+
+    <div class="q-card">
+      <div class="q-icon">🔥</div>
+      <div class="q-text"><strong>Что обычно запускает мои самые тяжёлые состояния?</strong><em>Есть ли триггер — конфликт, одиночество, конкретные мысли, воспоминания, время суток? Если получится заметить паттерн — терапевту будет намного легче с этим работать.</em></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-icon">🌫️</div>
+      <div class="q-text"><strong>Бывает ли ощущение «отключения» — как будто я не здесь?</strong><em>Во время срывов или сильной тревоги — бывает ли чувство нереальности, «тумана», как будто смотришь на себя со стороны, или наоборот — всё вокруг становится ненастоящим? Это называется диссоциация, и это важный маркер для терапевта. Фраза «хочу перестать чувствовать что-то внутри» — может быть именно об этом.</em></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-icon">🕊️</div>
+      <div class="q-text"><strong>Когда в последний раз мне было спокойно? Что я делала?</strong><em>Может быть, это было на прогулке, рядом с кем-то, за каким-то занятием. Попробуй вспомнить — не «в целом», а конкретный момент. Это подсказка для терапии: что именно помогает твоей нервной системе расслабиться.</em></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-icon">🫂</div>
+      <div class="q-text"><strong>Есть ли у меня человек, которому я могу позвонить, когда совсем плохо?</strong><em>Не «в теории», а прямо сейчас — чьё имя первое приходит в голову? Если такой человек есть — он должен знать, что ты можешь позвонить. Если нет — это важная тема для терапии.</em></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-icon">💬</div>
+      <div class="q-text"><strong>Говорю ли я врачу всё как есть — или преуменьшаю?</strong><em>«Ну, бывает немного тяжело» вместо «я впиваюсь ногтями в кожу, чтобы перестать чувствовать». Врач не может помочь с тем, о чём не знает. Терапия работает настолько, насколько ты в неё честна.</em></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-icon">🪴</div>
+      <div class="q-text"><strong>Разрешаю ли я себе отдыхать без чувства вины?</strong><em>Лежать, ничего не делать, не быть «продуктивной» — это не лень. Когда тело и психика в режиме восстановления, отдых — это часть лечения. Не наказание, не слабость.</em></div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-icon">🌅</div>
+      <div class="q-text"><strong>Что бы мне хотелось почувствовать через полгода?</strong><em>Не «вылечиться» — это абстрактно. А что-то конкретное: «просыпаться без страха», «не бояться вечера», «смеяться и не думать, что потом будет плохо». Это твой ориентир — и его можно обсудить с терапевтом как цель.</em></div>
+    </div>
+
+    <div class="hl hl-violet">
+      <strong>Зачем это:</strong> Терапия — это не только то, что происходит в кабинете. Это и то, что ты замечаешь между сессиями. Чем лучше ты понимаешь свои паттерны — тем быстрее врач найдёт подход. Ты — главный эксперт по себе.
+    </div>
+  </div>
+
+  <div class="support-banner">
+    <span class="emoji">🌷</span>
+    Тебе 22. Ты обратилась за помощью. Ты принимаешь лечение. Ты читаешь это.<br>
+    <strong>Многие не доходят даже до этого шага. А ты уже здесь.</strong>
+  </div>
+
+  <div class="friends-section">
+    <div class="section-icon" style="background: var(--rose-light);">👐</div>
+    <h2>Не замыкайся. Пожалуйста.</h2>
+    <p>Когда внутри тяжело, первый инстинкт — спрятаться. Закрыть дверь, не отвечать на сообщения, сказать «всё нормально». Кажется, что никому не хочется слушать про твои проблемы, что ты нагружаешь людей, что лучше справиться самой.</p>
+    <p><strong>Но это не так.</strong></p>
+
+    <div class="friends-quote">
+      Люди, которые тебя любят, хотят знать, что тебе плохо. Не чтобы пожалеть — а чтобы быть рядом. Когда ты молчишь и прячешься, они не перестают переживать — они просто не знают, как помочь.
+    </div>
+
+    <p><strong>Тебе не нужно объяснять всё.</strong> Можно просто написать подруге: «Мне сейчас тяжело, можем просто поговорить?» Или: «Я не в порядке, но не хочу об этом подробно — можно я просто побуду рядом?» Этого достаточно. Людям не нужен идеальный пересказ — им нужно знать, что ты их впускаешь.</p>
+
+    <p>Может казаться, что ты «обуза» или что твои проблемы слишком тяжёлые для других. Но подумай: если бы твоя подруга переживала то же самое — ты бы хотела, чтобы она молчала и мучилась одна? Конечно нет. Ты бы хотела быть рядом. Так вот — они тоже.</p>
+
+    <p>Обращаться за поддержкой — это не слабость. Это навык. Терапевт работает с тем, что внутри. А друзья напоминают, что снаружи — тоже тепло.</p>
+
+    <div class="hl hl-rose">
+      <strong>Конкретные шаги:</strong> Напиши одному близкому человеку. Не обязательно про диагнозы или таблетки — хотя бы «привет, я соскучилась, давай увидимся». Позови подругу на кофе, на прогулку, просто посидеть вместе. Не жди, пока станет совсем хорошо, чтобы начать жить — живи сейчас, даже когда тяжело. Ты заслуживаешь тепла не только когда ты «в порядке».
+    </div>
+  </div>
+
+  <div class="support-banner">
+    <span class="emoji">🔥</span>
+    Ты пережила годы без помощи, без лечения, без понимания что происходит — <strong>и ты справилась.</strong><br>
+    Теперь у тебя есть врач, есть лечение, есть понимание. Стало труднее? Нет — стало осознаннее.<br>
+    А осознанность — это первый шаг к тому, чтобы стало по-настоящему лучше.
+  </div>
+
+  <div class="support-banner" style="background: linear-gradient(135deg, var(--rose-light), var(--violet-light));">
+    <span class="emoji">🌼</span>
+    Плохие дни ещё будут — и это нормально. Выздоровление не линейное.<br>
+    Но каждый такой день теперь будет <strong>менее тяжёлым, менее долгим и менее одиноким</strong>,<br>
+    чем раньше. Потому что теперь ты не одна.
+  </div>
+
+  <div class="bottom-note">
+    <span class="heart">💛</span>
+    Ты на правильном пути. Лечение работает. Дай ему время.<br>
+    Не прячься от людей, которые тебя любят.<br>
+    Просить о помощи — это сила, а не слабость.<br><br>
+    <strong>Ты справишься. Ты не одна.</strong>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  const flowers = ['🌸', '🌺', '🌼', '🌷', '🏵️', '💮', '🌻'];
+  const body = document.body;
+
+  function createFlower() {
+    const el = document.createElement('div');
+    el.className = 'flower';
+    el.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+    el.style.left = (Math.random() * 100) + 'vw';
+    el.style.top = (-5 - Math.random() * 5) + 'vh';
+    el.style.fontSize = (11 + Math.random() * 8) + 'px';
+
+    const duration = 12 + Math.random() * 18;
+    el.style.animationDuration = duration + 's';
+
+    const sway = -60 + Math.random() * 120;
+    el.style.setProperty('--sway', sway + 'px');
+
+    body.appendChild(el);
+    setTimeout(() => el.remove(), duration * 1000);
+  }
+
+  // Sparse: one flower every 3-6 seconds
+  function scheduleNext() {
+    const delay = 3000 + Math.random() * 3000;
+    setTimeout(() => {
+      createFlower();
+      scheduleNext();
+    }, delay);
+  }
+
+  // Start after a small delay
+  setTimeout(() => {
+    createFlower();
+    scheduleNext();
+  }, 2000);
+})();
+</script>
+
+</body>
+</html>
