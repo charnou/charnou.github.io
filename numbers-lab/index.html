@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Numbers Lab by Valeria</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{
+  --paper:#FDF7F3; --card:#FFFFFF; --ink:#4B4351; --ink-soft:#7C7288;
+  --pink:#F6C9DA; --pink-ink:#B85B85; --pink-tint:#FDEFF5;
+  --blue:#C9E3F0; --blue-ink:#4682A2; --blue-tint:#EEF7FC;
+  --green:#CFE8D5; --green-ink:#4F9370; --green-tint:#EFF8F1;
+  --yellow:#FAEEC2; --yellow-ink:#A98726; --yellow-tint:#FDF8E6;
+  --bad:#F6DEDE; --bad-ink:#C07B7B;
+  --almost:#FAEBD3; --almost-ink:#A9803D;
+  --line:#EFE3DC; --shadow:0 1px 0 #F4EAE4, 0 6px 18px rgba(120,90,110,.055);
+  --r:18px;
+  /* accent pair — swapped per student */
+  --acc:var(--pink); --acc-ink:var(--pink-ink); --acc-tint:var(--pink-tint); --acc-on:#6B3550;
+  --acc2:var(--yellow); --acc2-ink:var(--yellow-ink); --acc2-tint:var(--yellow-tint); --acc2-on:#6A5416;
+  --paper:#FDF7F3; --dot:#F5EAEF;
+  /* category hues — warm set */
+  --c1:#F6C9DA; --c1i:#B85B85; --c2:#FAEEC2; --c2i:#A98726;
+  --c3:#FBDCC6; --c3i:#B0693F; --c4:#E9DCF2; --c4i:#7D5FA0;
+}
+body.cool{
+  --acc:var(--blue); --acc-ink:var(--blue-ink); --acc-tint:var(--blue-tint); --acc-on:#2E5D75;
+  --acc2:var(--green); --acc2-ink:var(--green-ink); --acc2-tint:var(--green-tint); --acc2-on:#2F6248;
+  --paper:#F6FAFB; --dot:#E4EFF3; --line:#E2ECEF;
+  --shadow:0 1px 0 #E8F1F4, 0 6px 18px rgba(70,110,130,.06);
+  /* category hues — cool set */
+  --c1:#C9E3F0; --c1i:#4682A2; --c2:#CFE8D5; --c2i:#4F9370;
+  --c3:#D3EAEA; --c3i:#3F8388; --c4:#DEE6F6; --c4i:#5A6EA0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{
+  display:flex;flex-direction:column;
+  height:100vh;height:100dvh;overflow:hidden;
+  background:var(--paper);
+  background-image:radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size:24px 24px;
+  color:var(--ink);
+  font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:130}
+.wrap{max-width:760px;margin:0 auto;padding:22px 16px 130px}
+h1,h2,h3,.digits,.deck-face{font-family:Georgia,"Iowan Old Style","Times New Roman",serif}
+h1{font-size:clamp(30px,7vw,46px);line-height:1.05;margin:0 0 6px;font-weight:400;letter-spacing:-.01em}
+h1 em{font-style:italic;color:var(--acc-ink)}
+h2{font-size:clamp(22px,5.6vw,27px);margin:0 0 6px;font-weight:400;letter-spacing:-.005em}
+h3{font-size:18px;margin:22px 0 8px;font-weight:400}
+p{margin:0 0 12px}
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 10px}
+.lead{color:var(--ink-soft);margin-bottom:22px;max-width:62ch}
+.ru{color:var(--ink-soft);font-size:14.5px}
+
+/* ---------- generic card ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);margin:0 0 16px}
+.tab{display:inline-block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:10px}
+.t-date,.t-big,.t-ordinal{background:var(--c1);color:var(--c1i)}
+.t-fraction{background:var(--c2);color:var(--c2i)}
+.t-percent,.t-decimal{background:var(--c3);color:var(--c3i)}
+.t-temp,.t-year{background:var(--c4);color:var(--c4i)}
+
+/* ---------- buttons ---------- */
+.btn{font:inherit;font-size:15px;cursor:pointer;border:1px solid transparent;border-radius:12px;padding:11px 18px;background:var(--acc);color:var(--acc-on);transition:transform .12s ease,filter .12s ease}
+.btn:hover{filter:brightness(1.03)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:#fff;border-color:var(--line);color:var(--ink-soft)}
+.btn.danger{background:var(--bad);color:var(--bad-ink)}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.5;cursor:default}
+.btn:focus-visible,input:focus-visible,.tile:focus-visible,.chip:focus-visible,.word:focus-visible,.opt:focus-visible{outline:3px solid var(--acc-ink);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* ---------- wordmark byline ---------- */
+.by{display:inline-block;font-family:-apple-system,"Segoe UI",Arial,sans-serif;font-size:11px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--acc-ink);margin-left:.7em;
+  vertical-align:.42em;opacity:.9;white-space:nowrap}
+
+/* ---------- step chips ---------- */
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.step{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:999px;
+  background:#fff;border:1px solid var(--line);color:#B4A8BC;white-space:nowrap}
+.step.on{background:var(--acc-tint);border-color:var(--acc);color:var(--acc-ink);font-weight:600}
+.step.past{background:var(--green-tint);border-color:var(--green);color:var(--green-ink)}
+
+/* ---------- explicit name picker ---------- */
+.pick-q{font-family:Georgia,serif;font-size:clamp(21px,5.4vw,27px);margin:0 0 4px}
+.name{position:relative;display:flex;align-items:center;gap:13px;background:#fff;border:2px solid var(--line);
+  border-radius:16px;padding:14px 15px;font:inherit;cursor:pointer;text-align:left;width:100%;
+  transition:border-color .14s ease,background .14s ease,transform .12s ease}
+.name:hover{transform:translateY(-1px)}
+.av{flex:0 0 44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:Georgia,serif;font-size:20px;color:#5F5468}
+.name .who b{display:block;font-family:Georgia,serif;font-size:19px;font-weight:400;line-height:1.2}
+.name .who span{font-size:12.5px;color:var(--ink-soft)}
+.name .mark{position:absolute;right:14px;font-size:18px;color:var(--green-ink);opacity:0;transition:opacity .14s ease}
+.name[aria-pressed=true]{border-color:var(--green-ink);background:var(--green-tint)}
+.name[aria-pressed=true] .mark{opacity:1}
+.gate{border-top:1px dashed var(--line);margin-top:18px;padding-top:16px}
+
+/* ---------- old name grid tweak ---------- */
+.names{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.name{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;font:inherit;cursor:pointer;text-align:left}
+.name[aria-pressed=true]{background:var(--green-tint);border-color:var(--green)}
+
+/* ---------- rules ---------- */
+.rules{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);margin-bottom:26px}
+.rsec{border-top:2px solid var(--line);padding:22px 0 6px}
+.rsec:first-of-type{border-top:0;padding-top:6px}
+.rh{display:flex;align-items:center;gap:12px;margin:0 0 10px;font-size:clamp(20px,5vw,25px);font-weight:400}
+.rn{flex:0 0 38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:19px;background:var(--c1);color:var(--c1i)}
+.rsec[data-n="2"] .rn,.rsec[data-n="6"] .rn{background:var(--c2);color:var(--c2i)}
+.rsec[data-n="3"] .rn,.rsec[data-n="7"] .rn{background:var(--c3);color:var(--c3i)}
+.rsec[data-n="4"] .rn{background:var(--c4);color:var(--c4i)}
+.rt small{display:block;font-family:-apple-system,"Segoe UI",Arial,sans-serif;font-size:12px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:10px 0}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+td.en{font-family:Georgia,serif}
+.tag{display:inline-block;font-size:11px;padding:2px 7px;border-radius:6px;background:var(--acc2-tint);color:var(--acc2-ink);margin-left:4px}
+.no{color:var(--bad-ink)}
+.yes{color:var(--green-ink)}
+ul{margin:8px 0 8px 18px;padding:0}
+li{margin-bottom:5px}
+
+
+/* ---------- menu ---------- */
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin-bottom:20px}
+.m-card{position:relative;text-align:left;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;font:inherit;cursor:pointer;box-shadow:var(--shadow);transition:transform .12s ease}
+.m-card:hover{transform:translateY(-2px)}
+.m-card .num{font-family:Georgia,serif;font-size:13px;color:var(--ink-soft)}
+.m-card b{display:block;font-family:Georgia,serif;font-size:19px;font-weight:400;margin:2px 0 3px}
+.m-card small{color:var(--ink-soft)}
+.m-card .stripe{position:absolute;left:0;top:14px;bottom:14px;width:4px;border-radius:4px}
+.s-pink .stripe{background:var(--c1)} .s-blue .stripe{background:var(--c2)}
+.s-green .stripe{background:var(--c3)} .s-yellow .stripe{background:var(--c4)}
+.m-card.done{background:var(--green-tint);border-color:var(--green)}
+.m-card.empty{background:#fff;border-style:dashed}
+.m-card .flag.warn{color:var(--bad-ink)}
+.m-card .flag{position:absolute;right:14px;top:14px;font-size:13px;color:var(--green-ink)}
+
+/* ---------- exercise bits ---------- */
+.digits{font-size:clamp(30px,8vw,42px);line-height:1.1;margin:2px 0 14px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.digits small{font-family:inherit;font-size:15px;color:var(--ink-soft);display:block;margin-top:4px}
+input[type=text]{font:inherit;font-size:16px;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#FFFDFB;color:var(--ink)}
+input[type=text]:disabled{background:var(--green-tint);border-color:var(--green)}
+.fb{margin-top:10px;font-size:14.5px;padding:10px 12px;border-radius:12px;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--green-tint);color:var(--green-ink)}
+.fb.almost{background:var(--almost);color:var(--almost-ink)}
+.fb.bad{background:var(--bad);color:var(--bad-ink)}
+.fb.hint{background:var(--acc-tint);color:var(--acc-ink)}
+.fb b{font-family:Georgia,serif}
+.card.solved{background:var(--green-tint);border-color:var(--green)}
+.pop{animation:pop .42s cubic-bezier(.33,1,.68,1)}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.018)}100%{transform:scale(1)}}
+.shake{animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+
+/* words for spot-the-mistake */
+.sentence{font-family:Georgia,serif;font-size:22px;line-height:1.9;margin:6px 0 4px}
+.word{font:inherit;background:transparent;border:0;border-bottom:2px dashed #E7D6DE;padding:1px 3px;cursor:pointer;color:inherit;border-radius:4px}
+.word:hover{background:var(--acc-tint)}
+.word.miss{background:var(--bad);border-bottom-color:var(--bad-ink)}
+.word.found{background:var(--almost);border-bottom-color:var(--almost-ink)}
+.word.fixed{background:var(--green-tint);border-bottom:2px solid var(--green-ink)}
+.opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.opt{font:inherit;font-family:Georgia,serif;font-size:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer;color:var(--ink)}
+.opt:hover{background:var(--acc-tint)}
+.opt.pick-ok{background:var(--green-tint);border-color:var(--green);color:var(--green-ink)}
+.opt.pick-bad{background:var(--bad);border-color:var(--bad-ink);color:var(--bad-ink)}
+.opt:disabled{cursor:default}
+
+/* match */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+.mcol{display:grid;gap:8px;grid-auto-rows:minmax(64px,auto)}
+.mhead{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);
+  padding:0 2px 6px;text-align:center}
+.tile{font:inherit;font-size:14.5px;line-height:1.3;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:11px 8px;cursor:pointer;text-align:center;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;overflow-wrap:break-word;word-break:break-word}
+.tile.n{font-family:Georgia,serif;font-size:20px;font-variant-numeric:tabular-nums}
+.tile.sel{background:var(--acc-tint);border-color:var(--acc-ink)}
+.tile.gone{background:var(--green-tint);border-color:var(--green);color:var(--green-ink);cursor:default}
+.tile.err{background:var(--bad);border-color:var(--bad-ink)}
+
+/* build */
+.slot{min-height:58px;border:2px dashed #E7D6DE;border-radius:14px;padding:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:#FFFDFB}
+.slot:empty::before{content:"tap the words below";color:#C9BCC6;font-size:14px}
+.pool{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{font:inherit;font-family:Georgia,serif;font-size:16px;background:var(--acc-tint);border:1px solid var(--acc);border-radius:999px;padding:8px 14px;cursor:pointer;color:var(--acc-on)}
+.chip.used{opacity:.35;cursor:default}
+.chip.inslot{background:#fff;border-color:var(--acc-ink)}
+
+/* deck */
+.deck{perspective:1000px;margin:10px 0}
+.deck-face{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px;cursor:pointer}
+.deck-face .big{font-size:clamp(32px,9vw,46px)}
+.deck-face .say{font-size:clamp(20px,5.5vw,26px);color:var(--green-ink)}
+.deck-face .tip{font-family:-apple-system,"Segoe UI",Arial,sans-serif;font-size:12.5px;color:var(--ink-soft);margin-top:12px}
+
+/* progress + footer bar */
+.bar{height:8px;border-radius:99px;background:#F1E4DE;overflow:hidden;margin:6px 0 18px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .4s ease}
+.topline{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13px;color:var(--ink-soft)}
+
+/* cheat button + modal */
+#cheatBtn{position:fixed;right:16px;bottom:16px;z-index:105;background:var(--acc2);color:var(--acc2-on);border:0;border-radius:999px;padding:13px 20px;font:inherit;font-size:15px;box-shadow:0 8px 20px rgba(90,120,150,.22);cursor:pointer}
+#modal{position:fixed;inset:0;z-index:96;background:rgba(75,67,81,.35);display:none;padding:16px;overflow:auto}
+#modal.open{display:block}
+#modal .sheet{max-width:720px;margin:24px auto;background:var(--paper);border-radius:22px;padding:20px 20px 96px}
+#cheatBtn.on{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+
+/* results */
+.score{font-family:Georgia,serif;font-size:56px;line-height:1;color:var(--acc-ink)}
+.review{background:#fff;border:1px solid var(--line);border-left:3px solid var(--acc);
+  border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.sig{text-align:center;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-soft);margin:26px 0 0;opacity:.75}
+.review .q{font-family:Georgia,serif;font-size:19px}
+.review .mine{color:var(--bad-ink)}
+.review .right{color:var(--green-ink);font-family:Georgia,serif}
+/* ---------- fixed header: progress + page switch ---------- */
+#hdr{position:relative;flex:0 0 auto;z-index:100;background:rgba(253,247,243,.97);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(120,90,110,.05)}
+
+body.cool #hdr{background:rgba(246,250,251,.97)}
+body.cool .sticky{background:rgba(246,250,251,.94)}
+
+/* the only scrolling area — the header above can never move */
+#scroller{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
+#top{height:5px;background:#F2E6E0}
+#top i{display:block;height:100%;width:0;border-radius:0 4px 4px 0;
+  background:linear-gradient(90deg,var(--acc-ink),var(--acc) 45%,var(--acc2));transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+/* ---------- segmented page switch ---------- */
+.seg{display:flex;align-items:center;gap:8px;max-width:760px;margin:0 auto;padding:9px 16px}
+.sg{flex:1;font:inherit;font-size:14.5px;cursor:pointer;border:1px solid var(--line);background:#fff;
+  color:var(--ink-soft);border-radius:12px;padding:9px 10px;transition:background .16s ease,color .16s ease,border-color .16s ease}
+.sg .ico{opacity:.55;font-size:13px}
+.sg.on{background:var(--acc-tint);border-color:var(--acc);color:var(--acc-ink);font-weight:600}
+.sg.on .ico{opacity:1}
+.xbtn{flex:0 0 38px;width:38px;padding:8px 0;text-align:center;font-size:20px;line-height:1;color:#C3B6C6}
+.xbtn:hover{background:var(--bad);border-color:var(--bad-ink);color:var(--bad-ink)}
+.pct{flex:0 0 auto;font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+#hdr.bare .seg{display:none}
+
+/* ---------- page slide ---------- */
+@keyframes inR{from{opacity:.4;transform:translateX(18px)}to{opacity:1;transform:none}}
+@keyframes inL{from{opacity:.4;transform:translateX(-18px)}to{opacity:1;transform:none}}
+.pg-r{animation:inR .42s cubic-bezier(.33,1,.68,1)}
+.pg-l{animation:inL .42s cubic-bezier(.33,1,.68,1)}
+@keyframes ring{0%,100%{box-shadow:var(--shadow)}45%{box-shadow:0 0 0 4px var(--acc),var(--shadow)}}
+.focusme{animation:ring 1.4s cubic-bezier(.33,1,.68,1) 1}
+
+/* ---------- entrance motion (kept minimal on purpose) ---------- */
+@keyframes fadeUp{from{opacity:.3;transform:translateY(6px)}to{opacity:1;transform:none}}
+.an-up{animation:fadeUp .34s cubic-bezier(.33,1,.68,1) both}
+@keyframes fbIn{from{opacity:.3}to{opacity:1}}
+.fb.show{animation:fbIn .22s ease}
+
+/* ---------- flashcard flip ---------- */
+.deck-face{transition:transform .19s cubic-bezier(.4,0,.6,1),box-shadow .19s ease}
+.deck-face.flipping{transform:rotateY(84deg);box-shadow:0 4px 14px rgba(120,90,110,.14)}
+
+/* ---------- sticky block header ---------- */
+.sticky{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;
+  padding:10px 0 12px;margin-bottom:4px;background:rgba(253,247,243,.94);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.sticky .where{font-size:12.5px;color:var(--ink-soft);letter-spacing:.02em}
+.sticky .btn{padding:8px 14px;font-size:14px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0;
+  border:1px solid var(--line);border-radius:14px;background:#fff}
+.tw table{margin:0}
+.tw th{background:var(--acc-tint)}
+.tw tr:last-child td{border-bottom:0}
+.tw tr:nth-child(even) td{background:#FEFBF9}
+.tw th,.tw td{padding:9px 12px}
+
+/* ---------- leave confirmation ---------- */
+#ask{position:fixed;inset:0;z-index:110;background:rgba(75,67,81,.32);display:none;
+  align-items:center;justify-content:center;padding:20px}
+#ask.open{display:flex}
+#ask .sheet2{background:#fff;border-radius:20px;padding:24px;max-width:400px;width:100%;
+  box-shadow:0 24px 60px rgba(90,60,80,.22);border-top:5px solid var(--acc);
+  animation:popIn .26s cubic-bezier(.33,1,.68,1)}
+#ask .sheet2.t-ok{border-top-color:var(--green-ink)}
+#ask .sheet2.t-almost{border-top-color:var(--almost-ink)}
+#ask .sheet2.t-plain{border-top-color:var(--line)}
+#ask h3{margin:0 0 8px;font-size:22px;line-height:1.2}
+#ask #askB{color:var(--ink-soft);font-size:14.5px;line-height:1.5}
+#ask #askB b{color:var(--ink)}
+#ask .score-line{font-family:Georgia,serif;font-size:30px;color:var(--acc-ink);margin:2px 0 6px}
+#ask #askRow{margin-top:18px}
+#ask #askRow .btn{flex:1}
+@keyframes popIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:430px){
+  .wrap{padding:16px 12px 110px}
+  .match{gap:7px}
+  .mcol{gap:6px;grid-auto-rows:minmax(58px,auto)}
+  .tile{font-size:13.5px;padding:9px 6px;border-radius:12px}
+  .tile.n{font-size:18px}
+}
+</style>
+</head>
+<body>
+<header id="hdr" class="bare">
+  <div id="top"><i></i></div>
+  <div class="seg">
+    <button class="sg" id="segRules" type="button"><span class="ico">◀</span> Rules</button>
+    <button class="sg" id="segTasks" type="button">Tasks <span class="ico">▶</span></button>
+    <span class="pct" id="pct"></span>
+    <button class="sg xbtn" id="segReset" type="button" title="Start over" aria-label="Start over">×</button>
+  </div>
+</header>
+<canvas id="fx"></canvas>
+<main id="scroller"><div class="wrap" id="app"></div></main>
+<button id="cheatBtn" type="button">Rules</button>
+<div id="ask"><div class="sheet2" id="askSheet">
+  <h3 id="askT"></h3>
+  <div id="askB"></div>
+  <div class="row" id="askRow"></div>
+</div></div>
+<div id="modal"><div class="sheet"><div id="modalBody"></div></div></div>
+
+<template id="rulesTpl">
+<div class="rules">
+  <p class="eyebrow">Reference — правила</p>
+  <h2>How to say numbers</h2>
+  <p class="ru">Открывай нужный раздел. Всё как в вашем учебнике — только британский вариант.</p>
+
+  <section class="rsec" data-n="1">
+    <h3 class="rh"><span class="rn">1</span><span class="rt">Ordinal numbers <small>порядковые</small></span></h3>
+    <p class="ru">К числу добавляется <b>-th</b>: four → fourth, ten → tenth. Запомнить нужно только исключения.</p>
+    <div class="tw"><table>
+      <tr><th>Надо запомнить</th><th>Меняется написание</th><th>Обычные</th></tr>
+      <tr>
+        <td class="en">1st first<br>2nd second<br>3rd third</td>
+        <td class="en">5th fi<b>f</b>th<br>8th eigh<b>th</b><br>9th ni<b>n</b>th <span class="tag">без e!</span><br>12th twel<b>f</b>th</td>
+        <td class="en">4th fourth<br>6th sixth<br>7th seventh<br>10th tenth</td>
+      </tr>
+    </table></div>
+    <div class="tw"><table>
+      <tr><th>-y → -ieth</th><th>Составные</th></tr>
+      <tr>
+        <td class="en">20th twentieth<br>30th thirtieth</td>
+        <td class="en">21st twenty-first<br>23rd twenty-third<br>31st thirty-first</td>
+      </tr>
+    </table></div>
+    <p class="ru">В составных числах -th получает <b>только последнее слово</b>: twenty-<b>first</b>, thirty-<b>first</b>.</p>
+  </section>
+
+  <section class="rsec" data-n="2">
+    <h3 class="rh"><span class="rn">2</span><span class="rt">Dates <small>даты</small></span></h3>
+    <p class="ru">В британском формате сначала <b>день</b>, потом месяц: <b>01/09</b> = 1 сентября (не 9 января!).</p>
+    <div class="tw"><table>
+      <tr><th>Format</th><th>How it looks</th></tr>
+      <tr><td>Write</td><td class="en">1st October</td></tr>
+      <tr><td>Say</td><td class="en"><b>the</b> first <b>of</b> October</td></tr>
+      <tr><td>Write</td><td class="en">26th October</td></tr>
+      <tr><td>Say</td><td class="en"><b>the</b> twenty-sixth <b>of</b> October</td></tr>
+    </table></div>
+    <ul>
+      <li>Всегда <b>the … of …</b> — оба слова обязательны.</li>
+      <li>Предлог <span class="no">from / on</span> здесь не нужен: <span class="yes">the first of September</span>.</li>
+      <li>Число — порядковое: <span class="no">the twenty-two of March</span> → <span class="yes">the twenty-second of March</span>.</li>
+      <li>В дате «on» появляется только перед всей датой: I was born <b>on</b> the 5th of May.</li>
+    </ul>
+  </section>
+
+  <section class="rsec" data-n="3">
+    <h3 class="rh"><span class="rn">3</span><span class="rt">Years <small>годы</small></span></h3>
+    <div class="tw"><table>
+      <tr><th>Год</th><th>Как читать</th><th>Правило</th></tr>
+      <tr><td class="en">1985</td><td class="en">nineteen eighty-five</td><td class="ru">до 2000 — делим на две части: 19 | 85</td></tr>
+      <tr><td class="en">1905</td><td class="en">nineteen <b>oh</b> five</td><td class="ru">ноль в середине = oh</td></tr>
+      <tr><td class="en">1900</td><td class="en">nineteen hundred</td><td class="ru">два нуля в конце = hundred</td></tr>
+      <tr><td class="en">2005</td><td class="en">two thousand <b>and</b> five</td><td class="ru">2000–2009</td></tr>
+      <tr><td class="en">2011</td><td class="en">twenty eleven <span class="ru">или</span> two thousand and eleven</td><td class="ru">с 2010 — оба варианта</td></tr>
+    </table></div>
+    <p class="ru">Год <b>не</b> читается как обычное число: <span class="no">one thousand nine hundred and eighty-five</span>.</p>
+  </section>
+
+  <section class="rsec" data-n="4">
+    <h3 class="rh"><span class="rn">4</span><span class="rt">Fractions <small>дроби</small></span></h3>
+    <div class="tw"><table>
+      <tr><th>Дробь</th><th>Говорим</th><th>Что происходит</th></tr>
+      <tr><td class="en">¼</td><td class="en">a quarter</td><td class="ru">1/4 — особое слово</td></tr>
+      <tr><td class="en">½</td><td class="en">a half</td><td class="ru">1/2 — особое слово</td></tr>
+      <tr><td class="en">⅓</td><td class="en">a third</td><td class="ru">1 = a, знаменатель порядковый</td></tr>
+      <tr><td class="en">¾</td><td class="en">three-quarters</td><td class="ru">числитель &gt; 1 → знаменатель <b>+ s</b></td></tr>
+      <tr><td class="en">⅔</td><td class="en">two-thirds</td><td class="ru">то же правило</td></tr>
+      <tr><td class="en">⅖</td><td class="en">two-fifths</td><td class="ru">то же правило</td></tr>
+    </table></div>
+    <p class="ru">Ошибка: <span class="no">three quarter</span> → <span class="yes">three quarters</span>.</p>
+  </section>
+
+  <section class="rsec" data-n="5">
+    <h3 class="rh"><span class="rn">5</span><span class="rt">Percentages &amp; decimals <small>проценты и десятичные</small></span></h3>
+    <div class="tw"><table>
+      <tr><th>Пишем</th><th>Говорим</th></tr>
+      <tr><td class="en">15%</td><td class="en">fifteen per cent</td></tr>
+      <tr><td class="en">4.7%</td><td class="en">four point seven per cent</td></tr>
+      <tr><td class="en">2.89</td><td class="en">two point eight nine</td></tr>
+      <tr><td class="en">0.3</td><td class="en">nought point three</td></tr>
+      <tr><td class="en">0.05</td><td class="en">nought point nought five</td></tr>
+    </table></div>
+    <ul>
+      <li><b>per cent</b> — два слова, никогда с -s: <span class="no">percents</span>.</li>
+      <li>После точки цифры читаются <b>по одной</b>: 2.89 = point <b>eight nine</b>, не «eighty-nine».</li>
+      <li>Ноль перед точкой у британцев — <b>nought</b> (zero тоже поймут).</li>
+    </ul>
+  </section>
+
+  <section class="rsec" data-n="6">
+    <h3 class="rh"><span class="rn">6</span><span class="rt">Temperatures <small>температура</small></span></h3>
+    <div class="tw"><table>
+      <tr><th>Пишем</th><th>Говорим</th></tr>
+      <tr><td class="en">22°C</td><td class="en">twenty-two degrees Celsius</td></tr>
+      <tr><td class="en">1°C</td><td class="en">one degree Celsius <span class="tag">без s</span></td></tr>
+      <tr><td class="en">-7°C</td><td class="en">minus seven (degrees Celsius)</td></tr>
+    </table></div>
+  </section>
+
+  <section class="rsec" data-n="7">
+    <h3 class="rh"><span class="rn">7</span><span class="rt">Big numbers <small>числа до 100 000</small></span></h3>
+    <p class="ru">Разбиваем число на группы и читаем по группам.</p>
+    <div class="tw"><table>
+      <tr><th>Число</th><th>Как читать</th></tr>
+      <tr><td class="en">943</td><td class="en">nine hundred <b>and</b> forty-three</td></tr>
+      <tr><td class="en">16,943</td><td class="en">sixteen thousand nine hundred <b>and</b> forty-three</td></tr>
+      <tr><td class="en">16,040</td><td class="en">sixteen thousand <b>and</b> forty</td></tr>
+      <tr><td class="en">100,000</td><td class="en">one hundred thousand</td></tr>
+      <tr><td class="en">2,015 <span class="ru">(людей)</span></td><td class="en">two thousand <b>and</b> fifteen</td></tr>
+    </table></div>
+    <ul>
+      <li><b>and</b> ставится перед последней частью, которая меньше 100: nine hundred <b>and</b> forty-three.</li>
+      <li>Если последняя часть — сотни, and не нужен: 16,900 = sixteen thousand nine hundred.</li>
+      <li>hundred / thousand после числа <b>никогда не получают -s</b>: <span class="no">sixteen thousands</span>.</li>
+      <li>21–99 пишутся через дефис: twenty-two, forty-three.</li>
+    </ul>
+  </section>
+</div>
+</template>
+
+<script>
+"use strict";
+/* ============================== data ============================== */
+var STUDENTS=[
+  {name:"Alesya",ru:"Алеся",c:"var(--pink)",t:"warm"},
+  {name:"Rita",ru:"Рита",c:"var(--yellow)",t:"warm"},
+  {name:"Rodion",ru:"Родион",c:"var(--green)",t:"cool"},
+  {name:"Vladimir",ru:"Владимир",c:"var(--blue)",t:"cool"}
+];
+
+var BLOCKS=[
+ {id:"write",kind:"write",colour:"pink",title:"Write it in words",sub:"Пишем словами: даты, дроби, проценты, числа",
+  items:[
+   {t:"date",d:"05/03",lab:"day / month",a:"the fifth of March",hint:"the f_____ of March",
+    rule:"Дата: the + порядковое + of + месяц. 05/03 по-британски — 5 марта."},
+   {t:"fraction",d:"¾",a:"three-quarters",hint:"three-q_______",
+    rule:"Числитель больше 1 → знаменатель во множественном числе."},
+   {t:"percent",d:"15%",a:"fifteen per cent",hint:"fifteen p__ c___",
+    rule:"per cent — два слова, без -s."},
+   {t:"decimal",d:"0.3",a:"nought point three",alt:["zero point three"],
+    altNote:"Принято, но в британском учебнике — nought point three.",hint:"n_____ point three",
+    rule:"Ноль перед точкой — nought."},
+   {t:"temp",d:"-7°C",a:"minus seven degrees Celsius",alt:["minus seven"],
+    altNote:"Так тоже правильно — в учебнике короткий вариант minus seven.",hint:"minus seven d______ C______",
+    rule:"minus + число + degrees Celsius."},
+   {t:"year",d:"1985",a:"nineteen eighty-five",hint:"nineteen e_____-five",
+    rule:"Год до 2000 делим на две части: 19 | 85."},
+   {t:"fraction",d:"⅖",a:"two-fifths",hint:"two-f_____",
+    rule:"5 → fifth, плюс -s, потому что числитель 2."},
+   {t:"big",d:"16,943",a:"sixteen thousand nine hundred and forty-three",hint:"sixteen thousand nine hundred ___ forty-three",
+    rule:"and перед последней частью меньше 100; thousand без -s."}
+  ]},
+
+ {id:"error",kind:"error",colour:"blue",title:"Spot the mistake",sub:"Найди ошибку и выбери замену",
+  items:[
+   {d:"22/03",w:["the","twenty-two","of","March"],i:1,o:["twenty-second","twentieth-two","second-twenty"],c:0,
+    ex:"В датах нужно порядковое числительное: the twenty-second of March."},
+   {d:"01/09",w:["the","first","from","September"],i:2,o:["of","on","at"],c:0,
+    ex:"Дата всегда с of: the first of September."},
+   {d:"15%",w:["fifteen","percents"],i:1,o:["per cent","per cents","of cent"],c:0,
+    ex:"per cent — два слова и никогда с -s."},
+   {d:"¾",w:["three","quarter"],i:1,o:["quarters","quarterth","quarteres"],c:0,
+    ex:"Числитель больше 1 → three-quarters."},
+   {d:"16,943",w:["sixteen","thousands","nine","hundred","and","forty-three"],i:1,o:["thousand","thousandth","thousands of"],c:0,
+    ex:"После числа thousand не получает -s."},
+   {d:"2.89",w:["two","point","eighty-nine"],i:2,o:["eight nine","eight and nine","point eight nine"],c:0,
+    ex:"После точки цифры читаем по одной: two point eight nine."},
+   {d:"1905",w:["nineteen","hundred","five"],i:1,o:["oh","and","zero"],c:0,
+    ex:"Ноль в середине года читается как oh: nineteen oh five."},
+   {d:"16,943",w:["sixteen","thousand","and","nine","hundred","and","forty-three"],i:2,o:["— убрать это слово","plus","with"],c:0,del:true,
+    ex:"and ставится только перед последней частью меньше 100."}
+  ]},
+
+ {id:"match",kind:"match",colour:"green",title:"Tricky pairs",sub:"Соедини похожие числа с их чтением",
+  items:[
+   {d:"1905",a:"nineteen oh five"},
+   {d:"1950",a:"nineteen fifty"},
+   {d:"1915",a:"nineteen fifteen"},
+   {d:"2015",a:"twenty fifteen"},
+   {d:"03/12",a:"the third of December"},
+   {d:"12/03",a:"the twelfth of March"}
+  ]},
+
+ {id:"reverse",kind:"reverse",colour:"yellow",title:"Quick round",sub:"Слышишь слова — выбираешь цифры",
+  items:[
+   {q:"nineteen oh nine",o:["1909","1990","1919"],c:0,ex:"oh = ноль в середине: 19-0-9."},
+   {q:"two thousand and nine",o:["2009","2090","2900"],c:0,ex:"2000–2009 читаются как two thousand and …"},
+   {q:"the eleventh of December",o:["11/12","12/11","11/11"],c:0,ex:"Британский формат: день/месяц."},
+   {q:"nought point nought five",o:["0.05","0.5","5.0"],c:0,ex:"Каждая цифра после точки отдельно: nought five = 05."},
+   {q:"two-fifths",o:["2/5","5/2","2/15"],c:0,ex:"Числитель — обычное число, знаменатель — порядковое."},
+   {q:"sixteen thousand and forty",o:["16,040","16,400","1,640"],c:0,ex:"and перед последней частью меньше 100 — значит дальше только 40."},
+   {q:"minus fifteen degrees Celsius",o:["-15°C","15°C","-50°C"],c:0,ex:"minus = знак минус."},
+   {q:"four point seven per cent",o:["4.7%","47%","0.47%"],c:0,ex:"point = десятичная точка."}
+  ]},
+
+ {id:"build",kind:"build",colour:"pink",title:"Build the phrase",sub:"Собери правильную фразу из блоков",
+  items:[
+   {d:"26/10",a:["the","twenty-sixth","of","October"],x:["on","twenty-six"],ex:"the + порядковое + of + месяц."},
+   {d:"1985",a:["nineteen","eighty-five"],x:["one thousand","hundred","and"],ex:"Год делим на две части, без hundred и and."},
+   {d:"16,943",a:["sixteen","thousand","nine","hundred","and","forty-three"],x:["thousands","of"],ex:"thousand без -s, and только перед 43."},
+   {d:"4.7%",a:["four","point","seven","per cent"],x:["percents","forty-seven"],ex:"per cent — два слова; после точки цифра по одной."},
+   {d:"-22°C",a:["minus","twenty-two","degrees","Celsius"],x:["below zero","degree"],ex:"minus + число + degrees Celsius."}
+  ]},
+
+ {id:"cards",kind:"cards",colour:"blue",title:"Say it out loud",sub:"Карточки: скажи вслух, потом переверни",
+  items:[
+   {d:"23/05",a:"the twenty-third of May"},
+   {d:"⅔",a:"two-thirds"},
+   {d:"4.7%",a:"four point seven per cent"},
+   {d:"1905",a:"nineteen oh five"},
+   {d:"100,000",a:"one hundred thousand"},
+   {d:"-3°C",a:"minus three degrees Celsius"},
+   {d:"2010",a:"twenty ten / two thousand and ten"},
+   {d:"31/12",a:"the thirty-first of December"},
+   {d:"0.05",a:"nought point nought five"},
+   {d:"2,015 people",a:"two thousand and fifteen"}
+  ]},
+
+ {id:"boss",kind:"quiz",colour:"green",title:"Final challenge",sub:"8 заданий на всё сразу",
+  items:[
+   {type:"write",t:"date",d:"01/09",a:"the first of September",hint:"the f____ of S________",rule:"День/месяц + the … of …"},
+   {type:"mc",d:"2011",q:"Which is correct?",o:["twenty eleven","two thousand eleven","twenty and eleven"],c:0,
+    ex:"С 2010 года: twenty eleven или two thousand and eleven."},
+   {type:"write",t:"big",d:"100,000",a:"one hundred thousand",hint:"one h______ t_______",rule:"hundred и thousand без -s."},
+   {type:"write",t:"fraction",d:"¾",a:"three-quarters",hint:"three-q_______",rule:"Числитель больше 1 → +s."},
+   {type:"mc",d:"0.75",q:"Which is correct?",o:["nought point seven five","nought point seventy-five","zero point seventy five"],c:0,
+    ex:"После точки цифры по одной: seven five."},
+   {type:"write",t:"temp",d:"22°C",a:"twenty-two degrees Celsius",hint:"twenty-two d______ C______",rule:"degrees Celsius."},
+   {type:"write",t:"date",d:"30/06",a:"the thirtieth of June",hint:"the t________ of June",rule:"30 → thirtieth (-y меняется на -ieth)."},
+   {type:"write",t:"big",d:"2,015 people",a:"two thousand and fifteen",hint:"two thousand ___ fifteen",rule:"Это число, а не год: нужен and."}
+  ]}
+];
+
+var PRAISE={
+ Alesya:"Alesya, ты прошла всё до конца — даты и дроби больше не страшные.",
+ Rita:"Rita, полный проход — теперь годы и проценты читаются на автомате.",
+ Rodion:"Rodion, дошёл до конца. Большие числа с and — уже твои.",
+ Vladimir:"Vladimir, весь путь пройден. Ordinals и dates закрыты."
+};
+
+var TABLAB={date:"date",fraction:"fraction",percent:"percentage",decimal:"decimal",
+ temp:"temperature",year:"year",big:"big number",ordinal:"ordinal"};
+
+/* ---------- topics: which item trains what ---------- */
+var TOPICS={
+ dates:{en:"Dates",ru:"даты"},
+ ordinals:{en:"Ordinal numbers",ru:"порядковые"},
+ fractions:{en:"Fractions",ru:"дроби"},
+ percent:{en:"Percentages",ru:"проценты"},
+ decimals:{en:"Decimals",ru:"десятичные"},
+ temp:{en:"Temperatures",ru:"температура"},
+ years:{en:"Years",ru:"годы"},
+ big:{en:"Big numbers",ru:"большие числа"}
+};
+var TOPIC_MAP={
+ write:  ["dates","fractions","percent","decimals","temp","years","fractions","big"],
+ error:  ["dates","dates","percent","fractions","big","decimals","years","big"],
+ match:  ["years","years","years","years","dates","dates"],
+ reverse:["years","years","dates","decimals","fractions","big","temp","percent"],
+ build:  ["dates","years","big","percent","temp"],
+ boss:   ["dates","years","big","fractions","decimals","temp","dates","big"]
+};
+function topicOf(id,i){var m=TOPIC_MAP[id];return m?m[i]:null;}
+
+/* ---------- extra practice pools (6 per topic) ---------- */
+var EXTRA={
+ dates:[
+  {t:"date",d:"14/02",a:"the fourteenth of February",hint:"the f__________ of F_______",rule:"14 → fourteenth."},
+  {t:"date",d:"21/08",a:"the twenty-first of August",hint:"the twenty-f____ of August",rule:"-th получает только последнее слово: twenty-first."},
+  {type:"mc",d:"09/07",q:"Which is correct?",o:["the ninth of July","the nineth of July","the ninth of June"],c:0,
+   ex:"nine → ninth, буква e выпадает. И 07 — это июль."},
+  {t:"ordinal",d:"12th",a:"the twelfth",hint:"the t______",rule:"twelve → twelfth, ve меняется на f."},
+  {t:"date",d:"30/11",a:"the thirtieth of November",hint:"the t________ of November",rule:"-y меняется на -ieth: thirtieth."},
+  {type:"mc",d:"3 May",q:"How do the British write this date?",o:["3rd May","May 3rd","3th May"],c:0,
+   ex:"Британцы пишут день первым: 3rd May. May 3rd — американский вариант."}
+ ],
+ fractions:[
+  {t:"fraction",d:"⅔",a:"two-thirds",hint:"two-t_____",rule:"Числитель больше 1 → знаменатель с -s."},
+  {t:"fraction",d:"¼",a:"a quarter",alt:["one quarter"],altNote:"Обычно говорят a quarter.",hint:"a q______",rule:"1/4 — особое слово quarter."},
+  {t:"fraction",d:"½",a:"a half",alt:["one half"],altNote:"Обычно говорят a half.",hint:"a h___",rule:"1/2 — особое слово half."},
+  {t:"fraction",d:"⅘",a:"four-fifths",hint:"four-f_____",rule:"five → fifth, плюс -s."},
+  {type:"mc",d:"⅗",q:"Which is correct?",o:["three-fifths","three-fifth","third-fifths"],c:0,
+   ex:"Числитель — обычное число, знаменатель — порядковое с -s."},
+  {t:"fraction",d:"⅚",a:"five-sixths",hint:"five-s______",rule:"six → sixth, плюс -s."}
+ ],
+ percent:[
+  {t:"percent",d:"25%",a:"twenty-five per cent",hint:"twenty-five p__ c___",rule:"per cent — два слова."},
+  {t:"percent",d:"7.5%",a:"seven point five per cent",hint:"seven p____ five per cent",rule:"Точка = point."},
+  {type:"mc",d:"100%",q:"Which is correct?",o:["one hundred per cent","one hundred per cents","a hundred percents"],c:0,
+   ex:"per cent никогда не получает -s и пишется в два слова."},
+  {t:"percent",d:"0.5%",a:"nought point five per cent",alt:["zero point five per cent"],altNote:"В учебнике — nought.",hint:"n_____ point five per cent",rule:"Ноль перед точкой — nought."},
+  {t:"percent",d:"60%",a:"sixty per cent",hint:"s____ per cent",rule:"per cent без -s."},
+  {type:"mc",d:"12.3%",q:"Which is correct?",o:["twelve point three per cent","twelve point thirty-three per cent","twelve comma three per cent"],c:0,
+   ex:"Десятичная — точка (point), не запятая."}
+ ],
+ decimals:[
+  {t:"decimal",d:"5.62",a:"five point six two",hint:"five point s__ t__",rule:"После точки цифры по одной."},
+  {t:"decimal",d:"0.9",a:"nought point nine",alt:["zero point nine"],altNote:"В учебнике — nought.",hint:"n_____ point nine",rule:"Ноль перед точкой — nought."},
+  {t:"decimal",d:"3.05",a:"three point nought five",alt:["three point zero five"],altNote:"В учебнике — nought.",hint:"three point n_____ five",rule:"Каждая цифра отдельно, включая ноль."},
+  {type:"mc",d:"12.45",q:"Which is correct?",o:["twelve point four five","twelve point forty-five","twelve point four and five"],c:0,
+   ex:"После точки читаем по одной цифре: four five."},
+  {t:"decimal",d:"0.07",a:"nought point nought seven",alt:["zero point zero seven"],altNote:"В учебнике — nought.",hint:"nought point n_____ seven",rule:"Ноль после точки тоже читается."},
+  {t:"decimal",d:"8.1",a:"eight point one",hint:"eight p____ one",rule:"point + цифра."}
+ ],
+ temp:[
+  {t:"temp",d:"30°C",a:"thirty degrees Celsius",hint:"thirty d______ C______",rule:"degrees Celsius."},
+  {t:"temp",d:"-12°C",a:"minus twelve degrees Celsius",alt:["minus twelve"],altNote:"Короткий вариант тоже верный.",hint:"m____ twelve degrees Celsius",rule:"Минус = minus."},
+  {t:"temp",d:"1°C",a:"one degree Celsius",hint:"one d_____ Celsius",rule:"При 1 — degree без -s!"},
+  {type:"mc",d:"-0.5°C",q:"Which is correct?",o:["minus nought point five degrees Celsius","minus zero point five degree Celsius","minus a half degrees Celsius"],c:0,
+   ex:"nought point five + degrees с -s, потому что не 1."},
+  {t:"temp",d:"18°C",a:"eighteen degrees Celsius",hint:"e_______ degrees Celsius",rule:"degrees Celsius."},
+  {t:"temp",d:"-25°C",a:"minus twenty-five degrees Celsius",alt:["minus twenty-five"],altNote:"Короткий вариант тоже верный.",hint:"minus twenty-f___ degrees Celsius",rule:"21–99 через дефис."}
+ ],
+ years:[
+  {t:"year",d:"1972",a:"nineteen seventy-two",hint:"nineteen s______-two",rule:"Делим на две части: 19 | 72."},
+  {t:"year",d:"1808",a:"eighteen oh eight",hint:"eighteen __ eight",rule:"Ноль в середине — oh."},
+  {t:"year",d:"2000",a:"two thousand",hint:"two t_______",rule:"2000 — просто two thousand."},
+  {t:"year",d:"2007",a:"two thousand and seven",hint:"two thousand ___ seven",rule:"2000–2009: two thousand and …"},
+  {type:"mc",d:"1600",q:"Which is correct?",o:["sixteen hundred","one thousand six hundred","sixteen thousand"],c:0,
+   ex:"Год с двумя нулями в конце: [число] + hundred."},
+  {t:"year",d:"2019",a:"twenty nineteen",alt:["two thousand and nineteen"],altNote:"Оба варианта верны с 2010 года.",hint:"t_____ nineteen",rule:"С 2010: twenty nineteen или two thousand and nineteen."}
+ ],
+ big:[
+  {t:"big",d:"4,512",a:"four thousand five hundred and twelve",hint:"four thousand five hundred ___ twelve",rule:"and перед последней частью меньше 100."},
+  {t:"big",d:"615",a:"six hundred and fifteen",hint:"six hundred ___ fifteen",rule:"and после hundred."},
+  {t:"big",d:"70,308",a:"seventy thousand three hundred and eight",hint:"seventy thousand three hundred ___ eight",rule:"thousand без -s, and перед 8."},
+  {type:"mc",d:"20,060",q:"Which is correct?",o:["twenty thousand and sixty","twenty thousand sixty","twenty thousands and sixty"],c:0,
+   ex:"Сотен нет, поэтому and идёт сразу перед 60. thousand без -s."},
+  {t:"big",d:"1,000",a:"one thousand",hint:"one t_______",rule:"Без -s и без and."},
+  {t:"big",d:"99,999",a:"ninety-nine thousand nine hundred and ninety-nine",hint:"ninety-nine thousand nine hundred ___ ninety-nine",rule:"and только перед последней частью меньше 100."}
+ ]
+};
+
+/* ============================== state ============================== */
+var S={name:null,ru:null,theme:"warm",screen:"rules",prog:{},mistakes:[]};
+var STATS={};      /* topic -> {seen, miss} */
+var SCORED_SEEN=0; /* how many scored tasks were actually attempted */
+var BONUS={};      /* topic -> {score, total} */
+function tally(topic,clean,isExtra){
+  if(!isExtra)SCORED_SEEN++;
+  if(!topic)return;
+  var s=STATS[topic]||(STATS[topic]={seen:0,miss:0});
+  s.seen++; if(!clean)s.miss++;
+}
+var TOTAL_ITEMS=0,DONE_ITEMS=0;
+BLOCKS.forEach(function(b){TOTAL_ITEMS+=b.items.length;});
+function paintTop(){
+  var f=document.querySelector("#top i");
+  if(f)f.style.width=Math.min(100,DONE_ITEMS/TOTAL_ITEMS*100)+"%";
+  var p=document.getElementById("pct");
+  if(p)p.textContent=DONE_ITEMS+" / "+TOTAL_ITEMS;
+}
+function bump(){DONE_ITEMS++;paintTop();}
+
+function weakList(){
+  return Object.keys(STATS).map(function(k){
+    return {topic:k,seen:STATS[k].seen,miss:STATS[k].miss,rate:STATS[k].miss/STATS[k].seen};
+  }).sort(function(a,b){return (b.miss-a.miss)||(b.rate-a.rate);});
+}
+BLOCKS.forEach(function(b){ S.prog[b.id]={done:false,score:0,seen:0,total:scoredTotal(b)}; });
+function scoredTotal(b){ return b.kind==="cards"?0:b.items.length; }
+
+function logMistake(block,prompt,mine,right,ex,topic){
+  S.mistakes.push({block:block,prompt:prompt,mine:mine,right:right,ex:ex||"",topic:topic||null});
+}
+
+/* ============================== helpers ============================== */
+var app=document.getElementById("app");
+var SCR=document.getElementById("scroller");
+function toTop(){
+  if(SCR)SCR.scrollTop=0;
+  try{if(window.pageYOffset)window.scroll(0,0);}catch(e){}
+}
+function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function norm(s){
+  return String(s).toLowerCase()
+    .replace(/[\u2019']/g,"")
+    .replace(/[-\u2013\u2014]/g," ")
+    .replace(/[.,!?;:"()\u00b0]/g," ")
+    .replace(/\s+/g," ").trim();
+}
+function lev(a,b){
+  var m=a.length,n=b.length,i,j,prev=[],cur=[];
+  for(j=0;j<=n;j++)prev[j]=j;
+  for(i=1;i<=m;i++){cur[0]=i;
+    for(j=1;j<=n;j++){
+      cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a.charAt(i-1)===b.charAt(j-1)?0:1));
+    }
+    prev=cur.slice();
+  }
+  return prev[n];
+}
+function drop(words,list){return words.filter(function(w){return list.indexOf(w)<0;});}
+
+var CARD2ORD={one:"first",two:"second",three:"third",four:"fourth",five:"fifth",six:"sixth",
+ seven:"seventh",eight:"eighth",nine:"ninth",ten:"tenth",eleven:"eleventh",twelve:"twelfth",
+ thirteen:"thirteenth",fourteen:"fourteenth",fifteen:"fifteenth",sixteen:"sixteenth",
+ seventeen:"seventeenth",eighteen:"eighteenth",nineteen:"nineteenth",twenty:"twentieth",thirty:"thirtieth"};
+
+/* status: ok | ok-note | digits | and | struct | brit | ordinal | plural | typo | wrong */
+function check(input,item){
+  var n=norm(input);
+  if(!n)return{status:"wrong",msg:"Пустое поле — напиши свой вариант."};
+  var main=norm(item.a);
+  if(n===main)return{status:"ok"};
+  var alts=item.alt||[];
+  for(var k=0;k<alts.length;k++){
+    if(n===norm(alts[k]))return{status:"ok-note",msg:item.altNote||""};
+  }
+  if(/\d/.test(n))return{status:"digits",msg:"Здесь нужно <b>словами</b>, без цифр."};
+
+  /* variants a real British speaker would use — accepted, with a nudge to the book form */
+  function soft(){return{status:"ok-note",msg:"Тоже верно. В учебнике — <b>"+esc(item.a)+"</b>."};}
+  function aOne(x){return x.replace(/\ba\b/g,"one");}
+  if(aOne(n)===aOne(main))return soft();                      /* a hundred = one hundred */
+  if(/ celsius$/.test(main)&&n===main.replace(/ celsius$/,""))return soft();   /* ...degrees */
+  if(main.indexOf("the ")===0&&main.indexOf(" of ")<0&&n===main.slice(4))return soft(); /* bare ordinal */
+
+  var uw=n.split(" "),mw=main.split(" ");
+
+  if(n.indexOf("percent")>=0 && norm(n.replace(/percent/g,"per cent"))===main)
+    return{status:"brit",msg:"Почти! В британском варианте — <b>per cent</b>, в два слова."};
+
+  if(drop(uw,["and"]).join(" ")===drop(mw,["and"]).join(" ")){
+    return uw.length<mw.length
+      ? {status:"and",msg:"Почти! Не хватает <b>and</b>: <b>"+esc(item.a)+"</b>. and ставится перед последней частью меньше 100."}
+      : {status:"and",msg:"Почти! Здесь <b>and</b> лишний: <b>"+esc(item.a)+"</b>."};
+  }
+  if(drop(uw,["the","of"]).join(" ")===drop(mw,["the","of"]).join(" ")){
+    return{status:"struct",msg:main.indexOf(" of ")>=0
+      ? "Почти! Дату по-британски произносят с <b>the … of …</b>: <b>"+esc(item.a)+"</b>."
+      : "Почти! Не хватает <b>the</b>: <b>"+esc(item.a)+"</b>."};
+  }
+  if(uw.length===mw.length){
+    var ord=null,plu=null,typo=[],fail=false;
+    for(var i=0;i<uw.length;i++){
+      if(uw[i]===mw[i])continue;
+      if(CARD2ORD[uw[i]]===mw[i]){ord=[uw[i],mw[i]];}
+      else if(uw[i]===mw[i]+"s"){plu=["extra",mw[i]];}
+      else if(mw[i]===uw[i]+"s"){plu=["missing",mw[i]];}
+      else if(lev(uw[i],mw[i])<=1){typo.push(mw[i]);}
+      else fail=true;
+    }
+    if(!fail&&ord)
+      return{status:"ordinal",msg:"Почти! Нужно порядковое числительное: <b>"+esc(ord[1])+"</b>, а не "+esc(ord[0])+"."};
+    if(!fail&&plu)
+      return plu[0]==="extra"
+        ? {status:"plural",msg:"Почти! Здесь <b>без -s</b>: "+esc(plu[1])+"."}
+        : {status:"plural",msg:"Почти! Здесь нужно <b>-s</b>: "+esc(plu[1])+"."};
+    if(!fail&&typo.length&&typo.length<=2)
+      return{status:"typo",msg:"Почти! Проверь букву: <b>"+esc(typo.join(", "))+"</b>."};
+  }
+  if(lev(n,main)<=1)return{status:"typo",msg:"Почти! Одна буква не та — присмотрись."};
+  return{status:"wrong",msg:""};
+}
+
+/* ============================== confetti ============================== */
+var cv=document.getElementById("fx"),ctx=cv.getContext("2d"),parts=[],raf=null;
+var REDUCED=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function fit(){cv.width=innerWidth;cv.height=innerHeight;}
+fit();addEventListener("resize",fit);
+function confetti(power){
+  if(REDUCED)return;
+  var count=Math.round(60+110*(power==null?1:Math.max(0,Math.min(1,power))));
+  var cols=S.theme==="cool"
+    ? ["#C9E3F0","#CFE8D5","#D3EAEA","#DEE6F6","#9FD3C7","#8FBEDA"]
+    : ["#F6C9DA","#FAEEC2","#FBDCC6","#E9DCF2","#E8B4CB","#F3D6A8"];
+  for(var i=0;i<count;i++){
+    parts.push({x:innerWidth/2+(Math.random()-.5)*innerWidth*.6,y:innerHeight*.28+Math.random()*40,
+      vx:(Math.random()-.5)*7,vy:Math.random()*-9-3,g:.22+Math.random()*.12,
+      s:5+Math.random()*7,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[i%cols.length],life:120+Math.random()*60});
+  }
+  if(!raf)tick();
+}
+function tick(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  for(var i=parts.length-1;i>=0;i--){
+    var p=parts[i];p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.r+=p.vr;p.life--;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;
+    ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);ctx.restore();
+    if(p.life<0||p.y>cv.height+30)parts.splice(i,1);
+  }
+  raf=parts.length?requestAnimationFrame(tick):(ctx.clearRect(0,0,cv.width,cv.height),null);
+}
+
+/* ============================== screens ============================== */
+var PENDING=null;   /* block id we just finished — used to open the next one */
+function slide(dir){
+  if(REDUCED)return;
+  app.classList.remove("pg-r","pg-l");
+  void app.offsetWidth;
+  app.classList.add(dir);
+}
+function paintHeader(){
+  var hdr=document.getElementById("hdr");
+  hdr.classList.toggle("bare",!S.name);
+  var r=document.getElementById("segRules"),t=document.getElementById("segTasks");
+  var onRules=(S.screen==="rules");
+  r.classList.toggle("on",onRules);
+  t.classList.toggle("on",!onRules);
+}
+function render(){
+  app.innerHTML="";
+  S.deep=false;
+  paintHeader();
+  if(!S.name)return screenStart();
+  if(S.screen==="rules")return screenRules();
+  return screenTasks();
+}
+function goRules(){
+  S.screen="rules";render();slide("pg-l");toTop();
+}
+function goTasks(nextAfter,dir){
+  var focusing=!!nextAfter;
+  PENDING=nextAfter||null;
+  S.screen="tasks";render();
+  if(!focusing){slide(dir||"pg-r");toTop();}
+}
+
+function wordmark(){
+  var h=el("h1",null,'Numbers <em>Lab</em><span class="by">by Valeria</span>');
+  return h;
+}
+function steps(active){
+  var wrap=el("div","steps");
+  ["1 · Your name","2 · The rules","3 · The tasks"].forEach(function(t,i){
+    wrap.appendChild(el("span","step "+(i===active?"on":(i<active?"past":"")),t));
+  });
+  return wrap;
+}
+
+function screenStart(){
+  var h=el("div");
+  h.appendChild(el("p","eyebrow","Numbers · level A2"));
+  h.appendChild(wordmark());
+  h.appendChild(el("p","lead","Dates, fractions, percentages, decimals, temperatures, years and big numbers. About 20 minutes.<br><span class=\"ru\">Делай всё за один раз: если закрыть страницу, прогресс не сохранится.</span>"));
+  h.appendChild(steps(0));
+  var box=el("div","card");
+  box.appendChild(el("p","eyebrow","Step 1 — required"));
+  box.appendChild(el("p","pick-q","Who is doing this homework?"));
+  box.appendChild(el("p","ru","Нажми на своё имя — оно подсветится зелёным — и жми кнопку внизу. Дальше приложение будет обращаться к тебе по имени."));
+  var g=el("div","names"),chosen=null,btns=[];
+  var gate=el("div","gate");
+  var go=el("button","btn wide","Select your name first");
+  go.type="button";go.disabled=true;
+  STUDENTS.forEach(function(st){
+    var b=el("button","name",'<span class="av" style="background:'+st.c+'">'+st.name.charAt(0)+
+      '</span><span class="who"><b>'+st.name+'</b><span>'+st.ru+'</span></span><span class="mark">✓</span>');
+    b.type="button";b.setAttribute("aria-pressed","false");
+    b.onclick=function(){
+      chosen=st;
+      btns.forEach(function(x){x.setAttribute("aria-pressed","false");});
+      b.setAttribute("aria-pressed","true");
+      go.disabled=false;
+      go.textContent="Continue as "+st.name+" →";
+    };
+    btns.push(b);g.appendChild(b);
+  });
+  go.onclick=function(){
+    if(!chosen)return;
+    S.name=chosen.name;S.ru=chosen.ru;S.theme=chosen.t;
+    document.body.className=(chosen.t==="cool"?"cool":"");
+    goRules();
+  };
+  box.appendChild(g);
+  gate.appendChild(go);
+  box.appendChild(gate);
+  h.appendChild(box);
+  app.appendChild(h);
+}
+
+/* ---------- step 2: rules only ---------- */
+function screenRules(){
+  var bar=el("div","sticky");
+  var next=el("button","btn","To the tasks →");next.type="button";
+  next.onclick=goTasks;
+  bar.appendChild(next);
+  bar.appendChild(el("span","where",S.name+" · step 2 of 3 — rules"));
+  app.appendChild(bar);
+  app.appendChild(el("h2",null,"Page 1 — the rules"));
+  app.appendChild(el("p","ru","Заданий на этой странице нет — только правила, семь разделов. Прочитал → жми <b>Tasks ▶</b> сверху или большую кнопку внизу."));
+  app.appendChild(document.getElementById("rulesTpl").content.cloneNode(true));
+  var cta=el("div","card");
+  cta.appendChild(el("p","eyebrow","Step 2 finished"));
+  cta.appendChild(el("p","pick-q","Ready, "+S.name+"?"));
+  cta.appendChild(el("p","ru","Дальше — 7 блоков заданий. Правила остаются под рукой."));
+  var b2=el("button","btn wide","Start the tasks →");b2.type="button";
+  b2.onclick=goTasks;
+  cta.appendChild(b2);
+  app.appendChild(cta);
+}
+
+function screenTasks(){
+  var done=BLOCKS.filter(function(b){return S.prog[b.id].done;}).length;
+  var bar0=el("div","sticky");
+  var toRules=el("button","btn ghost","← Rules");toRules.type="button";
+  toRules.onclick=goRules;
+  bar0.appendChild(toRules);
+  bar0.appendChild(el("span","where",S.name+" · step 3 of 3 — tasks"));
+  app.appendChild(bar0);
+
+  var head=el("div");
+  head.appendChild(el("h2",null,"Page 2 — the tasks"));
+  head.appendChild(el("p","ru","Семь блоков, начинай с любого. Вернуться к правилам — кнопка <b>Rules</b> сверху слева; посмотреть их не выходя из задания — кнопка <b>Rules</b> внизу справа."));
+  head.appendChild(el("div","topline",'<span>'+done+' of '+BLOCKS.length+' blocks finished</span><span>'+
+    DONE_ITEMS+' / '+TOTAL_ITEMS+' tasks · ~20 min</span>'));
+  var bar=el("div","bar");bar.appendChild(el("i"));
+  bar.firstChild.style.width=(done/BLOCKS.length*100)+"%";
+  head.appendChild(bar);
+  app.appendChild(head);
+
+  var menu=el("div","menu");
+  BLOCKS.forEach(function(b,idx){
+    var p=S.prog[b.id];
+    var empty=(p.done&&p.seen===0);
+    var c=el("button","m-card s-"+b.colour+(p.done&&!empty?" done":"")+(empty?" empty":""),
+      '<span class="stripe"></span>'+
+      (p.done?'<span class="flag'+(empty?' warn':'')+'">'+(empty?'empty':'done '+(p.total?p.score+'/'+p.total:'✓'))+'</span>':'')+
+      '<span class="num">Block '+(idx+1)+'</span><b>'+b.title+'</b><small>'+b.sub+'</small>');
+    c.type="button";
+    c.onclick=function(){openBlock(b.id);};
+    menu.appendChild(c);
+  });
+  app.appendChild(menu);
+
+  if(PENDING){
+    var order=BLOCKS.map(function(x){return x.id;});
+    var from=order.indexOf(PENDING),next=-1;
+    for(var k=1;k<=order.length;k++){
+      var j=(from+k)%order.length;
+      if(!S.prog[order[j]].done){next=j;break;}
+    }
+    var target=next>-1?menu.children[next]:null;
+    PENDING=null;
+    setTimeout(function(){
+      var node=target||document.querySelector(".btn.wide");
+      if(!node)return;
+      try{node.scrollIntoView({behavior:REDUCED?"auto":"smooth",block:"center"});}
+      catch(e){try{node.scrollIntoView();}catch(e2){}}
+      node.classList.add("focusme");
+      setTimeout(function(){node.classList.remove("focusme");},2400);
+    },40);
+  }
+
+  var fin=el("button","btn wide","See my results");
+  fin.type="button";
+  if(done<BLOCKS.length){
+    fin.disabled=true;
+    fin.textContent="Finish all 7 blocks to see your results";
+  }else{
+    fin.onclick=screenResults;
+  }
+  app.appendChild(fin);
+}
+
+function blockHead(b,extra){
+  var w=el("div");
+  var bar=el("div","sticky");
+  var back=el("button","btn ghost","← All blocks");back.type="button";
+  back.onclick=function(){askLeave(function(){goTasks(null,"pg-l");});};
+  bar.appendChild(back);
+  bar.appendChild(el("span","where",S.name+" · block "+(BLOCKS.indexOf(b)+1)+" of 7"));
+  w.appendChild(bar);
+  w.appendChild(el("h2",null,b.title));
+  w.appendChild(el("p","ru",extra||b.sub));
+  return w;
+}
+
+function nextUnfinished(afterId){
+  var order=BLOCKS.map(function(x){return x.id;}),from=order.indexOf(afterId),k,j;
+  for(k=1;k<=order.length;k++){
+    j=(from+k)%order.length;
+    if(!S.prog[order[j]].done)return order[j];
+  }
+  return null;
+}
+function finishBar(b,infoGetter){
+  var wrap=el("div");
+  var btn=el("button","btn wide","Finish this block");
+  btn.type="button";
+
+  function close(info){
+    var total=S.prog[b.id].total,isCards=(b.kind==="cards");
+    S.prog[b.id].done=true;S.prog[b.id].score=info.score;S.prog[b.id].seen=info.seen;
+    btn.disabled=true;
+    var go=function(){goTasks(b.id);};
+    var nextId=nextUnfinished(b.id);
+    var label=nextId?"Next block →":"Back to the tasks";
+    var title,body,tone;
+    if(info.seen===0){
+      tone="plain";title="Block closed with no answers";
+      body="Задания этого блока остались непройденными. Если где-то застрянешь — в каждом есть кнопка <b>Hint</b>, а после третьей попытки подсказка появится сама.";
+    }else if(isCards){
+      confetti(.6);
+      tone="ok";title="Deck finished, "+S.name;
+      body="Ты проговорил <b>"+info.seen+"</b> карточек вслух — это и была задача.";
+    }else if(info.score===0){
+      tone="almost";title="Every answer needed a correction";
+      body="До правильного ответа ты дошёл везде, но каждый раз со второй попытки. Загляни в правила и пройди блок ещё раз — задания те же, зато уже знакомые.";
+    }else{
+      var ratio=total?info.score/total:1;
+      confetti(ratio);
+      tone="ok";
+      title=info.score===total?("Every single one first time, "+S.name+"!"):("Nice work, "+S.name+"!");
+      body='<div class="score-line">'+info.score+" / "+total+"</div>"+
+           (info.score===total?"Ни одной поправки в этом блоке."
+            :"Столько заданий ты взял с первой попытки. Остальные разберём в конце.");
+    }
+    dialog(title,body,[{label:label,go:go}],tone,go);
+  }
+
+  btn.onclick=function(){
+    var info=infoGetter();
+    if(info.seen===0){
+      confirmBox("Close an empty block?",
+        "В блоке нет ни одного ответа — задания останутся непройденными.",
+        "Close it anyway","Go back and try",function(){close(info);});
+      return;
+    }
+    close(info);
+  };
+  wrap.appendChild(btn);
+  return wrap;
+}
+
+function openBlock(id){
+  var b=BLOCKS.filter(function(x){return x.id===id;})[0];
+  app.innerHTML="";
+  S.deep=true;
+  app.appendChild(blockHead(b));
+  if(b.kind==="write"||b.kind==="quiz")blockWrite(b);
+  else if(b.kind==="error")blockError(b);
+  else if(b.kind==="match")blockMatch(b);
+  else if(b.kind==="reverse")blockReverse(b);
+  else if(b.kind==="build")blockBuild(b);
+  else if(b.kind==="cards")blockCards(b);
+  slide("pg-r");
+  toTop();
+}
+
+/* ---------- typing block (also used by the boss quiz and extra rounds) ---------- */
+function blockWrite(b){
+  var score=0,seen=0;
+  b.items.forEach(function(it,idx){
+    var topic=topicOf(b.id,idx);
+    var cb=function(clean){seen++;if(clean)score++;};
+    app.appendChild(it.type==="mc"?mcCard(it,b.title,topic,cb):writeCard(it,b.title,topic,cb));
+  });
+  app.appendChild(finishBar(b,function(){return{score:score,seen:seen};}));
+}
+
+/* one typing card. cb(clean) fires once, on the first Check. */
+function writeCard(it,blockTitle,topic,cb,noBump){
+  var card=el("div","card");
+  card.appendChild(el("span","tab t-"+(it.t||"big"),TABLAB[it.t]||"number"));
+  card.appendChild(el("div","digits",esc(it.d)+(it.lab?'<small>'+it.lab+'</small>':"")));
+  var inp=document.createElement("input");
+  inp.type="text";inp.placeholder="type it in words…";
+  inp.setAttribute("autocapitalize","none");inp.setAttribute("autocomplete","off");inp.spellcheck=false;
+  card.appendChild(inp);
+  var row=el("div","row");row.style.marginTop="10px";
+  var chk=el("button","btn","Check");chk.type="button";
+  var hb=el("button","btn ghost","Hint");hb.type="button";
+  row.appendChild(chk);row.appendChild(hb);
+  card.appendChild(row);
+  var fb=el("div","fb");card.appendChild(fb);
+  var tries=0,logged=false,usedHint=false,solved=false,scored=false;
+
+  function showHint(){
+    usedHint=true;
+    fb.className="fb hint show";
+    fb.innerHTML="<b>"+esc(it.hint)+"</b><br><span class=\"ru\">"+esc(it.rule||"")+"</span>";
+  }
+  hb.onclick=showHint;
+
+  function settle(clean){
+    if(scored)return;
+    scored=true;
+    tally(topic,clean,noBump);
+    if(!noBump)bump();
+    cb(clean);
+  }
+  function done(note){
+    var clean=(tries===1&&!usedHint);
+    solved=true;
+    inp.disabled=true;chk.disabled=true;hb.disabled=true;
+    card.classList.add("solved","pop");
+    fb.className="fb ok show";
+    fb.innerHTML="✓ <b>"+esc(it.a)+"</b>"+(note?"<br><span class=\"ru\">"+note+"</span>":"")+
+      (clean?" <span class=\"ru\">— с первого раза, "+S.name+"!</span>":"");
+    settle(clean);
+  }
+  chk.onclick=function(){
+    if(solved)return;
+    tries++;
+    var r=check(inp.value,it);
+    if(r.status==="ok"){done();return;}
+    if(r.status==="ok-note"){done(r.msg);return;}
+    settle(false);
+    if(!logged){logMistake(blockTitle,it.d,inp.value,it.a,it.rule||"",topic);logged=true;}
+    card.classList.remove("pop");card.classList.add("shake");
+    setTimeout(function(){card.classList.remove("shake");},320);
+    if(r.status==="wrong"){
+      fb.className="fb bad show";
+      fb.innerHTML=tries>=5
+        ?"<span class=\"ru\">Правильный вариант: </span><b>"+esc(it.a)+"</b><br><span class=\"ru\">Впиши его сам — так запомнится. "+esc(it.rule||"")+"</span>"
+        :tries>=3
+        ?"Не то. Подсказка: <b>"+esc(it.hint)+"</b><br><span class=\"ru\">"+esc(it.rule||"")+"</span>"
+        :"Не то. Попробуй ещё раз — или жми Hint.";
+      if(tries>=3)usedHint=true;
+    }else{
+      fb.className="fb almost show";
+      fb.innerHTML=r.msg;
+      if(tries>=3)fb.innerHTML+="<br><b>"+esc(it.a)+"</b>";
+    }
+  };
+  inp.addEventListener("keydown",function(e){if(e.key==="Enter")chk.click();});
+  return card;
+}
+
+function mcCard(it,blockTitle,topic,cb,noBump){
+  var card=el("div","card");
+  card.appendChild(el("span","tab t-"+(it.t||"year"),"choose"));
+  card.appendChild(el("div","digits",esc(it.d)));
+  card.appendChild(el("p",null,esc(it.q||"Which is correct?")));
+  var opts=el("div","opts"),fb=el("div","fb"),answered=false,tries=0,scored=false;
+  function settle(clean){if(scored)return;scored=true;tally(topic,clean,noBump);if(!noBump)bump();cb(clean);}
+  it.o.forEach(function(o,i){
+    var btn=el("button","opt",esc(o));btn.type="button";
+    btn.onclick=function(){
+      if(answered)return;tries++;
+      if(i===it.c){
+        answered=true;btn.className="opt pick-ok";
+        Array.prototype.forEach.call(opts.children,function(c){c.disabled=true;});
+        card.classList.add("solved","pop");
+        fb.className="fb ok show";fb.innerHTML="✓ <span class=\"ru\">"+esc(it.ex||"")+"</span>";
+        settle(tries===1);
+      }else{
+        btn.className="opt pick-bad";btn.disabled=true;
+        fb.className="fb bad show";fb.innerHTML="<span class=\"ru\">Не этот вариант. Попробуй другой.</span>";
+        settle(false);
+        if(tries===1)logMistake(blockTitle,it.d,it.o[i],it.o[it.c],it.ex||"",topic);
+      }
+    };
+    opts.appendChild(btn);
+  });
+  card.appendChild(opts);card.appendChild(fb);
+  return card;
+}
+
+/* ---------- spot the mistake ---------- */
+function blockError(b){
+  var score=0,seen=0;
+  b.items.forEach(function(it,idx){
+    var topic=topicOf(b.id,idx),scored=false;
+    function settle(clean){if(scored)return;scored=true;seen++;tally(topic,clean);bump();}
+    var card=el("div","card");
+    card.appendChild(el("span","tab t-date","find the mistake"));
+    card.appendChild(el("div","digits",esc(it.d)));
+    var sent=el("div","sentence"),fb=el("div","fb"),opts=el("div","opts");
+    var found=false,fixed=false,wrongTaps=0,logged=false;
+    it.w.forEach(function(w,i){
+      var btn=el("button","word",esc(w));btn.type="button";
+      btn.onclick=function(){
+        if(fixed)return;
+        if(i===it.i){
+          found=true;btn.classList.add("found");
+          fb.className="fb almost show";fb.innerHTML="Yes — this is the problem. <span class=\"ru\">Теперь выбери замену.</span>";
+          buildOpts(btn);
+        }else{
+          wrongTaps++;btn.classList.add("miss");
+          setTimeout(function(){btn.classList.remove("miss");},420);
+          fb.className="fb bad show";
+          fb.innerHTML=wrongTaps>=3
+            ?"<span class=\"ru\">Здесь всё в порядке. Подсказка: ошибка в слове номер "+(it.i+1)+".</span>"
+            :"<span class=\"ru\">Это слово правильное. Ищи дальше.</span>";
+          settle(false);
+          if(!logged){logMistake(b.title,it.w.join(" "),it.w[i]+" (не то слово)",it.w[it.i]+" → "+it.o[it.c],it.ex,topic);logged=true;}
+        }
+      };
+      sent.appendChild(btn);sent.appendChild(document.createTextNode(" "));
+    });
+    function buildOpts(wordBtn){
+      opts.innerHTML="";
+      it.o.forEach(function(o,i){
+        var ob=el("button","opt",esc(o));ob.type="button";
+        ob.onclick=function(){
+          if(fixed)return;
+          if(i===it.c){
+            fixed=true;ob.className="opt pick-ok";
+            Array.prototype.forEach.call(opts.children,function(c){c.disabled=true;});
+            wordBtn.classList.remove("found");wordBtn.classList.add("fixed");
+            wordBtn.textContent=it.del?"—":o;
+            card.classList.add("solved","pop");
+            fb.className="fb ok show";
+            fb.innerHTML="✓ <b>"+esc(correctSentence(it))+"</b><br><span class=\"ru\">"+esc(it.ex)+"</span>";
+            settle(wrongTaps===0&&!logged);
+            if(wrongTaps===0&&!logged)score++;
+          }else{
+            ob.className="opt pick-bad";ob.disabled=true;
+            fb.className="fb bad show";fb.innerHTML="<span class=\"ru\">Не эта замена. Посмотри правило в шпаргалке.</span>";
+            settle(false);
+            if(!logged){logMistake(b.title,it.w.join(" "),it.o[i],it.o[it.c],it.ex,topic);logged=true;}
+          }
+        };
+        opts.appendChild(ob);
+      });
+    }
+    card.appendChild(sent);card.appendChild(opts);card.appendChild(fb);
+    app.appendChild(card);
+  });
+  app.appendChild(finishBar(b,function(){return{score:score,seen:seen};}));
+}
+function correctSentence(it){
+  var out=[];
+  it.w.forEach(function(w,i){
+    if(i===it.i){ if(!it.del)out.push(it.o[it.c]); }
+    else out.push(w);
+  });
+  return out.join(" ");
+}
+
+/* ---------- match ---------- */
+function blockMatch(b){
+  var card=el("div","card");
+  card.appendChild(el("span","tab t-year","tap a number, then its reading"));
+  var grid=el("div","match"),fb=el("div","fb");
+  var left=b.items.map(function(it,i){return{i:i,txt:it.d};});
+  var right=b.items.map(function(it,i){return{i:i,txt:it.a};}).sort(function(){return Math.random()-.5;});
+  var sel=null,matched=0,seen=0,spoiled={},lb=[],rb=[];
+  var seq=0;
+  function box(item,cls){
+    var t=el("button","tile "+cls,esc(item.txt));t.type="button";t.dataset.i=item.i;
+    seq++;
+    return t;
+  }
+  var colL=el("div","mcol"),colR=el("div","mcol");
+  var headL=el("div","mhead","the figures"),headR=el("div","mhead","how to say it");
+  left.forEach(function(o){var t=box(o,"n");lb.push(t);colL.appendChild(t);
+    t.onclick=function(){ if(t.classList.contains("gone"))return;
+      lb.forEach(function(x){x.classList.remove("sel");});
+      t.classList.add("sel");sel=o.i;
+      fb.className="fb hint show";fb.innerHTML="Now tap the reading for <b>"+esc(o.txt)+"</b>.";};
+  });
+  right.forEach(function(o){var t=box(o,"");rb.push(t);colR.appendChild(t);
+    t.onclick=function(){
+      if(t.classList.contains("gone"))return;
+      if(sel===null){fb.className="fb hint show";fb.innerHTML="<span class=\"ru\">Сначала выбери число слева.</span>";return;}
+      var lt=lb.filter(function(x){return +x.dataset.i===sel;})[0];
+      if(o.i===sel){
+        t.className="tile gone";lt.className="tile n gone";matched++;
+        tally(topicOf(b.id,sel),!spoiled[sel]);bump();seen++;
+        fb.className="fb ok show";fb.innerHTML="✓ <b>"+esc(b.items[sel].d)+" = "+esc(b.items[sel].a)+"</b>";
+        sel=null;
+        if(matched===b.items.length){fb.innerHTML="✓ All pairs matched, "+S.name+"!";}
+      }else{
+        t.classList.add("err");
+        setTimeout(function(){t.classList.remove("err");},420);
+        spoiled[sel]=true;
+        fb.className="fb bad show";
+        fb.innerHTML="<span class=\"ru\">Не пара. </span>"+esc(b.items[sel].d)+" <span class=\"ru\">читается иначе — сравни внимательно.</span>";
+        logMistake(b.title,b.items[sel].d,o.txt,b.items[sel].a,"",topicOf(b.id,sel));
+      }
+    };
+  });
+  var wrapL=el("div"),wrapR=el("div");
+  wrapL.appendChild(headL);wrapL.appendChild(colL);
+  wrapR.appendChild(headR);wrapR.appendChild(colR);
+  grid.appendChild(wrapL);grid.appendChild(wrapR);
+  card.appendChild(grid);card.appendChild(fb);
+  app.appendChild(card);
+  app.appendChild(finishBar(b,function(){
+    var s=0;b.items.forEach(function(_,i){if(!spoiled[i])s++;});
+    return{score:Math.min(s,matched),seen:seen};
+  }));
+}
+
+/* ---------- reverse quick round ---------- */
+function blockReverse(b){
+  var score=0,seen=0;
+  b.items.forEach(function(it,idx){
+    var topic=topicOf(b.id,idx),scored=false;
+    function settle(clean){if(scored)return;scored=true;seen++;tally(topic,clean);bump();}
+    var card=el("div","card");
+    card.appendChild(el("span","tab t-decimal","which figures?"));
+    card.appendChild(el("div","digits",'"'+esc(it.q)+'"'));
+    var opts=el("div","opts"),fb=el("div","fb"),answered=false,tries=0;
+    it.o.forEach(function(o,i){
+      var btn=el("button","opt",esc(o));btn.type="button";
+      btn.onclick=function(){
+        if(answered)return;tries++;
+        if(i===it.c){
+          answered=true;btn.className="opt pick-ok";
+          Array.prototype.forEach.call(opts.children,function(c){c.disabled=true;});
+          card.classList.add("solved","pop");
+          fb.className="fb ok show";fb.innerHTML="✓ <span class=\"ru\">"+esc(it.ex)+"</span>";
+          settle(tries===1);
+          if(tries===1)score++;
+        }else{
+          btn.className="opt pick-bad";btn.disabled=true;
+          fb.className="fb bad show";fb.innerHTML="<span class=\"ru\">Нет. "+esc(it.ex)+"</span>";
+          settle(false);
+          if(tries===1)logMistake(b.title,it.q,it.o[i],it.o[it.c],it.ex,topic);
+        }
+      };
+      opts.appendChild(btn);
+    });
+    card.appendChild(opts);card.appendChild(fb);
+    app.appendChild(card);
+  });
+  app.appendChild(finishBar(b,function(){return{score:score,seen:seen};}));
+}
+
+/* ---------- build from blocks ---------- */
+function blockBuild(b){
+  var score=0,seen=0;
+  b.items.forEach(function(it,idx){
+    var topic=topicOf(b.id,idx),scored=false;
+    function settle(clean){if(scored)return;scored=true;seen++;tally(topic,clean);bump();}
+    var card=el("div","card");
+    card.appendChild(el("span","tab t-big","build it"));
+    card.appendChild(el("div","digits",esc(it.d)));
+    var slot=el("div","slot"),pool=el("div","pool"),fb=el("div","fb");
+    var chosen=[],tries=0,done=false,logged=false;
+    var all=it.a.concat(it.x).slice().sort(function(){return Math.random()-.5;});
+    var chips=[];
+    all.forEach(function(w,i){
+      var c=el("button","chip",esc(w));c.type="button";c.dataset.w=w;
+      c.onclick=function(){
+        if(done||c.classList.contains("used"))return;
+        c.classList.add("used");
+        chosen.push({w:w,chip:c});
+        var s=el("button","chip inslot",esc(w));s.type="button";
+        s.onclick=function(){
+          if(done)return;
+          var idx2=-1;chosen.forEach(function(x,j){if(x.el===s)idx2=j;});
+          if(idx2>-1){chosen[idx2].chip.classList.remove("used");chosen.splice(idx2,1);slot.removeChild(s);}
+        };
+        chosen[chosen.length-1].el=s;
+        slot.appendChild(s);
+      };
+      chips.push(c);pool.appendChild(c);
+    });
+    var row=el("div","row");row.style.marginTop="12px";
+    var chk=el("button","btn","Check");chk.type="button";
+    var clr=el("button","btn ghost","Clear");clr.type="button";
+    clr.onclick=function(){
+      if(done)return;
+      chosen.forEach(function(x){x.chip.classList.remove("used");});
+      chosen=[];slot.innerHTML="";
+    };
+    chk.onclick=function(){
+      if(done)return;
+      tries++;
+      var mine=chosen.map(function(x){return x.w;}).join(" ");
+      if(norm(mine)===norm(it.a.join(" "))){
+        done=true;card.classList.add("solved","pop");
+        chk.disabled=true;clr.disabled=true;
+        fb.className="fb ok show";
+        fb.innerHTML="✓ <b>"+esc(it.a.join(" "))+"</b><br><span class=\"ru\">"+esc(it.ex)+"</span>";
+        settle(tries===1);
+        if(tries===1)score++;
+      }else{
+        card.classList.add("shake");setTimeout(function(){card.classList.remove("shake");},320);
+        fb.className="fb bad show";
+        fb.innerHTML=tries>=3
+          ?"<span class=\"ru\">Смотри: правильный порядок — </span><b>"+esc(it.a.join(" "))+"</b><br><span class=\"ru\">"+esc(it.ex)+"</span>"
+          :"<span class=\"ru\">Пока не то. Лишние блоки в наборе есть — не все нужны.</span>";
+        settle(false);
+        if(!logged){logMistake(b.title,it.d,mine||"—",it.a.join(" "),it.ex,topic);logged=true;}
+      }
+    };
+    row.appendChild(chk);row.appendChild(clr);
+    card.appendChild(slot);card.appendChild(pool);card.appendChild(row);card.appendChild(fb);
+    app.appendChild(card);
+  });
+  app.appendChild(finishBar(b,function(){return{score:score,seen:seen};}));
+}
+
+/* ---------- flashcards ---------- */
+function blockCards(b){
+  var i=0,knew=0,practise=0,flipped=false;
+  var card=el("div","card");
+  var counter=el("p","eyebrow","");
+  var face=el("div","deck-face");
+  var deck=el("div","deck");deck.appendChild(face);
+  var row=el("div","row");
+  var kn=el("button","btn","I knew it");kn.type="button";
+  var pr=el("button","btn ghost","Need practice");pr.type="button";
+  var fb=el("div","fb");
+  card.appendChild(counter);card.appendChild(deck);card.appendChild(row);card.appendChild(fb);
+  row.appendChild(kn);row.appendChild(pr);
+
+  function draw(){
+    if(i>=b.items.length){
+      face.innerHTML='<div class="say">Deck finished, '+esc(S.name)+'</div><div class="tip">Knew it: '+knew+' · Need practice: '+practise+'</div>';
+      counter.textContent=b.items.length+" of "+b.items.length;
+      kn.disabled=pr.disabled=true;
+      return;
+    }
+    flipped=false;
+    counter.textContent=(i+1)+" of "+b.items.length;
+    face.innerHTML='<div class="big">'+esc(b.items[i].d)+'</div><div class="tip">say it out loud, then tap the card</div>';
+    if(!REDUCED){
+      face.classList.remove("an-up");void face.offsetWidth;face.classList.add("an-up");
+      setTimeout(function(){face.classList.remove("an-up");},420);
+    }
+    kn.disabled=pr.disabled=true;
+  }
+  face.onclick=function(){
+    if(i>=b.items.length||flipped)return;
+    flipped=true;
+    var back='<div class="tip">'+esc(b.items[i].d)+'</div><div class="say">'+esc(b.items[i].a)+
+             '</div><div class="tip">did you say it like this?</div>';
+    if(REDUCED){face.innerHTML=back;kn.disabled=pr.disabled=false;return;}
+    face.classList.remove("an-up");face.style.animationDelay="";
+    face.classList.add("flipping");
+    setTimeout(function(){
+      face.innerHTML=back;
+      face.classList.remove("flipping");
+      kn.disabled=pr.disabled=false;
+    },190);
+  };
+  kn.onclick=function(){if(!flipped)return;knew++;i++;bump();draw();};
+  pr.onclick=function(){if(!flipped)return;practise++;i++;bump();draw();};
+  draw();
+  app.appendChild(card);
+  app.appendChild(el("p","ru","Здесь нет правильных и неправильных ответов — важно произнести вслух до того, как перевернёшь карточку."));
+  app.appendChild(finishBar(b,function(){return{score:0,seen:knew+practise};}));
+}
+
+/* ---------- results ---------- */
+function screenResults(justFinished){
+  app.innerHTML="";
+  S.deep=true;
+  var total=0,got=0;
+  BLOCKS.forEach(function(b){total+=S.prog[b.id].total;got+=S.prog[b.id].score;});
+  var pct=total?Math.round(got/total*100):0;
+  app.appendChild(el("p","eyebrow","Results · "+S.name));
+  app.appendChild(el("h1",null,"Well done, <em>"+esc(S.name)+"</em>"));
+  var c=el("div","card");
+  var skipped=Math.max(0,total-SCORED_SEEN);
+  c.appendChild(el("div","score",got+" / "+total));
+  c.appendChild(el("p",null,pct+"% first-time correct"+
+    (skipped?' · <span class="mine">'+skipped+" задан"+(skipped===1?"ие":"ий")+" без ответа</span>":"")));
+  if(SCORED_SEEN===0){
+    c.appendChild(el("p","ru","Все блоки закрыты, но ни на одно задание ответа нет. Открой любой блок и попробуй: если где-то застрянешь, есть кнопка <b>Hint</b>, а после третьей попытки подсказка появится сама."));
+  }else{
+    c.appendChild(el("p","ru",PRAISE[S.name]||"Ты дошёл до конца — это главное."));
+    c.appendChild(el("p","ru",pct>=85?"Уровень «сам объясню другому». Ошибок почти нет — можно смело говорить даты и большие числа вслух."
+      :pct>=60?"Хорошая база. Ниже — то, что стоит проговорить ещё раз перед уроком."
+      :"Основное ты уже понял, но список ниже стоит перечитать и проговорить вслух — там всё, что подвело."));
+  }
+  app.appendChild(c);
+
+  /* ---- topic diagnosis ---- */
+  var weak=weakList(),worst=weak.filter(function(x){return x.miss>0;});
+  if(weak.length){
+    app.appendChild(el("h3",null,"Where you slipped — по темам"));
+    var diag=el("div","card");
+    if(!worst.length){
+      diag.appendChild(el("p",null,"Every topic clean. <span class=\"ru\">Ни одной темы с ошибками — редкий результат.</span>"));
+    }else{
+      diag.appendChild(el("p","ru","Чем длиннее полоска, тем больше ошибок в этой теме. Слабее всего — <b>"+
+        esc(TOPICS[worst[0].topic].ru)+"</b>."));
+    }
+    weak.forEach(function(row){
+      var t=TOPICS[row.topic],max=weak[0].miss||1;
+      var line=el("div");line.style.margin="10px 0";
+      line.appendChild(el("div","topline",'<span>'+t.en+' <span class="ru">— '+t.ru+'</span></span><span>'+
+        row.miss+' / '+row.seen+'</span>'));
+      var bar=el("div","bar");bar.style.margin="4px 0 0";
+      var fill=el("i");
+      fill.style.width=(row.miss?Math.max(6,row.miss/max*100):0)+"%";
+      fill.style.background=row.miss===0?"var(--acc2)":(row.rate>=.5?"var(--acc-ink)":"var(--acc)");
+      bar.appendChild(fill);line.appendChild(bar);
+      diag.appendChild(line);
+    });
+    app.appendChild(diag);
+  }
+
+  /* ---- bonus rounds already done ---- */
+  var bk=Object.keys(BONUS);
+  if(bk.length){
+    var bcard=el("div","card");
+    bcard.appendChild(el("p","eyebrow","Extra rounds"));
+    bk.forEach(function(k){
+      bcard.appendChild(el("p",null,TOPICS[k].en+" <span class=\"ru\">— "+TOPICS[k].ru+"</span>: <b>"+
+        BONUS[k].score+" / "+BONUS[k].total+"</b>"));
+    });
+    app.appendChild(bcard);
+  }
+
+  /* ---- offer extra practice ---- */
+  var offer=el("div","card");
+  var pick=worst.filter(function(x){return !BONUS[x.topic];})[0]||weak.filter(function(x){return !BONUS[x.topic];})[0];
+  offer.appendChild(el("h3",null,"Want a bit more?"));
+  if(pick){
+    offer.appendChild(el("p","ru",worst.length
+      ? "Есть ещё 6 заданий по теме, которая подвела сильнее всего. Займёт 3–4 минуты."
+      : "Ошибок нет, но можно взять 6 дополнительных заданий на любую тему."));
+    var yes=el("button","btn wide","Yes — "+TOPICS[pick.topic].en+" ("+EXTRA[pick.topic].length+" more)");
+    yes.type="button";yes.style.marginBottom="8px";
+    yes.onclick=function(){screenExtra(pick.topic);};
+    offer.appendChild(yes);
+  }
+  var other=el("button","btn ghost wide","Choose another topic");
+  other.type="button";other.style.marginBottom="8px";
+  other.onclick=screenTopics;
+  offer.appendChild(other);
+  var no=el("button","btn ghost wide","No thanks, I'm done");
+  no.type="button";
+  no.onclick=function(){
+    dialog("All done, "+S.name,
+      "Ниже — разбор твоих ошибок. Покажи его на уроке или просто проговори вслух каждый правильный вариант.",
+      [{label:"Close",ghost:true}],"plain");
+  };
+  offer.appendChild(no);
+  app.appendChild(offer);
+
+  /* ---- mistake review ---- */
+  var byBlock={};
+  S.mistakes.forEach(function(m){(byBlock[m.block]=byBlock[m.block]||[]).push(m);});
+  var keys=Object.keys(byBlock);
+  if(!keys.length){
+    var perfect=el("div","card");
+    perfect.appendChild(el("p",null,skipped
+      ? "No mistakes — but "+skipped+" tasks were left blank. <span class=\"ru\">Ошибок нет, но "+skipped+
+        " заданий осталось без ответа.</span>"
+      : "No mistakes at all. <span class=\"ru\">Ни одной ошибки — впечатляет.</span>"));
+    app.appendChild(perfect);
+  }else{
+    app.appendChild(el("h3",null,"Your mistakes — разбор"));
+    app.appendChild(el("p","ru","Покажи этот список на уроке или просто проговори вслух каждый правильный вариант."));
+    keys.forEach(function(k){
+      app.appendChild(el("p","eyebrow",esc(k)));
+      byBlock[k].forEach(function(m){
+        var r=el("div","review");
+        r.appendChild(el("div","q",esc(m.prompt)));
+        r.appendChild(el("div","mine","твой вариант: "+esc(m.mine||"—")));
+        r.appendChild(el("div","right","правильно: "+esc(m.right)));
+        if(m.ex)r.appendChild(el("p","ru",esc(m.ex)));
+        app.appendChild(r);
+      });
+    });
+  }
+  var again=el("button","btn wide","Back to the tasks");again.type="button";
+  again.onclick=function(){goTasks(null,"pg-l");};
+  app.appendChild(again);
+  app.appendChild(el("p","sig","Numbers Lab · by Valeria"));
+  slide("pg-r");
+  if(got>0)confetti(Math.max(.35,got/(total||1)));
+  toTop();
+}
+
+/* ---------- choose a topic for extra practice ---------- */
+function screenTopics(){
+  app.innerHTML="";
+  S.deep=true;
+  var back=el("button","btn ghost","← Results");back.type="button";
+  back.onclick=function(){screenResults();};
+  app.appendChild(back);
+  app.appendChild(el("p","eyebrow","Extra practice · "+S.name));
+  app.appendChild(el("h2",null,"Pick a topic"));
+  app.appendChild(el("p","ru","6 новых заданий по выбранной теме. Отмеченные «focus» — там больше всего ошибок."));
+  var weak=weakList(),rank={};
+  weak.filter(function(x){return x.miss>0;}).slice(0,2).forEach(function(x){rank[x.topic]=true;});
+  var grid=el("div","menu");
+  Object.keys(EXTRA).forEach(function(k){
+    var st=STATS[k],miss=st?st.miss:0,seen=st?st.seen:0;
+    var b=el("button","m-card s-"+(rank[k]?"pink":"blue")+(BONUS[k]?" done":""),
+      '<span class="stripe"></span>'+
+      (BONUS[k]?'<span class="flag">done '+BONUS[k].score+'/'+BONUS[k].total+'</span>':(rank[k]?'<span class="flag" style="color:var(--acc-ink)">focus</span>':''))+
+      '<span class="num">'+EXTRA[k].length+' tasks</span><b>'+TOPICS[k].en+'</b><small>'+TOPICS[k].ru+
+      (seen?' · ошибок '+miss+' из '+seen:'')+'</small>');
+    b.type="button";
+    b.onclick=function(){screenExtra(k);};
+    grid.appendChild(b);
+  });
+  app.appendChild(grid);
+  slide("pg-r");
+  toTop();
+}
+
+/* ---------- extra practice round ---------- */
+function screenExtra(topic){
+  app.innerHTML="";
+  S.deep=true;
+  var pool=EXTRA[topic],label="Extra: "+TOPICS[topic].en,score=0;
+  var bar=el("div","sticky");
+  var back=el("button","btn ghost","← Results");back.type="button";
+  back.onclick=function(){askLeave(function(){screenResults();slide("pg-l");});};
+  bar.appendChild(back);
+  bar.appendChild(el("span","where",S.name+" · extra round · "+TOPICS[topic].en));
+  app.appendChild(bar);
+  app.appendChild(el("h2",null,TOPICS[topic].en+" — ещё "+pool.length));
+  app.appendChild(el("p","ru","Эти задания ты ещё не видел. Результат этого раунда считается отдельно от основного."));
+  var seen=0;
+  pool.forEach(function(it){
+    var cb=function(clean){seen++;if(clean)score++;};
+    app.appendChild(it.type==="mc"?mcCard(it,label,topic,cb,true):writeCard(it,label,topic,cb,true));
+  });
+  var fin=el("button","btn wide","Finish extra round");fin.type="button";
+  fin.onclick=function(){
+    if(seen===0){
+      confirmBox("Close an empty round?",
+        "В этом раунде нет ни одного ответа — задания останутся непройденными.",
+        "Close it anyway","Go back and try",function(){screenResults();});
+      return;
+    }
+    BONUS[topic]={score:score,total:pool.length};
+    fin.disabled=true;
+    var back=function(){screenResults();};
+    if(score===0){
+      dialog("Every answer needed a correction",
+        "Все "+pool.length+" ответов пришлось исправлять — эта тема явно просит ещё одного круга.",
+        [{label:"Back to results",go:back}],"almost",back);
+    }else{
+      confetti(score/pool.length);
+      dialog("Extra round done, "+S.name,
+        '<div class="score-line">'+score+" / "+pool.length+"</div>"+TOPICS[topic].en+
+        " <span class=\"ru\">— "+TOPICS[topic].ru+"</span>",
+        [{label:"Back to results",go:back}],"ok",back);
+    }
+  };
+  app.appendChild(fin);
+  slide("pg-r");
+  toTop();
+}
+
+/* ---------- leave confirmation ---------- */
+var ask=document.getElementById("ask");
+var DISMISS=null;
+function closeDialog(){ask.classList.remove("open");DISMISS=null;}
+/* buttons: [{label, go, ghost}] · tone: ok | almost | plain · dismiss: what a backdrop/Esc tap does */
+function dialog(title,bodyHtml,buttons,tone,dismiss){
+  document.getElementById("askT").textContent=title;
+  document.getElementById("askB").innerHTML=bodyHtml||"";
+  document.getElementById("askSheet").className="sheet2"+(tone?" t-"+tone:"");
+  var row=document.getElementById("askRow");
+  row.innerHTML="";
+  buttons.forEach(function(cfg){
+    var b=el("button","btn"+(cfg.ghost?" ghost":"")+(cfg.danger?" danger":""),esc(cfg.label));
+    b.type="button";
+    b.onclick=function(){closeDialog();if(cfg.go)cfg.go();};
+    row.appendChild(b);
+  });
+  DISMISS=dismiss||null;
+  ask.classList.add("open");
+  var safe=row.querySelector(".btn.ghost")||row.querySelector(".btn");
+  if(safe)try{safe.focus();}catch(e){}
+}
+function confirmBox(title,body,yesLab,noLab,go){
+  dialog(title,body,[{label:yesLab,go:go},{label:noLab,ghost:true}],"plain");
+}
+function askLeave(go){
+  if(!document.querySelector(".card.solved,.fb.show,.tile.gone,.chip.used")){go();return;}
+  confirmBox("Leave this block?",
+    "Ответы в этом блоке не сохранятся — придётся проходить его заново.",
+    "Yes, leave","Stay here",go);
+}
+ask.addEventListener("click",function(e){
+  if(e.target!==ask)return;
+  var d=DISMISS;closeDialog();if(d)d();
+});
+
+/* ---------- start over ---------- */
+function resetAll(){
+  S={name:null,ru:null,theme:"warm",screen:"rules",prog:{},mistakes:[]};
+  BLOCKS.forEach(function(b){S.prog[b.id]={done:false,score:0,seen:0,total:scoredTotal(b)};});
+  STATS={};BONUS={};SCORED_SEEN=0;DONE_ITEMS=0;PENDING=null;
+  document.body.className="";
+  closeCheat();closeDialog();
+  parts.length=0;
+  try{ctx.clearRect(0,0,cv.width,cv.height);}catch(e){}
+  render();paintTop();toTop();
+}
+document.getElementById("segReset").onclick=function(){
+  if(!S.name)return;
+  dialog("Start over?",
+    "Обнулится всё: закрытые блоки, счёт, разбор ошибок и доп-раунды. Вернёмся к выбору имени.",
+    [{label:"Yes, start over",go:resetAll,danger:true},{label:"Cancel",ghost:true}],"plain");
+};
+
+/* ---------- header page switch ---------- */
+function switchPage(target,dir){
+  if(!S.name)return;
+  if(S.screen===target&&!S.deep)return;   /* already here and not inside a block — do nothing */
+  askLeave(function(){S.screen=target;render();slide(dir);toTop();});
+}
+document.getElementById("segRules").onclick=function(){switchPage("rules","pg-l");};
+document.getElementById("segTasks").onclick=function(){switchPage("tasks","pg-r");};
+
+/* ---------- cheat sheet modal ---------- */
+var modal=document.getElementById("modal"),mBody=document.getElementById("modalBody");
+var cheatBtn=document.getElementById("cheatBtn");
+function openCheat(){
+  if(!mBody.firstChild)mBody.appendChild(document.getElementById("rulesTpl").content.cloneNode(true));
+  modal.classList.add("open");
+  cheatBtn.classList.add("on");
+  cheatBtn.textContent="Close";
+}
+function closeCheat(){
+  modal.classList.remove("open");
+  cheatBtn.classList.remove("on");
+  cheatBtn.textContent="Rules";
+}
+cheatBtn.onclick=function(){
+  if(modal.classList.contains("open"))closeCheat();else openCheat();
+};
+modal.addEventListener("click",function(e){if(e.target===modal)closeCheat();});
+document.addEventListener("keydown",function(e){
+  if(e.key!=="Escape")return;
+  if(ask.classList.contains("open")){var d=DISMISS;closeDialog();if(d)d();return;}
+  closeCheat();
+});
+
+render();
+paintTop();
+</script>
+</body>
+</html>
