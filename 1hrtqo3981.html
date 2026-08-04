@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Анкета №2 — уточнения</title>
+<style>
+  :root {
+    --bg: #f8f9fa; --card: #ffffff; --ink: #1b1c1e; --muted: #3c4043;
+    --accent: #1a73e8; --accent-ink: #ffffff; --line: #dadce0;
+    --star: #e37400; --hint-bg: #f1f3f4; --done: #188038;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 'Segoe UI', Roboto, Arial, sans-serif; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 120px; }
+  header h1 { font-size: 26px; margin: 8px 0 4px; }
+  header p { color: var(--muted); margin: 4px 0; font-size: 14px; }
+  .progressbar { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0 8px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
+  .progressbar .track { flex: 1; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+  .progressbar .fill { height: 100%; width: 0%; background: var(--done); transition: width .3s; }
+  .progressbar .label { font-size: 13px; color: var(--muted); white-space: nowrap; font-family: Consolas, monospace; }
+  h2 { font-size: 19px; margin: 36px 0 6px; padding-bottom: 6px; border-bottom: 2px solid var(--accent); }
+  .block-note { font-size: 14px; color: var(--muted); margin: 0 0 14px; }
+  .q { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin: 12px 0; box-shadow: 0 1px 2px rgba(60,64,67,.08); }
+  .q.answered { border-left: 4px solid var(--done); }
+  .q .head { display: flex; gap: 8px; align-items: baseline; }
+  .q .num { font-family: Consolas, monospace; font-size: 13px; color: var(--muted); flex-shrink: 0; }
+  .q .star { color: var(--star); font-size: 14px; }
+  .q .text { font-weight: bold; }
+  .q .hint { font-size: 14px; color: var(--ink); background: #e8f0fe; border-left: 3px solid var(--accent); border-radius: 4px; padding: 8px 12px; margin: 8px 0; }
+  textarea { width: 100%; min-height: 56px; margin-top: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; resize: vertical; background: #fff; color: var(--ink); font: 14px/1.5 'Segoe UI', Roboto, Arial, sans-serif; }
+  textarea:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .opts { margin: 8px 0 0; }
+  .opts label { display: block; padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 15px; }
+  .opts label:hover { background: var(--hint-bg); }
+  .opts input { margin-right: 8px; accent-color: var(--accent); }
+  .comment-label { font-size: 13.5px; color: var(--muted); margin-top: 8px; display: block; }
+  .actions { position: fixed; bottom: 0; left: 0; right: 0; z-index: 10; background: var(--card); border-top: 1px solid var(--line); padding: 12px 56px 12px 16px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  button { font: 600 14px 'Segoe UI', Roboto, Arial, sans-serif; padding: 10px 22px; border-radius: 6px; border: 1px solid var(--line); background: var(--card); color: var(--accent); cursor: pointer; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  button:hover { filter: brightness(1.08); }
+  #btnClear { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-weight: normal; font-size: 13px; padding: 8px 14px; color: var(--muted); }
+  #outputPanel { display: none; margin-top: 28px; }
+  #outputPanel.visible { display: block; }
+  #output { min-height: 300px; font: 13px/1.5 Consolas, 'Courier New', monospace; white-space: pre; overflow-x: auto; }
+  .copied { background: var(--done) !important; color: var(--accent-ink) !important; }
+  .footer-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Анкета №2 — уточнения</h1>
+    <p>2026-08-05 · 13 вопросов · продолжение первой анкеты: здесь то, что осталось непонятным или недосказанным</p>
+    <p>Ответы сохраняются в этом браузере автоматически. ⭐ — самое важное: от этих ответов зависит формулировка вашего дела.</p>
+  </header>
+
+  <div class="progressbar">
+    <div class="track"><div class="fill" id="progressFill"></div></div>
+    <span class="label" id="progressLabel">0 / 0</span>
+  </div>
+
+  <div id="form"></div>
+
+  <div id="outputPanel">
+    <h2>Результат — скопируйте и отправьте ассистенту</h2>
+    <textarea id="output" readonly></textarea>
+  </div>
+
+  <p class="footer-note">Страница ничего никуда не отправляет: данные не покидают ваш браузер, пока вы сами их не скопируете.</p>
+</div>
+
+<div class="actions">
+  <button class="primary" id="btnBuild">Собрать ответы</button>
+  <button id="btnCopy">📋 Копировать</button>
+  <button id="btnClear">Очистить всё</button>
+</div>
+
+<script>
+"use strict";
+
+var BLOCKS = {
+  A: { title: "A. Сердце заявки: AI и отрасль", note: "Из первой анкеты понятно направление — AI. Теперь нужна конкретика, из которой соберём формулировку дела." },
+  B: { title: "B. Стратегия", note: "Два решения, которые вы отложили в первой анкете." },
+  C: { title: "C. Семья", note: "Для расчёта документов и защиты возраста детей." },
+  D: { title: "D. Факты для документов", note: "То, что пойдёт прямо в бумаги. Можно заполнять частями, с документами под рукой." }
+};
+
+var Q = [
+ {n:1, b:"A", s:1, t:"Что вы реально делали с AI в работе — руками, а не на курсах?", type:"check", opts:["Внедрял AI-инструменты в процессы команды (настраивал, учил коллег, менял процессы)","Строил AI-фичи в продукте клиента (чат-боты, ассистенты, умный поиск, LLM в интерфейсе)","Пользуюсь сам каждый день для своего кода (Copilot, ChatGPT и т.п.)","Пока в основном сертификаты и обучение, практики на проектах мало"], h:"Это определит, можно ли строить дело вокруг AI. «Внедрял для команды» и «строил в продукте» — сильные варианты; «пользуюсь сам» — так скажет каждый второй, этого мало. В подробностях: что именно, на каком проекте, что стало лучше (быстрее, дешевле, меньше ошибок)?", ph:"Например: настроил Copilot-процессы для команды из 15 человек, ревью ускорилось на треть..."},
+ {n:2, b:"A", s:1, t:"В первой анкете вы отметили отрасли «банки/финансы» и «другое» — что за «другое»?", type:"check", opts:["Медицина / здравоохранение","Ритейл / e-commerce","Энергетика / промышленность","Логистика / транспорт","Телеком","Медиа / развлечения","Госструктуры","Страхование"], h:"Отрасль + AI = каркас всего дела. В подробностях: какой из проектов (банковский или «другой») был самым большим и значимым лично для вас?", ph:"Самый значимый проект и почему."},
+ {n:3, b:"A", s:1, t:"Публичный след: что из этого вы РЕАЛЬНО готовы делать ближайшие 3–6 месяцев?", type:"check", opts:["Писать статьи (Хабр, Medium, dev.to)","Выступать на митапах / конференциях (можно онлайн)","Выложить и развивать полезную библиотеку / open source","Менторить на платформах (Solvery, ADPList и т.п.)","Вести блог / телеграм-канал / YouTube по теме","Честно: ничего из этого делать не буду"], h:"Вы ответили «готов наработать» — теперь конкретно. Достаточно выбрать 2 пункта и делать их регулярно. Тема должна совпадать с делом (AI + ваша отрасль).", ph:"Что уже приходило в голову, темы, площадки."},
+ {n:4, b:"B", s:1, t:"Темп подачи — как действуем?", type:"radio", opts:["Прокачка 4–6 месяцев (публичный след + формулировка дела), потом подача сильного пакета — РЕКОМЕНДУЮ","Подать как можно раньше, занять место в очереди — риск сырого пакета","Пока копим факты, срок решу позже"], h:"Напомню: при отказе место в очереди НЕ сохраняется и деньги сгорают. Ваш же ответ в первой анкете — «максимум шансов с первой попытки»."},
+ {n:5, b:"B", s:0, t:"Бюджет — после всего, что вы уже узнали о сложности?", type:"radio", opts:["Всё сам, только госпошлины (~$4,000)","Сам + разовые проверки юристом ключевых бумаг ($500–1,500)","Полное сопровождение юристом ($6,000–10,000 сверху)","Всё ещё не решил"], h:"Мягко подсвечу: сейчас отказывают более чем половине заявителей, а апелляции выигрывает 1–2%. Средний вариант (сам + точечные проверки юристом) — разумный минимум для вашего профиля."},
+ {n:6, b:"C", s:1, t:"Жена: кем работает и какое у неё образование?", h:"Это не праздный вопрос: если у неё сильный профиль (медицина, наука, инженерия) — возможно, у семьи есть вторая, запасная заявка.", ph:"Профессия, образование (вуз/специальность), кем работает сейчас."},
+ {n:7, b:"C", s:1, t:"Дети: даты рождения?", h:"Нужно точно — от возраста детей зависит, успеют ли они пройти по вашей заявке до 21 года (есть защитный механизм, но его надо считать по датам).", ph:"Например: 12.03.2015 и 05.08.2019."},
+ {n:8, b:"D", s:0, t:"Диплом: годы и формулировка?", h:"Три вещи: год окончания первой ступени (специалист/бакалавр), год окончания магистратуры, и что дословно написано в графе «квалификация» в обоих дипломах.", ph:"Специалист: год, квалификация. Магистр: год, квалификация."},
+ {n:9, b:"D", s:1, t:"Карьера по месяцам: полная цепочка?", h:"Считается каждый месяц. Формат: месяц.год — месяц.год, место, должность. Все повышения в EPAM отдельными строками. Особенно точно — дата, с которой вы фронтендер.", ph:"09.2011–06.2016 мясокомбинат, инженер...\n07.2016–... EPAM, junior frontend...\n...2018 middle, ...2021 senior"},
+ {n:10, b:"D", s:1, t:"2–3 главных проекта в EPAM — с цифрами?", h:"По каждому: отрасль клиента (без названия), что лично вы делали, размер команды, и ЦИФРЫ: пользователи, нагрузка, ускорение, экономия. Это пойдёт в основу дела и писем поддержки.", ph:"Проект 1: банк, вёл фронтенд команды из 8, платформа на 2 млн пользователей, ускорил загрузку с 6 до 2 секунд..."},
+ {n:11, b:"D", s:0, t:"Заводские достижения — вы обещали описать?", h:"Внедрения, рацпредложения, автоматизация на мясокомбинате / «Омск Карбон» — коротко, 2–3 предложения.", ph:"Что внедрили, что улучшилось."},
+ {n:12, b:"D", s:0, t:"AI-сертификаты — перечислите какие именно?", h:"Названия и годы. Например: AWS Certified AI Practitioner (2025), Google Cloud GenAI Leader (2024), внутренние EPAM...", ph:"Название — год, название — год..."},
+ {n:13, b:"D", s:0, t:"Шенген сейчас есть?", type:"radio", opts:["Есть действующий","Нет","В процессе получения"], h:"В первой анкете вы отметили только паспорт. Шенген понадобится для поездки на собеседование в Варшаву (когда до этого дойдёт — оформляется и специально под собеседование)."}
+];
+
+var form = document.getElementById("form");
+var LS = "eb2form-f2.";
+
+function esc(s){ var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+
+function render(){
+  var html = "", curBlock = "";
+  Q.forEach(function(q){
+    if (q.b !== curBlock) {
+      curBlock = q.b;
+      html += "<h2>" + esc(BLOCKS[q.b].title) + "</h2>";
+      html += "<p class='block-note'>" + esc(BLOCKS[q.b].note) + "</p>";
+    }
+    html += "<div class='q' id='q" + q.n + "'>";
+    html += "<div class='head'><span class='num'>#" + q.n + "</span>" + (q.s ? "<span class='star'>⭐</span>" : "") + "<span class='text'>" + esc(q.t) + "</span></div>";
+    if (q.h) html += "<div class='hint'>" + esc(q.h) + "</div>";
+    if (q.type === "radio" || q.type === "check") {
+      var it = q.type === "radio" ? "radio" : "checkbox";
+      html += "<div class='opts'>";
+      q.opts.forEach(function(o, i){
+        html += "<label><input type='" + it + "' name='opt" + q.n + "' data-q='" + q.n + "' data-i='" + i + "'>" + esc(o) + "</label>";
+      });
+      html += "</div>";
+      html += "<label class='comment-label'>Подробности (если есть):</label>";
+      html += "<textarea data-q='" + q.n + "' data-role='comment' rows='2' placeholder='" + esc(q.ph || "") + "'></textarea>";
+    } else {
+      html += "<textarea data-q='" + q.n + "' data-role='answer' rows='3' placeholder='" + esc(q.ph || "Ваш ответ…") + "'></textarea>";
+    }
+    html += "</div>";
+  });
+  form.innerHTML = html;
+}
+
+function save(n){
+  var q = Q.find(function(x){ return x.n === n; });
+  var data = {};
+  if (q.type === "radio" || q.type === "check") {
+    var sel = [];
+    document.querySelectorAll("input[name='opt" + n + "']:checked").forEach(function(el){
+      sel.push(parseInt(el.getAttribute("data-i"), 10));
+    });
+    data.sel = sel;
+    data.comment = document.querySelector("textarea[data-q='" + n + "'][data-role='comment']").value;
+  } else {
+    data.answer = document.querySelector("textarea[data-q='" + n + "'][data-role='answer']").value;
+  }
+  localStorage.setItem(LS + n, JSON.stringify(data));
+  markAnswered(n, data);
+  updateProgress();
+}
+
+function load(){
+  Q.forEach(function(q){
+    var raw = localStorage.getItem(LS + q.n);
+    if (!raw) return;
+    var data; try { data = JSON.parse(raw); } catch(e){ return; }
+    if (q.type === "radio" || q.type === "check") {
+      (data.sel || []).forEach(function(i){
+        var el = document.querySelector("input[name='opt" + q.n + "'][data-i='" + i + "']");
+        if (el) el.checked = true;
+      });
+      document.querySelector("textarea[data-q='" + q.n + "'][data-role='comment']").value = data.comment || "";
+    } else {
+      document.querySelector("textarea[data-q='" + q.n + "'][data-role='answer']").value = data.answer || "";
+    }
+    markAnswered(q.n, data);
+  });
+  updateProgress();
+}
+
+function isAnswered(data){
+  if (!data) return false;
+  if (data.sel && data.sel.length) return true;
+  if (data.comment && data.comment.trim()) return true;
+  if (data.answer && data.answer.trim()) return true;
+  return false;
+}
+
+function markAnswered(n, data){
+  document.getElementById("q" + n).classList.toggle("answered", isAnswered(data));
+}
+
+function updateProgress(){
+  var done = 0;
+  Q.forEach(function(q){
+    var raw = localStorage.getItem(LS + q.n);
+    var data = null; try { data = raw ? JSON.parse(raw) : null; } catch(e){}
+    if (isAnswered(data)) done++;
+  });
+  document.getElementById("progressFill").style.width = Math.round(done / Q.length * 100) + "%";
+  document.getElementById("progressLabel").textContent = done + " / " + Q.length;
+}
+
+function buildOutput(){
+  var lines = [];
+  lines.push("# EB2-NIW: ОТВЕТЫ ЗАЯВИТЕЛЯ — АНКЕТА 2 (УТОЧНЕНИЯ)");
+  lines.push("Анкета: 2026-08-05-f2");
+  lines.push("Заполнено: " + new Date().toISOString().slice(0, 10));
+  lines.push("");
+  var curBlock = "";
+  Q.forEach(function(q){
+    if (q.b !== curBlock) {
+      curBlock = q.b;
+      lines.push("## " + BLOCKS[q.b].title);
+      lines.push("");
+    }
+    var raw = localStorage.getItem(LS + q.n);
+    var data = null; try { data = raw ? JSON.parse(raw) : null; } catch(e){}
+    lines.push("**" + q.n + ". " + q.t + "**");
+    if (!isAnswered(data)) {
+      lines.push("— (нет ответа)");
+    } else if (q.type === "radio" || q.type === "check") {
+      (data.sel || []).forEach(function(i){ lines.push("[выбрано] " + q.opts[i]); });
+      if (data.comment && data.comment.trim()) lines.push("Подробности: " + data.comment.trim());
+    } else {
+      lines.push(data.answer.trim());
+    }
+    lines.push("");
+  });
+  return lines.join("\n");
+}
+
+document.getElementById("btnBuild").addEventListener("click", function(){
+  var out = document.getElementById("output");
+  out.value = buildOutput();
+  document.getElementById("outputPanel").classList.add("visible");
+  out.style.height = Math.min(out.scrollHeight + 20, 500) + "px";
+  document.getElementById("outputPanel").scrollIntoView({ behavior: "smooth" });
+});
+
+document.getElementById("btnCopy").addEventListener("click", function(){
+  var out = document.getElementById("output");
+  if (!out.value) out.value = buildOutput();
+  document.getElementById("outputPanel").classList.add("visible");
+  var btn = this;
+  function ok(){
+    btn.classList.add("copied"); btn.textContent = "✓ Скопировано";
+    setTimeout(function(){ btn.classList.remove("copied"); btn.textContent = "📋 Копировать"; }, 2500);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(out.value).then(ok, function(){ out.select(); document.execCommand("copy"); ok(); });
+  } else {
+    out.select(); document.execCommand("copy"); ok();
+  }
+});
+
+var clearArmed = false;
+document.getElementById("btnClear").addEventListener("click", function(){
+  var btn = this;
+  if (!clearArmed) {
+    clearArmed = true; btn.textContent = "Точно очистить всё?";
+    setTimeout(function(){ clearArmed = false; btn.textContent = "Очистить всё"; }, 4000);
+    return;
+  }
+  Q.forEach(function(q){ localStorage.removeItem(LS + q.n); });
+  render(); attach(); updateProgress();
+  document.getElementById("output").value = "";
+  document.getElementById("outputPanel").classList.remove("visible");
+  clearArmed = false; btn.textContent = "Очистить всё";
+});
+
+function attach(){
+  form.querySelectorAll("textarea, input").forEach(function(el){
+    el.addEventListener("input", function(){ save(parseInt(el.getAttribute("data-q"), 10)); });
+    el.addEventListener("change", function(){ save(parseInt(el.getAttribute("data-q"), 10)); });
+  });
+}
+
+render(); attach(); load();
+</script>
+</body>
+</html>
