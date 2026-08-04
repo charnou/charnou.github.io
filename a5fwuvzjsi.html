@@ -54,7 +54,7 @@
     <h1>Анкета заявителя</h1>
     <p>Версия 3.1 (2026-08-05) · 40 вопросов · почти везде можно просто выбрать вариант</p>
     <p>Ответы сохраняются в этом браузере автоматически — можно заполнять в несколько заходов.
-       ⭐ — самые важные вопросы. Не знаете ответ — выбирайте «не знаю» или пропускайте, это тоже полезная информация.</p>
+       Не знаете ответ — выбирайте «не знаю» или пропускайте, это тоже полезная информация.</p>
   </header>
 
   <div class="progressbar">
@@ -150,7 +150,7 @@ function render(){
       html += "<p class='block-note'>" + esc(BLOCKS[q.b].note) + "</p>";
     }
     html += "<div class='q' id='q" + q.n + "'>";
-    html += "<div class='head'><span class='num'>#" + q.n + "</span>" + (q.s ? "<span class='star'>⭐</span>" : "") + "<span class='text'>" + esc(q.t) + "</span></div>";
+    html += "<div class='head'><span class='num'>#" + q.n + "</span><span class='text'>" + esc(q.t) + "</span></div>";
     if (q.h) html += "<div class='hint'>" + esc(q.h) + "</div>";
     if (q.type === "radio" || q.type === "check") {
       var it = q.type === "radio" ? "radio" : "checkbox";
