@@ -11,13 +11,6 @@
     --accent: #1f5e46; --accent-ink: #ffffff; --line: #e3ddd2;
     --star: #b3541e; --hint-bg: #f0ede6; --done: #1f5e46;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #17181a; --card: #1f2124; --ink: #e8e6e1; --muted: #9a968e;
-      --accent: #4fa37f; --accent-ink: #10231b; --line: #33363a;
-      --star: #e08b4e; --hint-bg: #26282c; --done: #4fa37f;
-    }
-  }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 Georgia, 'Times New Roman', serif; }
   .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 120px; }
@@ -43,7 +36,8 @@
   .opts label:hover { background: var(--hint-bg); }
   .opts input { margin-right: 8px; accent-color: var(--accent); }
   .comment-label { font-size: 13px; color: var(--muted); margin-top: 8px; display: block; }
-  .actions { position: fixed; bottom: 0; left: 0; right: 0; z-index: 10; background: var(--card); border-top: 1px solid var(--line); padding: 12px 16px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .actions { position: fixed; bottom: 0; left: 0; right: 0; z-index: 10; background: var(--card); border-top: 1px solid var(--line); padding: 12px 56px 12px 16px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  #btnClear { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-weight: normal; font-size: 13px; padding: 8px 14px; color: var(--muted); }
   button { font: bold 15px Georgia, serif; padding: 10px 22px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
   button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
   button:hover { filter: brightness(1.08); }
