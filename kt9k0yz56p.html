@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Анкета №3 — три вопроса</title>
+<title>Анкета №3 — финальная</title>
 <style>
   :root {
     --bg: #f8f9fa; --card: #ffffff; --ink: #1b1c1e; --muted: #3c4043;
@@ -16,6 +16,8 @@
   .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 120px; }
   header h1 { font-size: 26px; margin: 8px 0 4px; }
   header p { color: var(--muted); margin: 4px 0; font-size: 14px; }
+  h2 { font-size: 19px; margin: 36px 0 6px; padding-bottom: 6px; border-bottom: 2px solid var(--accent); }
+  .block-note { font-size: 14px; color: var(--muted); margin: 0 0 14px; }
   .q { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin: 12px 0; box-shadow: 0 1px 2px rgba(60,64,67,.08); }
   .q.answered { border-left: 4px solid var(--done); }
   .q .head { display: flex; gap: 8px; align-items: baseline; }
@@ -34,9 +36,13 @@
   button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
   button:hover { filter: brightness(1.08); }
   #btnClear { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-weight: normal; font-size: 13px; padding: 8px 14px; color: var(--muted); }
+  .progressbar { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0 8px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; }
+  .progressbar .track { flex: 1; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+  .progressbar .fill { height: 100%; width: 0%; background: var(--done); transition: width .3s; }
+  .progressbar .label { font-size: 13px; color: var(--muted); white-space: nowrap; font-family: Consolas, monospace; }
   #outputPanel { display: none; margin-top: 28px; }
   #outputPanel.visible { display: block; }
-  #output { min-height: 200px; font: 13px/1.5 Consolas, 'Courier New', monospace; white-space: pre; overflow-x: auto; width: 100%; }
+  #output { min-height: 250px; width: 100%; font: 13px/1.5 Consolas, 'Courier New', monospace; white-space: pre; overflow-x: auto; }
   .copied { background: var(--done) !important; color: var(--accent-ink) !important; }
   .footer-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 30px; }
 </style>
@@ -44,10 +50,15 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>Анкета №3 — пять вопросов</h1>
-    <p>2026-08-05 · последние решения перед стартом дорожной карты: отрасль по накопленному следу, где брать AI-практику, юрист</p>
+    <h1>Анкета №3 — финальная</h1>
+    <p>2026-08-05 · 14 вопросов · последние решения + точные факты + скрытые козыри, найденные при повторном анализе кейса</p>
     <p>Ответы сохраняются в этом браузере автоматически.</p>
   </header>
+
+  <div class="progressbar">
+    <div class="track"><div class="fill" id="progressFill"></div></div>
+    <span class="label" id="progressLabel">0 / 0</span>
+  </div>
 
   <div id="form"></div>
 
@@ -68,12 +79,28 @@
 <script>
 "use strict";
 
+var BLOCKS = {
+  A: { title: "A. Отрасль и стратегия", note: "Клиенты в консалтинге ротируются, поэтому отрасль для дела выбираем по накопленному следу, а не по текущему аккаунту." },
+  B: { title: "B. Точные факты для бумаг", note: "Мелочи, от которых зависят оценка диплома и подсчёт стажа." },
+  C: { title: "C. Скрытые козыри", note: "Вещи, которые вы, возможно, не считаете достижениями — а для заявки это отдельные виды доказательств." },
+  D: { title: "D. Финансовая часть", note: "Для собеседования: показать, что семья финансово устойчива." }
+};
+
 var Q = [
- {n:1, t:"За 5 лет в EPAM — где наработано больше всего? Считайте по времени и весу проектов, а не по текущему клиенту.", type:"radio", opts:["Банки / финансы / страхование","Ритейл / e-commerce","Примерно поровну","Другое — опишу в подробностях"], h:"Клиенты в консалтинге ротируются, поэтому отрасль для дела выбираем не по текущему аккаунту, а по накопленному следу: на собеседовании спросят «почему эта отрасль» — ответ должен опираться на годы работы, а не на клиента этого месяца.", ph:"Например: 3 года банк, 1,5 года ритейл."},
- {n:2, t:"Письменные благодарности и лучшие результаты (которые можно подтвердить) — из какого домена?", type:"radio", opts:["В основном от банковских/финансовых клиентов","В основном от ритейла","И оттуда, и оттуда","Надо поднять документы и посмотреть"], h:"Отрасль дела должна совпадать с тем, откуда ваши сильнейшие доказательства — иначе на бумаге получится разрыв.", ph:"Что за благодарности, если помните."},
- {n:3, t:"На текущем аккаунте вы надолго?", type:"radio", opts:["Да, долгосрочный аккаунт — сижу годами","Ротация: проект может смениться в ближайшие месяцы","Сейчас между проектами / на бенче"], h:"Влияет на то, где нарабатывать AI-практику и насколько согласованно кейс будет выглядеть на собеседовании через год.", ph:"Сколько уже на этом аккаунте."},
- {n:4, t:"Где реальнее наработать AI-практику — настроить инструменты, обучить коллег, замерить эффект?", type:"radio", opts:["На текущем аккаунте — там это возможно","Через внутренние AI-программы и комьюнити EPAM","На работе нереально нигде"], h:"Это главный способ превратить сертификаты (Claude Architect, Gemini Enterprise) в практику с измеримым результатом без дополнительного времени. И это же готовая тема будущих докладов.", ph:"Мысли, ограничения."},
- {n:5, t:"Подбор юриста — стартуем сейчас?", type:"radio", opts:["Да — готовь критерии выбора и шорт-лист фирм","Позже — сначала соберём факты сами"], h:"Вы выбрали полное сопровождение. Рекомендую подключать юриста ДО начала полугодовой прокачки: он закрепит формулировку дела, и вы полгода работаете в правильном направлении, а не переделываете.", ph:"Пожелания к юристу, если есть."}
+ {n:1, b:"A", t:"За 5 лет в EPAM — где наработано больше всего? Считайте по времени и весу проектов, а не по текущему клиенту.", type:"radio", opts:["Банки / финансы / страхование","Ритейл / e-commerce","Примерно поровну","Другое — опишу в подробностях"], h:"На собеседовании спросят «почему эта отрасль» — ответ должен опираться на годы работы, а не на клиента этого месяца.", ph:"Например: 3 года банк, 1,5 года ритейл."},
+ {n:2, b:"A", t:"Письменные благодарности и лучшие результаты (которые можно подтвердить) — из какого домена?", type:"radio", opts:["В основном от банковских/финансовых клиентов","В основном от ритейла","И оттуда, и оттуда","Надо поднять документы и посмотреть"], h:"Отрасль дела должна совпадать с тем, откуда ваши сильнейшие доказательства — иначе на бумаге получится разрыв.", ph:"Что за благодарности, если помните."},
+ {n:3, b:"A", t:"На текущем аккаунте вы надолго?", type:"radio", opts:["Да, долгосрочный аккаунт — сижу годами","Ротация: проект может смениться в ближайшие месяцы","Сейчас между проектами / на бенче"], h:"Влияет на то, где нарабатывать AI-практику и насколько согласованно кейс будет выглядеть на собеседовании через год.", ph:"Сколько уже на этом аккаунте."},
+ {n:4, b:"A", t:"Где реальнее наработать AI-практику — настроить инструменты, обучить коллег, замерить эффект?", type:"radio", opts:["На текущем аккаунте — там это возможно","Через внутренние AI-программы и комьюнити EPAM","На работе нереально нигде"], h:"Это главный способ превратить сертификаты (Claude Architect, Gemini Enterprise) в практику с измеримым результатом без дополнительного времени. И это же готовая тема будущих докладов.", ph:"Мысли, ограничения."},
+ {n:5, b:"A", t:"Подбор юриста — стартуем сейчас?", type:"radio", opts:["Да — готовь критерии выбора и шорт-лист фирм","Позже — сначала соберём факты сами"], h:"Вы выбрали полное сопровождение. Рекомендую подключать юриста ДО начала полугодовой прокачки: он закрепит формулировку дела, и вы полгода работаете в правильном направлении, а не переделываете.", ph:"Пожелания к юристу, если есть."},
+ {n:6, b:"B", t:"Что написано в графе «квалификация» в дипломе специалиста?", type:"radio", opts:["Инженер","Инженер-механик","Инженер-технолог","Другое / не помню — посмотрю в дипломе"], h:"Точная формулировка нужна для официальной оценки диплома: от неё зависит, как позиционировать образование.", ph:"Дословно, если нашли диплом."},
+ {n:7, b:"B", t:"Месяц и год: выход в EPAM и повышение до Senior?", h:"Стаж считается по месяцам, у вас он впритык к порогу в 5 лет — эти две даты станут ключевыми цифрами кейса. Посмотрите в контракте или спросите HR.", ph:"В EPAM: 03.2021. Senior: 06.2024."},
+ {n:8, b:"B", t:"Как вы оформлены в EPAM?", type:"radio", opts:["Штат белорусского EPAM (ПВТ)","ИП / сервисный контракт","Контракт с иностранным юрлицом EPAM","Другое"], h:"Влияет на то, какие справки о стаже реально получить и как они будут выглядеть."},
+ {n:9, b:"B", t:"Тема магистерской диссертации — помните?", h:"Если в ней было что-то про расчёты, моделирование, автоматизацию — это ещё один кирпич в мост «механика → ИТ».", ph:"Тема хотя бы примерно."},
+ {n:10, b:"C", t:"Собеседования кандидатов: вы были официальным интервьюером EPAM?", type:"radio", opts:["Да, регулярный интервьюер — за годы порядка 50+ собеседований","Периодически — примерно 10–50","Меньше 10","Только неформально помогал"], h:"Скрытый козырь: официальная оценка чужой работы (интервью, асессменты) — отдельный вид доказательства признания в профессии. Если EPAM подтвердит статус интервьюера письмом — плюс.", ph:"Какие интервью: технические, асессменты?"},
+ {n:11, b:"C", t:"Менторство — формальное или нет?", type:"radio", opts:["Формальное: программы/лабы EPAM, менти с оценками и результатами","Неформально учил джунов на проекте","И то, и другое"], h:"Формальное менторство (с программами и результатами менти) оформляется как преподавательская деятельность — ещё один тип доказательств.", ph:"Сколько менти, какие результаты."},
+ {n:12, b:"C", t:"AI-инициативы EPAM — DIAL, AI/RUN, внутренние AI-комьюнити: вы причастны?", type:"radio", opts:["Участвовал / контрибьютил","Знаю про них, но не участвовал","Не слышал"], h:"Важно: DIAL — это ОТКРЫТАЯ (open source) GenAI-платформа EPAM. Участие в ней = готовый вклад в open source + AI-практика, не выходя с работы. Если не участвовали — это кандидат №1 на ближайшие полгода.", ph:"Что именно делали / могли бы делать."},
+ {n:13, b:"C", t:"Даты AI-сертификатов (Claude Architect, Gemini Enterprise ×2) — когда получены?", h:"Годы/месяцы нужны для списка доказательств: свежие сертификаты работают лучше.", ph:"Claude Architect — 2025, Gemini Deployment — ..., Agent Development — ..."},
+ {n:14, b:"D", t:"Активы семьи — что есть кроме накоплений?", type:"check", opts:["Квартира / недвижимость","Машина","Депозиты / вклады","Брокерский счёт / крипта","Практически всё — наличные и карты"], h:"На собеседовании надо показать финансовую устойчивость семьи (спонсора нет). Недвижимость и вклады с выписками — сильные аргументы.", ph:"Примерная оценка, если готовы поделиться."}
 ];
 
 var form = document.getElementById("form");
@@ -82,31 +109,49 @@ var LS = "eb2form-f3b.";
 function esc(s){ var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
 
 function render(){
-  var html = "";
+  var html = "", curBlock = "";
   Q.forEach(function(q){
+    if (q.b !== curBlock) {
+      curBlock = q.b;
+      html += "<h2>" + esc(BLOCKS[q.b].title) + "</h2>";
+      html += "<p class='block-note'>" + esc(BLOCKS[q.b].note) + "</p>";
+    }
     html += "<div class='q' id='q" + q.n + "'>";
     html += "<div class='head'><span class='num'>#" + q.n + "</span><span class='text'>" + esc(q.t) + "</span></div>";
     if (q.h) html += "<div class='hint'>" + esc(q.h) + "</div>";
-    html += "<div class='opts'>";
-    q.opts.forEach(function(o, i){
-      html += "<label><input type='radio' name='opt" + q.n + "' data-q='" + q.n + "' data-i='" + i + "'>" + esc(o) + "</label>";
-    });
-    html += "</div>";
-    html += "<label class='comment-label'>Подробности (если есть):</label>";
-    html += "<textarea data-q='" + q.n + "' data-role='comment' rows='2' placeholder='" + esc(q.ph || "") + "'></textarea>";
+    if (q.type === "radio" || q.type === "check") {
+      var it = q.type === "radio" ? "radio" : "checkbox";
+      html += "<div class='opts'>";
+      q.opts.forEach(function(o, i){
+        html += "<label><input type='" + it + "' name='opt" + q.n + "' data-q='" + q.n + "' data-i='" + i + "'>" + esc(o) + "</label>";
+      });
+      html += "</div>";
+      html += "<label class='comment-label'>Подробности (если есть):</label>";
+      html += "<textarea data-q='" + q.n + "' data-role='comment' rows='2' placeholder='" + esc(q.ph || "") + "'></textarea>";
+    } else {
+      html += "<textarea data-q='" + q.n + "' data-role='answer' rows='2' placeholder='" + esc(q.ph || "Ваш ответ…") + "'></textarea>";
+    }
     html += "</div>";
   });
   form.innerHTML = html;
 }
 
 function save(n){
-  var data = { sel: [], comment: "" };
-  document.querySelectorAll("input[name='opt" + n + "']:checked").forEach(function(el){
-    data.sel.push(parseInt(el.getAttribute("data-i"), 10));
-  });
-  data.comment = document.querySelector("textarea[data-q='" + n + "'][data-role='comment']").value;
+  var q = Q.find(function(x){ return x.n === n; });
+  var data = {};
+  if (q.type === "radio" || q.type === "check") {
+    var sel = [];
+    document.querySelectorAll("input[name='opt" + n + "']:checked").forEach(function(el){
+      sel.push(parseInt(el.getAttribute("data-i"), 10));
+    });
+    data.sel = sel;
+    data.comment = document.querySelector("textarea[data-q='" + n + "'][data-role='comment']").value;
+  } else {
+    data.answer = document.querySelector("textarea[data-q='" + n + "'][data-role='answer']").value;
+  }
   localStorage.setItem(LS + n, JSON.stringify(data));
   markAnswered(n, data);
+  updateProgress();
 }
 
 function load(){
@@ -114,19 +159,25 @@ function load(){
     var raw = localStorage.getItem(LS + q.n);
     if (!raw) return;
     var data; try { data = JSON.parse(raw); } catch(e){ return; }
-    (data.sel || []).forEach(function(i){
-      var el = document.querySelector("input[name='opt" + q.n + "'][data-i='" + i + "']");
-      if (el) el.checked = true;
-    });
-    document.querySelector("textarea[data-q='" + q.n + "'][data-role='comment']").value = data.comment || "";
+    if (q.type === "radio" || q.type === "check") {
+      (data.sel || []).forEach(function(i){
+        var el = document.querySelector("input[name='opt" + q.n + "'][data-i='" + i + "']");
+        if (el) el.checked = true;
+      });
+      document.querySelector("textarea[data-q='" + q.n + "'][data-role='comment']").value = data.comment || "";
+    } else {
+      document.querySelector("textarea[data-q='" + q.n + "'][data-role='answer']").value = data.answer || "";
+    }
     markAnswered(q.n, data);
   });
+  updateProgress();
 }
 
 function isAnswered(data){
   if (!data) return false;
   if (data.sel && data.sel.length) return true;
   if (data.comment && data.comment.trim()) return true;
+  if (data.answer && data.answer.trim()) return true;
   return false;
 }
 
@@ -134,20 +185,39 @@ function markAnswered(n, data){
   document.getElementById("q" + n).classList.toggle("answered", isAnswered(data));
 }
 
+function updateProgress(){
+  var done = 0;
+  Q.forEach(function(q){
+    var raw = localStorage.getItem(LS + q.n);
+    var data = null; try { data = raw ? JSON.parse(raw) : null; } catch(e){}
+    if (isAnswered(data)) done++;
+  });
+  document.getElementById("progressFill").style.width = Math.round(done / Q.length * 100) + "%";
+  document.getElementById("progressLabel").textContent = done + " / " + Q.length;
+}
+
 function buildOutput(){
   var lines = [];
-  lines.push("# EB2-NIW: ОТВЕТЫ ЗАЯВИТЕЛЯ — АНКЕТА 3");
+  lines.push("# EB2-NIW: ОТВЕТЫ ЗАЯВИТЕЛЯ — АНКЕТА 3 (ФИНАЛЬНАЯ)");
   lines.push("Заполнено: " + new Date().toISOString().slice(0, 10));
   lines.push("");
+  var curBlock = "";
   Q.forEach(function(q){
+    if (q.b !== curBlock) {
+      curBlock = q.b;
+      lines.push("## " + BLOCKS[q.b].title);
+      lines.push("");
+    }
     var raw = localStorage.getItem(LS + q.n);
     var data = null; try { data = raw ? JSON.parse(raw) : null; } catch(e){}
     lines.push("**" + q.n + ". " + q.t + "**");
     if (!isAnswered(data)) {
       lines.push("— (нет ответа)");
-    } else {
+    } else if (q.type === "radio" || q.type === "check") {
       (data.sel || []).forEach(function(i){ lines.push("[выбрано] " + q.opts[i]); });
       if (data.comment && data.comment.trim()) lines.push("Подробности: " + data.comment.trim());
+    } else {
+      lines.push(data.answer.trim());
     }
     lines.push("");
   });
@@ -158,7 +228,7 @@ document.getElementById("btnBuild").addEventListener("click", function(){
   var out = document.getElementById("output");
   out.value = buildOutput();
   document.getElementById("outputPanel").classList.add("visible");
-  out.style.height = Math.min(out.scrollHeight + 20, 400) + "px";
+  out.style.height = Math.min(out.scrollHeight + 20, 450) + "px";
   document.getElementById("outputPanel").scrollIntoView({ behavior: "smooth" });
 });
 
@@ -187,7 +257,7 @@ document.getElementById("btnClear").addEventListener("click", function(){
     return;
   }
   Q.forEach(function(q){ localStorage.removeItem(LS + q.n); });
-  render(); attach();
+  render(); attach(); updateProgress();
   document.getElementById("output").value = "";
   document.getElementById("outputPanel").classList.remove("visible");
   clearArmed = false; btn.textContent = "Очистить всё";
