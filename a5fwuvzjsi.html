@@ -7,12 +7,12 @@
 <title>Анкета</title>
 <style>
   :root {
-    --bg: #f6f4ef; --card: #ffffff; --ink: #1c1a17; --muted: #6b675f;
-    --accent: #1f5e46; --accent-ink: #ffffff; --line: #e3ddd2;
-    --star: #b3541e; --hint-bg: #f0ede6; --done: #1f5e46;
+    --bg: #f8f9fa; --card: #ffffff; --ink: #202124; --muted: #5f6368;
+    --accent: #1a73e8; --accent-ink: #ffffff; --line: #dadce0;
+    --star: #e37400; --hint-bg: #f1f3f4; --done: #188038;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 Georgia, 'Times New Roman', serif; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 'Segoe UI', Roboto, Arial, sans-serif; }
   .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 120px; }
   header h1 { font-size: 26px; margin: 8px 0 4px; }
   header p { color: var(--muted); margin: 4px 0; font-size: 14px; }
@@ -22,14 +22,14 @@
   .progressbar .label { font-size: 13px; color: var(--muted); white-space: nowrap; font-family: Consolas, monospace; }
   h2 { font-size: 19px; margin: 36px 0 6px; padding-bottom: 6px; border-bottom: 2px solid var(--accent); }
   .block-note { font-size: 13px; color: var(--muted); margin: 0 0 14px; }
-  .q { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+  .q { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin: 12px 0; box-shadow: 0 1px 2px rgba(60,64,67,.08); }
   .q.answered { border-left: 4px solid var(--done); }
   .q .head { display: flex; gap: 8px; align-items: baseline; }
   .q .num { font-family: Consolas, monospace; font-size: 13px; color: var(--muted); flex-shrink: 0; }
   .q .star { color: var(--star); font-size: 14px; }
   .q .text { font-weight: bold; }
   .q .hint { font-size: 13px; color: var(--muted); background: var(--hint-bg); border-radius: 6px; padding: 6px 10px; margin: 8px 0; }
-  textarea { width: 100%; min-height: 56px; margin-top: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; resize: vertical; background: var(--bg); color: var(--ink); font: 15px/1.5 Georgia, serif; }
+  textarea { width: 100%; min-height: 56px; margin-top: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; resize: vertical; background: #fff; color: var(--ink); font: 14px/1.5 'Segoe UI', Roboto, Arial, sans-serif; }
   textarea:focus { outline: 2px solid var(--accent); border-color: transparent; }
   .opts { margin: 8px 0 0; }
   .opts label { display: block; padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 15px; }
@@ -38,7 +38,7 @@
   .comment-label { font-size: 13px; color: var(--muted); margin-top: 8px; display: block; }
   .actions { position: fixed; bottom: 0; left: 0; right: 0; z-index: 10; background: var(--card); border-top: 1px solid var(--line); padding: 12px 56px 12px 16px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
   #btnClear { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-weight: normal; font-size: 13px; padding: 8px 14px; color: var(--muted); }
-  button { font: bold 15px Georgia, serif; padding: 10px 22px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+  button { font: 600 14px 'Segoe UI', Roboto, Arial, sans-serif; padding: 10px 22px; border-radius: 6px; border: 1px solid var(--line); background: var(--card); color: var(--accent); cursor: pointer; }
   button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
   button:hover { filter: brightness(1.08); }
   #outputPanel { display: none; margin-top: 28px; }
