@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Анкета №3 — три вопроса</title>
+<style>
+  :root {
+    --bg: #f8f9fa; --card: #ffffff; --ink: #1b1c1e; --muted: #3c4043;
+    --accent: #1a73e8; --accent-ink: #ffffff; --line: #dadce0;
+    --hint-bg: #f1f3f4; --done: #188038;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 'Segoe UI', Roboto, Arial, sans-serif; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 120px; }
+  header h1 { font-size: 26px; margin: 8px 0 4px; }
+  header p { color: var(--muted); margin: 4px 0; font-size: 14px; }
+  .q { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin: 12px 0; box-shadow: 0 1px 2px rgba(60,64,67,.08); }
+  .q.answered { border-left: 4px solid var(--done); }
+  .q .head { display: flex; gap: 8px; align-items: baseline; }
+  .q .num { font-family: Consolas, monospace; font-size: 13px; color: var(--muted); flex-shrink: 0; }
+  .q .text { font-weight: bold; }
+  .q .hint { font-size: 14px; color: var(--ink); background: #e8f0fe; border-left: 3px solid var(--accent); border-radius: 4px; padding: 8px 12px; margin: 8px 0; }
+  textarea { width: 100%; min-height: 56px; margin-top: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; resize: vertical; background: #fff; color: var(--ink); font: 14px/1.5 'Segoe UI', Roboto, Arial, sans-serif; }
+  textarea:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .opts { margin: 8px 0 0; }
+  .opts label { display: block; padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 15px; }
+  .opts label:hover { background: var(--hint-bg); }
+  .opts input { margin-right: 8px; accent-color: var(--accent); }
+  .comment-label { font-size: 13.5px; color: var(--muted); margin-top: 8px; display: block; }
+  .actions { position: fixed; bottom: 0; left: 0; right: 0; z-index: 10; background: var(--card); border-top: 1px solid var(--line); padding: 12px 56px 12px 16px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  button { font: 600 14px 'Segoe UI', Roboto, Arial, sans-serif; padding: 10px 22px; border-radius: 6px; border: 1px solid var(--line); background: var(--card); color: var(--accent); cursor: pointer; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  button:hover { filter: brightness(1.08); }
+  #btnClear { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-weight: normal; font-size: 13px; padding: 8px 14px; color: var(--muted); }
+  #outputPanel { display: none; margin-top: 28px; }
+  #outputPanel.visible { display: block; }
+  #output { min-height: 200px; font: 13px/1.5 Consolas, 'Courier New', monospace; white-space: pre; overflow-x: auto; width: 100%; }
+  .copied { background: var(--done) !important; color: var(--accent-ink) !important; }
+  .footer-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Анкета №3 — три вопроса</h1>
+    <p>2026-08-05 · последние три решения перед стартом дорожной карты</p>
+    <p>Ответы сохраняются в этом браузере автоматически.</p>
+  </header>
+
+  <div id="form"></div>
+
+  <div id="outputPanel">
+    <h2>Результат — скопируйте и отправьте ассистенту</h2>
+    <textarea id="output" readonly></textarea>
+  </div>
+
+  <p class="footer-note">Страница ничего никуда не отправляет: данные не покидают ваш браузер, пока вы сами их не скопируете.</p>
+</div>
+
+<div class="actions">
+  <button class="primary" id="btnBuild">Собрать ответы</button>
+  <button id="btnCopy">📋 Копировать</button>
+  <button id="btnClear">Очистить всё</button>
+</div>
+
+<script>
+"use strict";
+
+var Q = [
+ {n:1, t:"Ваш текущий проект в EPAM — из какого сектора клиент?", type:"radio", opts:["Банк / финансы","Ритейл / e-commerce","Другой сектор (напишу в подробностях)","Сейчас между проектами"], h:"Дело будем строить вокруг сектора, где вы работаете прямо сейчас — так оно выглядит правдоподобно. Финансы для заявки чуть сильнее ритейла, но правда важнее.", ph:"Что за проект, если «другой»."},
+ {n:2, t:"Готовы ли взять на текущем проекте роль «внедренца AI» — настроить AI-инструменты для команды, обучить коллег, замерить эффект?", type:"radio", opts:["Да, это реально на моём проекте","Скорее через внутренние AI-программы и комьюнити EPAM","Нереально ни там, ни там"], h:"Это главный способ превратить ваши сертификаты (Claude Architect, Gemini Enterprise) в практику с измеримым результатом — прямо на работе, без дополнительного времени. И это же готовая тема для будущих докладов.", ph:"Мысли, ограничения."},
+ {n:3, t:"Подбор юриста — стартуем сейчас?", type:"radio", opts:["Да — готовь критерии выбора и шорт-лист фирм","Позже — сначала соберём факты сами"], h:"Вы выбрали полное сопровождение. Рекомендую подключать юриста ДО начала полугодовой прокачки: он закрепит формулировку дела, и вы будете полгода работать в правильном направлении, а не переделывать.", ph:"Пожелания к юристу, если есть."}
+];
+
+var form = document.getElementById("form");
+var LS = "eb2form-f3.";
+
+function esc(s){ var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+
+function render(){
+  var html = "";
+  Q.forEach(function(q){
+    html += "<div class='q' id='q" + q.n + "'>";
+    html += "<div class='head'><span class='num'>#" + q.n + "</span><span class='text'>" + esc(q.t) + "</span></div>";
+    if (q.h) html += "<div class='hint'>" + esc(q.h) + "</div>";
+    html += "<div class='opts'>";
+    q.opts.forEach(function(o, i){
+      html += "<label><input type='radio' name='opt" + q.n + "' data-q='" + q.n + "' data-i='" + i + "'>" + esc(o) + "</label>";
+    });
+    html += "</div>";
+    html += "<label class='comment-label'>Подробности (если есть):</label>";
+    html += "<textarea data-q='" + q.n + "' data-role='comment' rows='2' placeholder='" + esc(q.ph || "") + "'></textarea>";
+    html += "</div>";
+  });
+  form.innerHTML = html;
+}
+
+function save(n){
+  var data = { sel: [], comment: "" };
+  document.querySelectorAll("input[name='opt" + n + "']:checked").forEach(function(el){
+    data.sel.push(parseInt(el.getAttribute("data-i"), 10));
+  });
+  data.comment = document.querySelector("textarea[data-q='" + n + "'][data-role='comment']").value;
+  localStorage.setItem(LS + n, JSON.stringify(data));
+  markAnswered(n, data);
+}
+
+function load(){
+  Q.forEach(function(q){
+    var raw = localStorage.getItem(LS + q.n);
+    if (!raw) return;
+    var data; try { data = JSON.parse(raw); } catch(e){ return; }
+    (data.sel || []).forEach(function(i){
+      var el = document.querySelector("input[name='opt" + q.n + "'][data-i='" + i + "']");
+      if (el) el.checked = true;
+    });
+    document.querySelector("textarea[data-q='" + q.n + "'][data-role='comment']").value = data.comment || "";
+    markAnswered(q.n, data);
+  });
+}
+
+function isAnswered(data){
+  if (!data) return false;
+  if (data.sel && data.sel.length) return true;
+  if (data.comment && data.comment.trim()) return true;
+  return false;
+}
+
+function markAnswered(n, data){
+  document.getElementById("q" + n).classList.toggle("answered", isAnswered(data));
+}
+
+function buildOutput(){
+  var lines = [];
+  lines.push("# EB2-NIW: ОТВЕТЫ ЗАЯВИТЕЛЯ — АНКЕТА 3");
+  lines.push("Заполнено: " + new Date().toISOString().slice(0, 10));
+  lines.push("");
+  Q.forEach(function(q){
+    var raw = localStorage.getItem(LS + q.n);
+    var data = null; try { data = raw ? JSON.parse(raw) : null; } catch(e){}
+    lines.push("**" + q.n + ". " + q.t + "**");
+    if (!isAnswered(data)) {
+      lines.push("— (нет ответа)");
+    } else {
+      (data.sel || []).forEach(function(i){ lines.push("[выбрано] " + q.opts[i]); });
+      if (data.comment && data.comment.trim()) lines.push("Подробности: " + data.comment.trim());
+    }
+    lines.push("");
+  });
+  return lines.join("\n");
+}
+
+document.getElementById("btnBuild").addEventListener("click", function(){
+  var out = document.getElementById("output");
+  out.value = buildOutput();
+  document.getElementById("outputPanel").classList.add("visible");
+  out.style.height = Math.min(out.scrollHeight + 20, 400) + "px";
+  document.getElementById("outputPanel").scrollIntoView({ behavior: "smooth" });
+});
+
+document.getElementById("btnCopy").addEventListener("click", function(){
+  var out = document.getElementById("output");
+  if (!out.value) out.value = buildOutput();
+  document.getElementById("outputPanel").classList.add("visible");
+  var btn = this;
+  function ok(){
+    btn.classList.add("copied"); btn.textContent = "✓ Скопировано";
+    setTimeout(function(){ btn.classList.remove("copied"); btn.textContent = "📋 Копировать"; }, 2500);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(out.value).then(ok, function(){ out.select(); document.execCommand("copy"); ok(); });
+  } else {
+    out.select(); document.execCommand("copy"); ok();
+  }
+});
+
+var clearArmed = false;
+document.getElementById("btnClear").addEventListener("click", function(){
+  var btn = this;
+  if (!clearArmed) {
+    clearArmed = true; btn.textContent = "Точно очистить всё?";
+    setTimeout(function(){ clearArmed = false; btn.textContent = "Очистить всё"; }, 4000);
+    return;
+  }
+  Q.forEach(function(q){ localStorage.removeItem(LS + q.n); });
+  render(); attach();
+  document.getElementById("output").value = "";
+  document.getElementById("outputPanel").classList.remove("visible");
+  clearArmed = false; btn.textContent = "Очистить всё";
+});
+
+function attach(){
+  form.querySelectorAll("textarea, input").forEach(function(el){
+    el.addEventListener("input", function(){ save(parseInt(el.getAttribute("data-q"), 10)); });
+    el.addEventListener("change", function(){ save(parseInt(el.getAttribute("data-q"), 10)); });
+  });
+}
+
+render(); attach(); load();
+</script>
+</body>
+</html>
