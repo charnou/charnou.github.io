@@ -1,0 +1,2534 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Interface English</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{
+  color-scheme:light only;
+  --bg:#F7F8FA; --card:#FFFFFF; --line:#E3E6EC; --line-soft:#EFF1F5;
+  --ink:#16181D; --ink-soft:#4A5060; --ink-muted:#7A8194;
+  --acc:#4F46E5; --acc-ink:#3730A3; --acc-tint:#EEF0FE;
+  --ok:#12866F; --ok-ink:#0B5E4E; --ok-tint:#E6F6F2;
+  --near:#B4690E; --near-ink:#8A5009; --near-tint:#FDF3E3;
+  --bad:#C0392B; --bad-ink:#8E2A20; --bad-tint:#FBEDEB;
+  --r:18px; --r-sm:12px;
+  --shadow:0 1px 2px rgba(16,18,29,.06),0 8px 24px rgba(16,18,29,.06);
+  --ease:cubic-bezier(.33,1,.68,1);
+  --font-display:"Segoe UI Semibold","Helvetica Neue",Arial,sans-serif;
+  --font-ui:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-mono:ui-monospace,"Cascadia Mono","SF Mono",Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+  background:var(--bg);color:var(--ink);
+  font:16px/1.55 var(--font-ui);
+  -webkit-tap-highlight-color:transparent;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+.wrap{width:100%;max-width:1100px;margin:0 auto;padding:0 20px}
+.card>*:not(.mockwrap){max-width:820px}
+.lead{max-width:860px}
+
+.top{flex:0 0 auto;background:var(--card);border-bottom:1px solid var(--line);z-index:5}
+.top-in{display:flex;align-items:center;gap:14px;height:58px}
+.brand{font:600 17px/1 var(--font-display);letter-spacing:-.2px;white-space:nowrap}
+.brand b{color:var(--acc)}
+.meter{flex:1 1 auto;height:6px;border-radius:999px;background:var(--line-soft);overflow:hidden;min-width:60px}
+.meter i{display:block;height:100%;width:0;border-radius:999px;background:var(--acc);transition:width .45s var(--ease)}
+.score{font:600 14px/1 var(--font-mono);color:var(--ink-soft);white-space:nowrap}
+.reset{background:none;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--ink-muted)}
+
+main{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;scroll-behavior:smooth}
+main>.wrap{padding-bottom:80px}
+
+.blk{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin:20px 0;overflow:hidden}
+.blk-h{padding:18px 22px 14px;border-bottom:1px solid var(--line-soft)}
+.blk-h h2{margin:0;font:600 20px/1.3 var(--font-display);letter-spacing:-.3px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;flex:0 0 26px;border-radius:8px;background:var(--acc-tint);color:var(--acc-ink);font:600 13px/1 var(--font-mono)}
+.mins{margin-left:auto;font:500 12px/1 var(--font-mono);color:var(--ink-muted);border:1px solid var(--line);border-radius:999px;padding:5px 9px;white-space:nowrap}
+.lead{margin:8px 0 0;color:var(--ink-soft);font-size:15px}
+.blk-b{padding:6px 22px 22px}
+
+.ru{font-family:var(--font-ui);font-size:14.5px;color:var(--ink-soft)}
+.ru-hide{font-size:13px;color:var(--acc);border-bottom:1px dashed var(--acc);cursor:pointer;white-space:nowrap}
+.ru-hide:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.en{font-family:var(--font-mono);font-weight:600}
+.k{font-family:var(--font-mono);font-size:.92em;background:var(--acc-tint);color:var(--acc-ink);border-radius:5px;padding:1px 4px;white-space:nowrap}
+
+.card{border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;margin:14px 0;background:var(--card)}
+.card>h3{margin:0 0 8px;font:600 15px/1.35 var(--font-display)}
+.q{margin:0 0 4px;font-weight:600;font-size:16px}
+.q .task{color:var(--acc-ink)}
+.sub{margin:2px 0 12px;font-size:14px;color:var(--ink-muted)}
+
+.opts{display:flex;flex-direction:column;gap:8px;margin:12px 0 0}
+.opt{display:flex;align-items:flex-start;gap:10px;text-align:left;width:100%;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);padding:11px 13px;transition:border-color .15s,background .15s}
+.opt .mk{flex:0 0 auto;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font:600 11px/1 var(--font-mono);color:var(--ink-muted)}
+.opt .tx{flex:1 1 auto}
+.opt.is-ok{border-color:var(--ok);background:var(--ok-tint)}
+.opt.is-ok .mk{border-color:var(--ok);background:var(--ok);color:#fff}
+.opt.is-bad{border-color:var(--bad);background:var(--bad-tint)}
+.opt.is-bad .mk{border-color:var(--bad);background:var(--bad);color:#fff}
+.opt.is-near{border-color:var(--near);background:var(--near-tint)}
+.opt.is-near .mk{border-color:var(--near);background:var(--near);color:#fff}
+@media (hover:hover){.opt:hover{border-color:var(--acc)}}
+
+.fb{margin:12px 0 0;padding:11px 13px;border-radius:var(--r-sm);font-size:14.5px;display:none}
+.fb.on{display:block}
+.fb.ok{background:var(--ok-tint);color:var(--ok-ink);border:1px solid var(--ok)}
+.fb.bad{background:var(--bad-tint);color:var(--bad-ink);border:1px solid var(--bad)}
+.fb.near{background:var(--near-tint);color:var(--near-ink);border:1px solid var(--near)}
+.fb.hint{background:var(--acc-tint);color:var(--acc-ink);border:1px solid var(--acc)}
+.fb b{font-family:var(--font-mono)}
+
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.btn{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:999px;padding:8px 15px;font-size:14px;font-weight:600}
+.btn.ghost{background:none;color:var(--acc-ink);border-color:var(--line)}
+.btn.tiny{padding:5px 11px;font-size:13px;font-weight:500}
+.btn[disabled]{opacity:.45;cursor:default}
+.say{background:none;border:none;padding:0 4px;font-size:14px;line-height:1;opacity:.6}
+@media (hover:hover){.say:hover{opacity:1}}
+
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;margin:12px 0 0}
+.word{border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 11px;background:var(--card)}
+.word .w{font:600 15px/1.3 var(--font-mono)}
+.word .d{font-size:13.5px;color:var(--ink-soft);margin-top:2px}
+
+.fam{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:12px 0 0}
+.fam>div{border:1px solid var(--line);border-radius:var(--r-sm);padding:12px;background:var(--card)}
+.fam h4{margin:0 0 6px;font:600 14px/1.3 var(--font-display)}
+.fam ul{margin:0;padding-left:18px;font-family:var(--font-mono);font-size:13.5px;line-height:1.7}
+
+.pairs{display:flex;gap:10px;margin:12px 0 0;flex-wrap:wrap}
+.col{flex:1 1 200px;display:flex;flex-direction:column;gap:7px;min-width:180px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:var(--r-sm);padding:9px 12px;text-align:left;font-size:14.5px;transition:border-color .15s,background .15s}
+.chip.en{font-family:var(--font-mono);font-weight:600}
+.chip.sel{border-color:var(--acc);background:var(--acc-tint)}
+.chip.is-ok{border-color:var(--ok);background:var(--ok-tint);cursor:default}
+.chip.is-bad{border-color:var(--bad);background:var(--bad-tint)}
+.chip[disabled]{cursor:default}
+@media (hover:hover){.chip:not([disabled]):hover{border-color:var(--acc)}}
+
+.gapline{font-size:16px;line-height:2.1;margin:12px 0 0}
+.slot{display:inline-block;min-width:120px;border-bottom:2px solid var(--acc);text-align:center;font-family:var(--font-mono);font-weight:600;color:var(--acc-ink);padding:0 6px}
+.toks{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+.tok{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 10px;font:600 14px/1.2 var(--font-mono)}
+.tok.is-ok{border-color:var(--ok);background:var(--ok-tint)}
+.tok.is-bad{border-color:var(--bad);background:var(--bad-tint)}
+.tok.sel{border-color:var(--acc);background:var(--acc-tint)}
+
+.stackbox{margin:12px 0 0}
+.stackphr{font:600 19px/1.4 var(--font-mono);letter-spacing:-.2px;padding:12px 14px;background:var(--acc-tint);border-radius:var(--r-sm);color:var(--acc-ink)}
+.stackslots{display:flex;flex-direction:column;gap:6px;margin:10px 0 0}
+.stackslot{display:flex;align-items:center;gap:10px;border:1px dashed var(--line);border-radius:var(--r-sm);padding:9px 12px;min-height:44px;font-size:14.5px}
+.stackslot .n{flex:0 0 auto;width:22px;height:22px;border-radius:6px;background:var(--line-soft);color:var(--ink-muted);font:600 12px/22px var(--font-mono);text-align:center}
+.stackslot.filled{border-style:solid;border-color:var(--ok);background:var(--ok-tint)}
+
+details.extra{border:1px dashed var(--line);border-radius:var(--r-sm);margin:14px 0;background:#FCFCFD}
+details.extra>summary{cursor:pointer;padding:10px 14px;font-size:13.5px;color:var(--ink-muted);font-weight:600;list-style:none}
+details.extra>summary::-webkit-details-marker{display:none}
+details.extra>summary:before{content:"EXTRA · ";font-family:var(--font-mono);color:var(--acc)}
+details.extra>div{padding:0 14px 6px}
+
+details.talk{border:1px solid var(--near);background:var(--near-tint);border-radius:var(--r-sm);margin:14px 0}
+details.talk>summary{cursor:pointer;padding:11px 14px;font-weight:600;font-size:14.5px;color:var(--near-ink);list-style:none}
+details.talk>summary::-webkit-details-marker{display:none}
+details.talk>summary:before{content:"🗣 ";}
+details.talk>div{padding:0 14px 12px;font-size:14.5px;color:var(--near-ink)}
+details.talk ul{margin:6px 0 0;padding-left:20px}
+
+.rule{display:flex;gap:12px;border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:var(--r-sm);padding:13px 15px;margin:10px 0;background:var(--card)}
+.rule .rn{flex:0 0 auto;font:600 22px/1 var(--font-display);color:var(--acc);opacity:.5}
+.rule h4{margin:0 0 4px;font:600 15px/1.35 var(--font-display)}
+.rule p{margin:0;font-size:14.5px;color:var(--ink-soft)}
+
+.sig{width:100%;border-collapse:collapse;margin:12px 0 0;font-size:14.5px}
+.sig td,.sig th{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+.sig th{background:var(--line-soft);font-weight:600;font-size:13px}
+.sig td:first-child{font-family:var(--font-mono);font-weight:600;white-space:nowrap;width:1%}
+
+.mockwrap{margin:12px 0 0;border-radius:var(--r-sm);overflow-x:auto;overscroll-behavior-x:contain;border:1px solid var(--line)}
+.mockwrap.plain{border:none}
+
+.mock-ribbon{min-width:760px;background:#F1F1F1;font:13px/1.3 "Segoe UI",Arial,sans-serif;color:#1A1A1A}
+.mock-ribbon .title{background:#fff;padding:5px 10px;font-size:12px;color:#444;display:flex;justify-content:space-between;border-bottom:1px solid #DDD}
+.mock-ribbon .title .logo{font-weight:700;color:#0B7285}
+.mock-ribbon .tabs{display:flex;background:#fff;border-bottom:1px solid #CFCFCF}
+.mock-ribbon .tabs button{background:none;border:none;padding:7px 15px;font-size:13px;color:#1A1A1A;border-bottom:2px solid transparent}
+.mock-ribbon .tabs button.file{background:#217346;color:#fff}
+.mock-ribbon .tabs button.act{border-bottom-color:#0B7285;font-weight:600;background:#F1F1F1}
+.mock-ribbon .groups{display:flex;align-items:stretch;padding:4px 0 0}
+.mock-ribbon .grp{display:flex;flex-direction:column;padding:0 5px;border-right:1px solid #DCDCDC}
+.mock-ribbon .grp:last-child{border-right:none}
+.mock-ribbon .gitems{display:flex;gap:2px;flex:1 1 auto;align-items:flex-start;padding:3px 0 5px}
+.mock-ribbon .glabel{text-align:center;font-size:11px;color:#666;padding:2px 0 4px;border-top:1px solid #E6E6E6}
+.mock-ribbon .ri{background:none;border:1px solid transparent;border-radius:3px;padding:4px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:46px;max-width:70px;font-size:11px;line-height:1.2;text-align:center;color:#1A1A1A}
+.mock-ribbon .ri .ic{width:22px;height:22px;border:1.5px solid #4A6E8A;border-radius:3px;background:#DCEAF4}
+.mock-ribbon .ri.dim{color:#A8A8A8}
+.mock-ribbon .ri.dim .ic{border-color:#C4C4C4;background:#EDEDED}
+.mock-ribbon .ri .cv{font-size:9px;opacity:.7}
+@media (hover:hover){.mock-ribbon .ri:not(.dim):hover{border-color:#7EB5D6;background:#E8F2F9}}
+.mock-ribbon .btabs{display:flex;gap:2px;background:#E4E4E4;border-top:1px solid #CFCFCF;padding:3px 6px}
+.mock-ribbon .btabs span{font-size:11px;padding:3px 9px;background:#F6F6F6;border:1px solid #D0D0D0;border-bottom:none}
+.mock-ribbon .btabs span.act{background:#fff;font-weight:600}
+
+.mock-game{min-width:700px;background:#0A0A0A;color:#D8D2C6;font:14px/1.4 "Segoe UI",Arial,sans-serif;display:flex;min-height:330px}
+.mock-game .gside{flex:0 0 190px;padding:22px 16px;border-right:1px solid #241F1A}
+.mock-game .gtitle{font:700 13px/1.3 var(--font-mono);letter-spacing:2px;color:#B8A170;margin-bottom:4px}
+.mock-game .gver{font-size:10px;color:#6B6357;letter-spacing:1px;margin-bottom:18px}
+.mock-game .gside button{display:block;width:100%;text-align:left;background:none;border:none;padding:5px 0;font-size:12.5px;letter-spacing:1.4px;color:#8A8175}
+.mock-game .gside button.act{color:#E8C87A;font-weight:700}
+.mock-game .grows{flex:1 1 auto;padding:16px 18px}
+.mock-game .grow{display:flex;align-items:center;gap:12px;padding:9px 12px;border-bottom:1px solid #191510}
+.mock-game .grow.act{border:1px solid #6E6250;background:#141210}
+.mock-game .grow .gl{flex:1 1 auto;font-size:13.5px}
+.mock-game .grow .gv{flex:0 0 74px;text-align:right;font-weight:600;font-size:13px;color:#E8C87A}
+.mock-game .grow .gs{flex:0 0 96px;height:9px;border:1px solid #3A332A;background:#0E0C0A;position:relative}
+.mock-game .grow .gs i{position:absolute;top:1px;bottom:1px;left:1px;background:#7E7566;width:34%}
+@media (hover:hover){.mock-game .grow:hover{background:#141210}}
+
+.mock-site{min-width:720px;background:#fff;font:14px/1.4 Arial,Helvetica,sans-serif;color:#1A1A1A}
+.mock-site .util{display:flex;justify-content:flex-end;gap:16px;padding:7px 16px;font-size:11.5px;color:#555;border-bottom:1px solid #EEE}
+.mock-site .mainrow{display:flex;align-items:center;gap:18px;padding:12px 16px}
+.mock-site .wordmark{font:900 24px/1 Arial,sans-serif;letter-spacing:-1px}
+.mock-site .wordmark.camar{color:#D5121B}
+.mock-site .tag{font-size:11px;color:#777;letter-spacing:.5px}
+.mock-site nav{display:flex;gap:15px;margin-left:auto;flex-wrap:wrap}
+.mock-site nav span{font-size:12.5px;color:#222;white-space:nowrap}
+.mock-site nav span.up{text-transform:uppercase;letter-spacing:.4px}
+.mock-site nav span.on{color:#D5121B;font-weight:700}
+.mock-site .mega{background:#57575A;color:#fff;padding:16px;display:flex;gap:14px;flex-wrap:wrap}
+.mock-site .mcol{flex:1 1 128px;min-width:120px}
+.mock-site .mcol h5{margin:0 0 5px;font-size:12.5px;line-height:1.3;border-bottom:1px solid #8A8A8D;padding-bottom:5px}
+.mock-site .mcol .sub{margin:0;padding:0;list-style:none;font-size:11.5px;line-height:1.75;color:#E2E2E2}
+.mock-site .mcol .kicker{font-size:10px;letter-spacing:.8px;color:#C9C9C9;margin-top:6px}
+.mock-site .zone{border:none;background:none;padding:0;color:inherit;font:inherit;text-align:left;display:block;width:100%}
+@media (hover:hover){.mock-site .zone:hover{text-decoration:underline}}
+
+.mock-dlg{background:#F0F0F0;border:1px solid #B4B4B4;font:13.5px/1.5 "Segoe UI",Arial,sans-serif;color:#1A1A1A;max-width:520px;margin:0 auto}
+.mock-dlg .dbar{background:#fff;border-bottom:1px solid #DEDEDE;padding:8px 12px;display:flex;align-items:center;font-size:12.5px;font-weight:600}
+.mock-dlg .dbar .x{margin-left:auto;border:none;background:none;font-size:15px;line-height:1;padding:0 4px;color:#555}
+.mock-dlg .dbody{padding:18px;background:#fff;display:flex;gap:13px}
+.mock-dlg .dbody .ico{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:#FDF3E3;color:#B4690E;font:700 18px/30px Arial;text-align:center}
+.mock-dlg .dbody .ico.warn{background:#FBEDEB;color:#C0392B}
+.mock-dlg .dfoot{padding:11px 14px;display:flex;gap:8px;justify-content:flex-end;border-top:1px solid #E0E0E0;flex-wrap:wrap}
+.mock-dlg .db{border:1px solid #ADADAD;background:#E8E8E8;border-radius:3px;padding:6px 16px;font-size:13px;min-width:84px}
+.mock-dlg .db.pri{border-color:#0B5FA5;background:#0B5FA5;color:#fff;font-weight:600}
+.mock-dlg .db.dgr{border-color:#B03A2E;background:#C0392B;color:#fff}
+@media (hover:hover){.mock-dlg .db:hover{border-color:#0B5FA5}}
+.mock-dlg .opt-line{display:flex;align-items:flex-start;gap:8px;margin:7px 0;font-size:13px}
+.mock-dlg .bx{flex:0 0 auto;width:14px;height:14px;border:1px solid #767676;background:#fff;margin-top:2px}
+.mock-dlg .bx.rad{border-radius:50%}
+.mock-dlg .bx.chk{background:#0B5FA5;border-color:#0B5FA5;color:#fff;font:700 10px/12px Arial;text-align:center}
+.mock-dlg .bx.dot{position:relative}
+.mock-dlg .bx.dot:after{content:"";position:absolute;inset:3px;border-radius:50%;background:#0B5FA5}
+
+.mock-cookie{background:#1F2430;color:#E8EAF0;font:13.5px/1.55 Arial,sans-serif;padding:18px}
+.mock-cookie h5{margin:0 0 6px;font-size:15px}
+.mock-cookie p{margin:0 0 12px;color:#B4BACB;font-size:13px}
+.mock-cookie .crow{display:flex;gap:8px;flex-wrap:wrap}
+.mock-cookie .cb{border:1px solid #4A5266;background:none;color:#E8EAF0;border-radius:4px;padding:8px 15px;font-size:13px}
+.mock-cookie .cb.pri{background:#3B82F6;border-color:#3B82F6;color:#fff;font-weight:600}
+@media (hover:hover){.mock-cookie .cb:hover{border-color:#8FA0C4}}
+
+.mock-perm{background:#fff;border:1px solid #C6C6C6;border-radius:8px;box-shadow:0 6px 22px rgba(0,0,0,.16);max-width:400px;font:13.5px/1.5 "Segoe UI",Arial,sans-serif}
+.mock-perm .purl{display:flex;align-items:center;gap:8px;padding:9px 13px;border-bottom:1px solid #EDEDED;font-size:12.5px;color:#444}
+.mock-perm .pbody{padding:14px 13px}
+.mock-perm .pfoot{display:flex;gap:8px;justify-content:flex-end;padding:0 13px 13px;flex-wrap:wrap}
+.mock-perm .pb{border:1px solid #C6C6C6;background:#fff;border-radius:4px;padding:6px 13px;font-size:13px}
+.mock-perm .pb.pri{background:#0B57D0;border-color:#0B57D0;color:#fff;font-weight:600}
+
+.done{display:inline-flex;align-items:center;gap:5px;font:600 12px/1 var(--font-mono);color:var(--ok-ink);background:var(--ok-tint);border:1px solid var(--ok);border-radius:999px;padding:4px 9px;margin-left:auto}
+
+.mist{border:1px solid var(--line);border-radius:var(--r-sm);padding:13px;margin:10px 0}
+.mist .mq{font-weight:600;font-size:14.5px;margin-bottom:6px}
+.mist .ml{font-family:var(--font-mono);font-size:13.5px;margin:2px 0}
+.mist .ml.mine{color:var(--bad-ink)}
+.mist .ml.right{color:var(--ok-ink)}
+.mist .mw{font-size:13.5px;color:var(--ink-soft);margin-top:5px}
+
+.sheet{border:2px solid var(--acc);border-radius:var(--r-sm);padding:18px;margin:14px 0;background:#fff}
+.sheet h3{margin:0 0 12px;font:600 18px/1.3 var(--font-display)}
+.sheet h4{margin:16px 0 6px;font:600 14px/1.3 var(--font-display);color:var(--acc-ink);text-transform:uppercase;letter-spacing:.5px;font-size:12px}
+.sheet ul{margin:0;padding-left:20px;font-size:14px;line-height:1.75}
+.sheet .mono{font-family:var(--font-mono);font-weight:600}
+.sheet .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0 22px}
+
+.final{text-align:center;padding:10px 0}
+.final .big{font:700 44px/1 var(--font-display);color:var(--acc)}
+.final .verdict{font-size:16px;margin-top:10px;color:var(--ink-soft)}
+
+.gate{max-width:440px;margin:30px auto}
+.gate label{display:block;font-weight:600;margin-bottom:6px;font-size:15px}
+.gate .req{color:var(--bad);font-family:var(--font-mono)}
+.gate input{width:100%;font:17px/1.4 var(--font-ui);padding:11px 13px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--card);color:var(--ink)}
+.gate input:focus{outline:2px solid var(--acc);outline-offset:1px;border-color:var(--acc)}
+.gate .hintline{font-size:13px;color:var(--ink-muted);margin-top:7px}
+
+@media (max-width:640px){
+  .wrap{padding:0 14px}
+  .blk-h,.blk-b{padding-left:15px;padding-right:15px}
+  .brand{font-size:15px}
+  .mins{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+@media print{
+  body{height:auto;overflow:visible;display:block;background:#fff}
+  .top,main>.wrap>.blk:not(.printable),.row,.reset,details.extra,details.talk{display:none!important}
+  main{overflow:visible}
+  .blk.printable{border:none;box-shadow:none;margin:0;page-break-inside:avoid}
+  .sheet{border:1px solid #999}
+  .mist{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand">Interface <b>English</b></div>
+    <div class="meter" role="progressbar" aria-label="Прогресс урока"><i id="bar"></i></div>
+    <div class="score" id="score">0 / 0</div>
+    <button class="reset" id="reset" type="button">Сброс</button>
+  </div>
+</header>
+<main id="main"><div class="wrap" id="app"></div></main>
+
+<script>
+"use strict";
+
+var KEY="interface-english-v2";
+var S={name:"",score:0,ans:{},open:{}};
+var SCORED=[];
+var TRIES={};
+
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+function el(tag,cls,txt){
+  var n=document.createElement(tag);
+  if(cls)n.className=cls;
+  if(txt!=null)n.textContent=txt;
+  return n;
+}
+function frag(){return document.createDocumentFragment();}
+function pick(sel,root){return (root||document).querySelector(sel);}
+
+function rich(text){
+  var out=frag();
+  var parts=String(text).split(/(\{[^}]+\}|\[[^\]]+\])/);
+  parts.forEach(function(p){
+    if(!p)return;
+    if(p.charAt(0)==="{"&&p.slice(-1)==="}"){out.appendChild(el("span","k",p.slice(1,-1)));}
+    else if(p.charAt(0)==="["&&p.slice(-1)==="]"){out.appendChild(ruSpan(p.slice(1,-1)));}
+    else{out.appendChild(document.createTextNode(p));}
+  });
+  return out;
+}
+
+function ruSpan(text){
+  var s=el("span","ru-hide","перевод");
+  s.setAttribute("role","button");
+  s.setAttribute("tabindex","0");
+  function open(){s.className="ru";s.textContent=" "+text+" ";}
+  s.addEventListener("click",open);
+  s.addEventListener("keydown",function(e){
+    if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}
+  });
+  return s;
+}
+
+var VOICE=null;
+function findVoice(){
+  if(VOICE)return VOICE;
+  try{
+    var vs=speechSynthesis.getVoices()||[];
+    for(var i=0;i<vs.length;i++){if(vs[i].lang==="en-GB"){VOICE=vs[i];return VOICE;}}
+    for(var j=0;j<vs.length;j++){if(vs[j].lang&&vs[j].lang.indexOf("en")===0){VOICE=vs[j];return VOICE;}}
+  }catch(e){}
+  return null;
+}
+function sayBtn(word){
+  var b=el("button","say","🔊");
+  b.type="button";
+  b.setAttribute("aria-label","Listen: "+word);
+  b.addEventListener("click",function(){
+    try{
+      var u=new SpeechSynthesisUtterance(word);
+      u.lang="en-GB";u.rate=.88;
+      var v=findVoice();
+      if(v)u.voice=v;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+    }catch(e){}
+  });
+  return b;
+}
+try{speechSynthesis.addEventListener("voiceschanged",function(){VOICE=null;findVoice();});findVoice();}catch(e){}
+
+function setProgress(){
+  var n=0;
+  SCORED.forEach(function(id){if(S.ans[id])n++;});
+  var total=SCORED.length||1;
+  pick("#bar").style.width=Math.round(n/total*100)+"%";
+  pick("#score").textContent="✓ "+S.score+" · "+n+"/"+total;
+}
+
+function settle(id,correct,o){
+  o=o||{};
+  var prev=S.ans[id];
+  var first=!prev;
+  if(first&&correct)S.score++;
+  S.ans[id]={
+    ok:!!correct,
+    pick:o.pick,
+    firstOk:first?!!correct:prev.firstOk,
+    firstPick:first?o.pick:prev.firstPick
+  };
+  save();
+  setProgress();
+  return first;
+}
+
+function fbBox(){return el("div","fb");}
+function showFb(box,kind,text){
+  box.className="fb on "+kind;
+  box.textContent="";
+  box.appendChild(rich(text));
+}
+
+function bump(id){TRIES[id]=(TRIES[id]||0)+1;return TRIES[id];}
+
+function hintRow(spec,box){
+  if(!spec.hint&&!spec.answer)return null;
+  var row=el("div","row");
+  if(spec.hint){
+    var h=el("button","btn ghost tiny","Подсказка");
+    h.type="button";
+    h.addEventListener("click",function(){showFb(box,"hint",spec.hint);});
+    row.appendChild(h);
+  }
+  if(spec.answer){
+    var a=el("button","btn ghost tiny","Не помню — покажи");
+    a.type="button";
+    a.addEventListener("click",function(){showFb(box,"hint",spec.answer);});
+    row.appendChild(a);
+  }
+  return row;
+}
+
+function head(spec){
+  var f=frag();
+  var q=el("p","q");
+  q.appendChild(rich(spec.q||spec.task||""));
+  f.appendChild(q);
+  if(spec.sub){var s=el("p","sub");s.appendChild(rich(spec.sub));f.appendChild(s);}
+  return f;
+}
+
+function mc(spec){
+  var c=el("div","card");
+  c.appendChild(head(spec));
+  var box=fbBox();
+  var opts=el("div","opts");
+  var nodes=[];
+  spec.items.forEach(function(it,i){
+    var b=el("button","opt");
+    b.type="button";
+    var mk=el("span","mk",String.fromCharCode(65+i));
+    var tx=el("span","tx");
+    tx.appendChild(rich(it.t));
+    b.appendChild(mk);b.appendChild(tx);
+    b.addEventListener("click",function(){choose(i,true);});
+    nodes.push(b);
+    opts.appendChild(b);
+  });
+  function choose(i,scoring){
+    var it=spec.items[i];
+    var kind=it.ok?"ok":(it.near?"near":"bad");
+    nodes.forEach(function(n){n.className="opt";});
+    nodes[i].className="opt is-"+kind;
+    if(it.ok){
+      spec.items.forEach(function(x,j){if(x.ok)nodes[j].className="opt is-ok";});
+    }
+    showFb(box,kind,it.why||"");
+    if(scoring){
+      var t=bump(spec.id);
+      settle(spec.id,!!it.ok,{pick:i});
+      if(!it.ok&&t>=3&&spec.hint)showFb(box,"hint",it.why+" — "+spec.hint);
+    }
+  }
+  c.appendChild(opts);
+  c.appendChild(box);
+  var hr=hintRow(spec,box);
+  if(hr)c.appendChild(hr);
+  if(!spec.extraOnly)SCORED.push(spec.id);
+  if(S.ans[spec.id]&&S.ans[spec.id].pick!=null)choose(S.ans[spec.id].pick,false);
+  return c;
+}
+
+function match(spec){
+  var c=el("div","card");
+  c.appendChild(head(spec));
+  var box=fbBox();
+  var wrap=el("div","pairs");
+  var lc=el("div","col"),rc=el("div","col");
+  var sel=null,solved={},lnodes={},rnodes={};
+  function mk(text,side,key){
+    var b=el("button","chip"+(side==="l"?" en":""));
+    b.type="button";
+    b.appendChild(rich(text));
+    b.addEventListener("click",function(){tap(side,key,b,true);});
+    (side==="l"?lnodes:rnodes)[key]=b;
+    return b;
+  }
+  spec.left.forEach(function(o){lc.appendChild(mk(o.t,"l",o.k));});
+  spec.right.forEach(function(o){rc.appendChild(mk(o.t,"r",o.k));});
+  wrap.appendChild(lc);wrap.appendChild(rc);
+  function lock(lk,rk){
+    solved[lk]=1;
+    lnodes[lk].className="chip en is-ok";rnodes[rk].className="chip is-ok";
+    lnodes[lk].disabled=true;rnodes[rk].disabled=true;
+  }
+  function tap(side,key,node,scoring){
+    if(node.disabled)return;
+    if(!sel){sel={side:side,key:key,node:node};node.className+=" sel";return;}
+    if(sel.side===side){sel.node.className=sel.node.className.replace(" sel","");sel={side:side,key:key,node:node};node.className+=" sel";return;}
+    var lk=sel.side==="l"?sel.key:key;
+    var rk=sel.side==="l"?key:sel.key;
+    sel.node.className=sel.node.className.replace(" sel","");
+    if(spec.pairs[lk]===rk){
+      lock(lk,rk);
+      var n=0;for(var q in solved)if(solved.hasOwnProperty(q))n++;
+      var total=spec.left.length;
+      if(n===total){
+        if(scoring)settle(spec.id,true,{pick:"all"});
+        showFb(box,"ok",spec.done||"Все пары собраны.");
+      }else if(scoring){
+        showFb(box,"ok","Верно. Осталось: "+(total-n)+".");
+      }
+    }else{
+      node.className=side==="l"?"chip en is-bad":"chip is-bad";
+      var self=node;
+      setTimeout(function(){if(!self.disabled)self.className=side==="l"?"chip en":"chip";},700);
+      var why=(spec.why&&spec.why[lk])||spec.miss||"Не та пара.";
+      showFb(box,"near",why);
+      if(scoring)bump(spec.id);
+    }
+    sel=null;
+  }
+  c.appendChild(wrap);
+  c.appendChild(box);
+  var hr=hintRow(spec,box);
+  if(hr)c.appendChild(hr);
+  if(!spec.extraOnly)SCORED.push(spec.id);
+  if(S.ans[spec.id]){
+    for(var k in spec.pairs)if(spec.pairs.hasOwnProperty(k))lock(k,spec.pairs[k]);
+    showFb(box,"ok",spec.done||"Все пары собраны.");
+  }
+  return c;
+}
+
+function hotspot(spec){
+  var c=el("div","card");
+  c.appendChild(head(spec));
+  var box=fbBox();
+  var holder=el("div","mockwrap");
+  holder.appendChild(spec.mock());
+  var zmap={};
+  spec.zones.forEach(function(z){zmap[z.z]=z;});
+  function land(name,scoring){
+    var z=zmap[name];
+    if(!z){
+      showFb(box,"near",spec.other||"Это не то место. Посмотри ещё раз, где живёт нужное действие.");
+      return;
+    }
+    showFb(box,z.ok?"ok":"bad",z.why||"");
+    if(scoring){
+      var t=bump(spec.id);
+      settle(spec.id,!!z.ok,{pick:name});
+      if(!z.ok&&t>=3&&spec.hint)showFb(box,"hint",z.why+" — "+spec.hint);
+    }
+  }
+  holder.addEventListener("click",function(e){
+    var n=e.target;
+    while(n&&n!==holder&&n.getAttribute&&!n.getAttribute("data-zone"))n=n.parentNode;
+    e.preventDefault();
+    if(!n||n===holder||!n.getAttribute||!n.getAttribute("data-zone")){
+      showFb(box,"hint",spec.dead||"Здесь нажимать не на что. Ищи кнопку, вкладку или пункт меню — то, на что в настоящей программе реально нажимают.");
+      return;
+    }
+    land(n.getAttribute("data-zone"),true);
+  });
+  c.appendChild(holder);
+  c.appendChild(box);
+  var hr=hintRow(spec,box);
+  if(hr)c.appendChild(hr);
+  if(!spec.extraOnly)SCORED.push(spec.id);
+  if(S.ans[spec.id]&&S.ans[spec.id].pick)land(S.ans[spec.id].pick,false);
+  return c;
+}
+
+function stack(spec){
+  var c=el("div","card");
+  c.appendChild(head(spec));
+  var box=fbBox();
+  var sb=el("div","stackbox");
+  var phr=el("div","stackphr",spec.phrase);
+  sb.appendChild(phr);
+  var slots=el("div","stackslots");
+  var step=0;
+  var slotNodes=[];
+  spec.order.forEach(function(o,i){
+    var s=el("div","stackslot");
+    s.appendChild(el("span","n",String(i+1)));
+    s.appendChild(el("span","tx",""));
+    slots.appendChild(s);
+    slotNodes.push(s);
+  });
+  sb.appendChild(slots);
+  var toks=el("div","toks");
+  var tokNodes=[];
+  var shuffled=spec.order.slice().sort(function(a,b){return a.t<b.t?-1:1;});
+  shuffled.forEach(function(o){
+    var b=el("button","tok",o.t);
+    b.type="button";
+    b.addEventListener("click",function(){tap(o,b,true);});
+    tokNodes.push({o:o,b:b});
+    toks.appendChild(b);
+  });
+  function place(o,b){
+    var s=slotNodes[step];
+    s.className="stackslot filled";
+    pick(".tx",s).textContent="";
+    pick(".tx",s).appendChild(rich(o.t+" — "+o.ru));
+    b.disabled=true;b.className="tok is-ok";
+    step++;
+  }
+  function tap(o,b,scoring){
+    if(b.disabled)return;
+    if(spec.order[step]&&spec.order[step].t===o.t){
+      place(o,b);
+      if(step===spec.order.length){
+        if(scoring)settle(spec.id,true,{pick:"all"});
+        showFb(box,"ok",spec.done||("Целиком: "+spec.ru));
+      }else if(scoring){
+        showFb(box,"ok","Верно. Дальше — следующее уточнение.");
+      }
+    }else{
+      b.className="tok is-bad";
+      setTimeout(function(){if(!b.disabled)b.className="tok";},700);
+      showFb(box,"near",spec.miss||"Начни с последнего слова — оно главное. Потом двигайся налево.");
+      if(scoring)bump(spec.id);
+    }
+  }
+  sb.appendChild(toks);
+  c.appendChild(sb);
+  c.appendChild(box);
+  var hr=hintRow(spec,box);
+  if(hr)c.appendChild(hr);
+  if(!spec.extraOnly)SCORED.push(spec.id);
+  if(S.ans[spec.id]){
+    tokNodes.forEach(function(){});
+    spec.order.forEach(function(o){
+      for(var i=0;i<tokNodes.length;i++){
+        if(tokNodes[i].o.t===o.t&&!tokNodes[i].b.disabled){place(o,tokNodes[i].b);break;}
+      }
+    });
+    showFb(box,"ok",spec.done||("Целиком: "+spec.ru));
+  }
+  return c;
+}
+
+function gap(spec){
+  var c=el("div","card");
+  c.appendChild(head(spec));
+  var box=fbBox();
+  var line=el("p","gapline");
+  line.appendChild(rich(spec.before));
+  var slot=el("span","slot","?");
+  line.appendChild(slot);
+  line.appendChild(rich(spec.after||""));
+  c.appendChild(line);
+  var toks=el("div","toks");
+  var nodes=[];
+  spec.chips.forEach(function(ch,i){
+    var b=el("button","tok",ch.t);
+    b.type="button";
+    b.addEventListener("click",function(){choose(i,true);});
+    nodes.push(b);
+    toks.appendChild(b);
+  });
+  function choose(i,scoring){
+    var ch=spec.chips[i];
+    nodes.forEach(function(n){n.className="tok";});
+    nodes[i].className="tok "+(ch.ok?"is-ok":"is-bad");
+    slot.textContent=ch.t;
+    showFb(box,ch.ok?"ok":(ch.near?"near":"bad"),ch.why||"");
+    if(scoring){
+      var t=bump(spec.id);
+      settle(spec.id,!!ch.ok,{pick:i});
+      if(!ch.ok&&t>=3&&spec.hint)showFb(box,"hint",spec.hint);
+    }
+  }
+  c.appendChild(toks);
+  c.appendChild(box);
+  var hr=hintRow(spec,box);
+  if(hr)c.appendChild(hr);
+  if(!spec.extraOnly)SCORED.push(spec.id);
+  if(S.ans[spec.id]&&S.ans[spec.id].pick!=null)choose(S.ans[spec.id].pick,false);
+  return c;
+}
+
+function findErr(spec){
+  var c=el("div","card");
+  c.appendChild(head(spec));
+  var box=fbBox();
+  var toks=el("div","toks");
+  var nodes=[];
+  var phase=0;
+  spec.tokens.forEach(function(t,i){
+    var b=el("button","tok",t);
+    b.type="button";
+    b.addEventListener("click",function(){step1(i,true);});
+    nodes.push(b);
+    toks.appendChild(b);
+  });
+  var fixWrap=el("div","toks");
+  fixWrap.style.display="none";
+  var fixNodes=[];
+  spec.fixes.forEach(function(f,i){
+    var b=el("button","tok",f.t);
+    b.type="button";
+    b.addEventListener("click",function(){step2(i,true);});
+    fixNodes.push(b);
+    fixWrap.appendChild(b);
+  });
+  function step1(i,scoring){
+    if(phase>0)return;
+    if(i===spec.badIndex){
+      nodes[i].className="tok is-ok";
+      nodes.forEach(function(n,j){if(j!==i)n.disabled=true;});
+      phase=1;
+      showFb(box,"ok",spec.found||"Да, ошибка здесь. Теперь выбери, чем заменить.");
+      fixWrap.style.display="";
+    }else{
+      nodes[i].className="tok is-bad";
+      var b=nodes[i];
+      setTimeout(function(){if(!b.disabled)b.className="tok";},700);
+      showFb(box,"near",spec.miss||"Это слово здесь уместно. Ищи дальше.");
+      if(scoring)bump(spec.id);
+    }
+  }
+  function step2(i,scoring){
+    if(phase>1)return;
+    var f=spec.fixes[i];
+    fixNodes.forEach(function(n){n.className="tok";});
+    fixNodes[i].className="tok "+(f.ok?"is-ok":"is-bad");
+    showFb(box,f.ok?"ok":(f.near?"near":"bad"),f.why||"");
+    if(f.ok){
+      phase=2;
+      if(scoring)settle(spec.id,true,{pick:"done"});
+    }else if(scoring){
+      bump(spec.id);
+      settle(spec.id,false,{pick:"wrongfix"});
+    }
+  }
+  c.appendChild(toks);
+  c.appendChild(fixWrap);
+  c.appendChild(box);
+  var hr=hintRow(spec,box);
+  if(hr)c.appendChild(hr);
+  if(!spec.extraOnly)SCORED.push(spec.id);
+  if(S.ans[spec.id]){
+    step1(spec.badIndex,false);
+    for(var i=0;i<spec.fixes.length;i++)if(spec.fixes[i].ok){step2(i,false);break;}
+  }
+  return c;
+}
+
+function note(spec){
+  var c=el("div","card");
+  if(spec.h)c.appendChild(el("h3",null,spec.h));
+  (spec.body||[]).forEach(function(p){
+    var n=el("p");
+    n.style.margin="0 0 8px";
+    n.style.fontSize="14.5px";
+    n.appendChild(rich(p));
+    c.appendChild(n);
+  });
+  if(spec.rules){
+    spec.rules.forEach(function(r,i){
+      var d=el("div","rule");
+      d.appendChild(el("div","rn",String(i+1)));
+      var t=el("div");
+      t.appendChild(el("h4",null,r.h));
+      var p=el("p");
+      p.appendChild(rich(r.p));
+      t.appendChild(p);
+      d.appendChild(t);
+      c.appendChild(d);
+    });
+  }
+  if(spec.table){
+    var tb=el("table","sig");
+    var tr=el("tr");
+    (spec.table.head||[]).forEach(function(h){tr.appendChild(el("th",null,h));});
+    tb.appendChild(tr);
+    spec.table.rows.forEach(function(row){
+      var r=el("tr");
+      row.forEach(function(cell){
+        var td=el("td");
+        td.appendChild(rich(cell));
+        r.appendChild(td);
+      });
+      tb.appendChild(r);
+    });
+    c.appendChild(tb);
+  }
+  if(spec.fams){
+    var g=el("div","fam");
+    spec.fams.forEach(function(f){
+      var d=el("div");
+      d.appendChild(el("h4",null,f.h));
+      var ul=el("ul");
+      f.list.forEach(function(w){ul.appendChild(el("li",null,w));});
+      d.appendChild(ul);
+      var p=el("p","ru");
+      p.style.margin="6px 0 0";
+      p.appendChild(rich(f.ru));
+      d.appendChild(p);
+      g.appendChild(d);
+    });
+    c.appendChild(g);
+  }
+  return c;
+}
+
+function words(spec){
+  var c=el("div","card");
+  if(spec.h)c.appendChild(el("h3",null,spec.h));
+  var g=el("div","words");
+  spec.list.forEach(function(o){
+    var d=el("div","word");
+    var w=el("div","w");
+    w.appendChild(document.createTextNode(o.w));
+    w.appendChild(sayBtn(o.w));
+    d.appendChild(w);
+    var dd=el("div","d");
+    dd.appendChild(rich(o.d));
+    d.appendChild(dd);
+    g.appendChild(d);
+  });
+  c.appendChild(g);
+  return c;
+}
+
+function talk(spec){
+  var d=el("details","talk");
+  d.appendChild(el("summary",null,spec.h||"Talk to your tutor"));
+  var box=el("div");
+  (spec.body||[]).forEach(function(p){
+    var n=el("p");
+    n.style.margin="0 0 6px";
+    n.appendChild(rich(p));
+    box.appendChild(n);
+  });
+  if(spec.list){
+    var ul=el("ul");
+    spec.list.forEach(function(t){
+      var li=el("li");
+      li.appendChild(rich(t));
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+  }
+  d.appendChild(box);
+  return d;
+}
+
+function gate(spec){
+  var c=el("div","card");
+  var g=el("div","gate");
+  var lab=el("label");
+  lab.appendChild(document.createTextNode("Your name "));
+  lab.appendChild(el("span","req","*"));
+  g.appendChild(lab);
+  var inp=el("input");
+  inp.type="text";
+  inp.setAttribute("placeholder","Type your name");
+  inp.value=S.name||"";
+  g.appendChild(inp);
+  var hint=el("p","hintline");
+  hint.appendChild(rich("{*} = {required field} — обязательное поле. Оставь его пустым, нажми {Submit} и посмотри, что скажет форма. [Так ведут себя все формы со звёздочкой.]"));
+  g.appendChild(hint);
+  var out=el("div","fb");
+  var row=el("div","row");
+  var b=el("button","btn","Submit");
+  b.type="button";
+  b.addEventListener("click",function(){
+    var v=inp.value.replace(/^\s+|\s+$/g,"");
+    if(!v){showFb(out,"bad","This field is required. — Без имени форма не отправится. Именно так ведут себя все формы с {*}.");return;}
+    S.name=v;
+    save();
+    showFb(out,"ok","Nice to meet you, "+v+". Поехали.");
+  });
+  row.appendChild(b);
+  g.appendChild(row);
+  g.appendChild(out);
+  c.appendChild(g);
+  if(S.name)showFb(out,"ok","Nice to meet you, "+S.name+". Поехали.");
+  return c;
+}
+
+var NS="http://www.w3.org/2000/svg";
+function svgRect(sv,x,y,w,h,fill,stroke,dash){
+  var n=document.createElementNS(NS,"rect");
+  n.setAttribute("x",x);n.setAttribute("y",y);
+  n.setAttribute("width",w);n.setAttribute("height",h);
+  n.setAttribute("fill",fill);
+  if(stroke){n.setAttribute("stroke",stroke);n.setAttribute("stroke-width","1.4");}
+  if(dash)n.setAttribute("stroke-dasharray","3 2");
+  sv.appendChild(n);
+}
+var POS_GEOM={
+  visible:[44,26,14],
+  concealed:[24,16,14],
+  flush:[30,14,14],
+  inset:[26,12,14],
+  jutting:[38,34,14]
+};
+function posSvg(kind){
+  var sv=document.createElementNS(NS,"svg");
+  sv.setAttribute("viewBox","0 0 96 60");
+  sv.setAttribute("width","96");
+  sv.setAttribute("height","60");
+  sv.setAttribute("aria-hidden","true");
+  svgRect(sv,20,6,24,48,"#E3E6EC","#9AA1B1");
+  var line=document.createElementNS(NS,"line");
+  line.setAttribute("x1","44");line.setAttribute("y1","2");
+  line.setAttribute("x2","44");line.setAttribute("y2","58");
+  line.setAttribute("stroke","#C0392B");
+  line.setAttribute("stroke-width","1");
+  line.setAttribute("stroke-dasharray","2 2");
+  sv.appendChild(line);
+  var g=POS_GEOM[kind];
+  svgRect(sv,g[0],22,g[1],g[2],kind==="concealed"?"#EEF0FE":"#4F46E5","#3730A3",kind==="concealed");
+  return sv;
+}
+function pos(spec){
+  var c=el("div","card");
+  if(spec.h)c.appendChild(el("h3",null,spec.h));
+  var p=el("p","sub");
+  p.appendChild(rich("Красная пунктирная линия — [поверхность панели, то есть лицевая плоскость]. Серый прямоугольник — сама панель, синий — фурнитура."));
+  c.appendChild(p);
+  var g=el("div","words");
+  spec.list.forEach(function(o){
+    var d=el("div","word");
+    d.appendChild(posSvg(o.k));
+    var w=el("div","w");
+    w.appendChild(document.createTextNode(o.w));
+    w.appendChild(sayBtn(o.w));
+    d.appendChild(w);
+    var dd=el("div","d");
+    dd.appendChild(rich(o.d));
+    d.appendChild(dd);
+    g.appendChild(d);
+  });
+  c.appendChild(g);
+  return c;
+}
+
+function rightOf(it){
+  var i;
+  if(it.t==="mc"){for(i=0;i<it.items.length;i++)if(it.items[i].ok)return{right:it.items[i].t,why:it.items[i].why||""};}
+  if(it.t==="gap"){for(i=0;i<it.chips.length;i++)if(it.chips[i].ok)return{right:it.chips[i].t,why:it.chips[i].why||""};}
+  if(it.t==="hotspot"){for(i=0;i<it.zones.length;i++)if(it.zones[i].ok)return{right:it.zones[i].z,why:it.zones[i].why||""};}
+  if(it.t==="err"){for(i=0;i<it.fixes.length;i++)if(it.fixes[i].ok)return{right:it.fixes[i].t,why:it.fixes[i].why||""};}
+  if(it.t==="stack"){
+    var a=[];
+    it.order.forEach(function(o){a.push(o.t);});
+    return{right:a.join(" → "),why:it.done||""};
+  }
+  if(it.t==="match")return{right:"все пары",why:it.done||""};
+  return{right:"",why:""};
+}
+function mineOf(it,p){
+  if(p==null)return "";
+  if(it.t==="mc"&&it.items[p])return it.items[p].t;
+  if(it.t==="gap"&&it.chips[p])return it.chips[p].t;
+  if(it.t==="hotspot")return String(p);
+  if(it.t==="err")return "выбрал неверную замену";
+  return "";
+}
+function walkItems(fn){
+  DATA.forEach(function(sec){
+    (sec.items||[]).forEach(function(it){
+      if(it.t==="extra"){(it.items||[]).forEach(function(sub){fn(sub,sec,true);});}
+      else fn(it,sec,false);
+    });
+  });
+}
+function review(spec){
+  var c=el("div","card");
+  c.appendChild(el("h3",null,spec.h||"Разбор ошибок"));
+  var out=el("div");
+  function build(){
+    out.textContent="";
+    var found=0;
+    walkItems(function(it,sec){
+      var a=S.ans[it.id];
+      if(!it.id||!a||a.firstOk!==false)return;
+      found++;
+      var r=rightOf(it);
+      var d=el("div","mist");
+      var q=el("div","mq");
+      q.appendChild(document.createTextNode(sec.n+" · "+sec.title+" — "));
+      q.appendChild(rich(it.q||it.task||it.phrase||""));
+      d.appendChild(q);
+      var m=mineOf(it,a.firstPick);
+      if(m){
+        var l1=el("div","ml mine");
+        l1.appendChild(document.createTextNode("твой вариант: "));
+        l1.appendChild(rich(m));
+        d.appendChild(l1);
+      }
+      var l2=el("div","ml right");
+      l2.appendChild(document.createTextNode("правильно: "));
+      l2.appendChild(rich(r.right));
+      d.appendChild(l2);
+      if(r.why){
+        var w=el("div","mw");
+        w.appendChild(rich(r.why));
+        d.appendChild(w);
+      }
+      out.appendChild(d);
+    });
+    if(!found){
+      var ok=el("div","fb on ok");
+      ok.textContent="Ошибок с первой попытки нет. Либо ты сильнее, чем думал, либо разбор ещё не собран — нажми кнопку выше.";
+      out.appendChild(ok);
+    }
+  }
+  var row=el("div","row");
+  var b=el("button","btn","Собрать разбор моих ошибок");
+  b.type="button";
+  b.addEventListener("click",build);
+  row.appendChild(b);
+  c.appendChild(row);
+  c.appendChild(out);
+  build();
+  return c;
+}
+function final(spec){
+  var c=el("div","card final");
+  var n=0,got=S.score;
+  SCORED.forEach(function(id){if(S.ans[id])n++;});
+  c.appendChild(el("div","big",got+" / "+(n||0)));
+  var p=el("p","verdict");
+  var pct=n?got/n:0;
+  var name=S.name?S.name+", ":"";
+  var txt;
+  if(!n)txt=name+"урок ещё не начат. Пройди блоки — и здесь появится результат.";
+  else if(pct>=.85)txt=name+"ты читаешь интерфейсы уверенно. Твоя задача теперь — не учить новые слова, а перестать открывать переводчик. Ты уже можешь без него.";
+  else if(pct>=.6)txt=name+"база есть. Слабые места видны в разборе ниже — пройдись по ним ещё раз, и этого хватит на любой незнакомый экран.";
+  else txt=name+"ничего страшного: с первой попытки ошибаются почти все, потому что раньше ты эти слова только УГАДЫВАЛ. Возьми шпаргалку ниже и распечатай — она работает лучше памяти.";
+  p.appendChild(document.createTextNode(txt));
+  c.appendChild(p);
+  var row=el("div","row");
+  row.style.justifyContent="center";
+  var r=el("button","btn ghost","Обновить итоги");
+  r.type="button";
+  r.addEventListener("click",function(){
+    renderAll();
+    setProgress();
+    var t=pick("#b9");
+    if(t)t.scrollIntoView();
+  });
+  row.appendChild(r);
+  var pr=el("button","btn","Распечатать шпаргалку");
+  pr.type="button";
+  pr.addEventListener("click",function(){window.print();});
+  row.appendChild(pr);
+  c.appendChild(row);
+  return c;
+}
+function sheet(spec){
+  var c=el("div","sheet");
+  c.appendChild(el("h3",null,"Interface English — шпаргалка на один лист"));
+  var g=el("div","grid2");
+  spec.cols.forEach(function(col){
+    var d=el("div");
+    col.forEach(function(sec){
+      d.appendChild(el("h4",null,sec.h));
+      var ul=el("ul");
+      sec.list.forEach(function(t){
+        var li=el("li");
+        li.appendChild(rich(t));
+        ul.appendChild(li);
+      });
+      d.appendChild(ul);
+    });
+    g.appendChild(d);
+  });
+  c.appendChild(g);
+  return c;
+}
+
+var BUILDERS={mc:mc,match:match,hotspot:hotspot,stack:stack,gap:gap,err:findErr,note:note,words:words,talk:talk,gate:gate,pos:pos,review:review,final:final,sheet:sheet};
+
+function buildItem(it){
+  var fn=BUILDERS[it.t];
+  if(!fn)return el("div");
+  return fn(it);
+}
+
+function ribItem(label,o){
+  o=o||{};
+  var b=el("button","ri"+(o.dim?" dim":""));
+  b.type="button";
+  b.setAttribute("data-zone",o.zone||label.toLowerCase().replace(/[^a-z]+/g,"-"));
+  b.appendChild(el("span","ic"));
+  b.appendChild(el("span",null,label));
+  if(o.caret)b.appendChild(el("span","cv","▾"));
+  return b;
+}
+function ribGroup(name,items){
+  var g=el("div","grp");
+  var gi=el("div","gitems");
+  items.forEach(function(i){gi.appendChild(i);});
+  g.appendChild(gi);
+  g.appendChild(el("div","glabel",name));
+  return g;
+}
+function mockCreo(tab){
+  var m=el("div","mock-ribbon");
+  var ti=el("div","title");
+  ti.appendChild(el("span","logo","creo"));
+  ti.appendChild(el("span",null,"!!!181-0009000, Stratnanotech Ultra, A.9 (K).pvs - Creo View Lite"));
+  m.appendChild(ti);
+  var tabs=el("div","tabs");
+  ["File","Home","Markup","Tools","Sectioning","Animation"].forEach(function(t){
+    var b=el("button",(t==="File"?"file":"")+(t===tab?" act":""),t);
+    b.type="button";
+    b.setAttribute("data-zone","tab-"+t.toLowerCase());
+    tabs.appendChild(b);
+  });
+  m.appendChild(tabs);
+  var gs=el("div","groups");
+  if(tab==="Markup"){
+    gs.appendChild(ribGroup("Annotations",[
+      ribItem("Note"),ribItem("Leader Line"),ribItem("Shape",{caret:1}),
+      ribItem("Freehand"),ribItem("Gtol"),ribItem("Stamp",{dim:1})
+    ]));
+    gs.appendChild(ribGroup("Measurements",[
+      ribItem("Summary"),ribItem("Length"),ribItem("Distance"),ribItem("Angle"),
+      ribItem("Diameter"),ribItem("Area"),ribItem("Mass Properties"),ribItem("Envelope")
+    ]));
+  }else{
+    gs.appendChild(ribGroup("Selection",[ribItem("Find"),ribItem("Select Mode",{caret:1})]));
+    gs.appendChild(ribGroup("Navigation",[
+      ribItem("Zoom All"),ribItem("Zoom Window"),ribItem("Zoom Selected",{dim:1}),
+      ribItem("Spin Center",{caret:1}),ribItem("Orientation")
+    ]));
+    gs.appendChild(ribGroup("Display",[
+      ribItem("Hide Selected",{dim:1}),ribItem("Show",{dim:1}),ribItem("Unhide All"),
+      ribItem("Isolate",{dim:1}),ribItem("Render Mode",{caret:1}),ribItem("Filters"),ribItem("Thumbnail",{dim:1})
+    ]));
+    gs.appendChild(ribGroup("Location",[
+      ribItem("Transform"),ribItem("Preset Explode"),ribItem("Restore Location"),ribItem("Capture Location")
+    ]));
+  }
+  m.appendChild(gs);
+  var bt=el("div","btabs");
+  ["Viewables","Annotation Sets","Structure","Model"].forEach(function(t,i){
+    var s=el("span",i===3?"act":"",t);
+    s.setAttribute("data-zone","bt-"+t.toLowerCase().replace(/[^a-z]+/g,"-"));
+    bt.appendChild(s);
+  });
+  m.appendChild(bt);
+  return m;
+}
+
+function mockWitcher(){
+  var m=el("div","mock-game");
+  var side=el("div","gside");
+  side.appendChild(el("div","gtitle","THE WITCHER 3"));
+  side.appendChild(el("div","gver","v1.31 · OPTIONS"));
+  ["AUDIO","CONTROL SETTINGS","CONTROLLER SCHEME","KEY BINDINGS","GAMEPLAY","VIDEO","LANGUAGE","CREDITS","BACK"].forEach(function(t){
+    var b=el("button",t==="GAMEPLAY"?"act":"",t);
+    b.type="button";
+    b.setAttribute("data-zone","gm-"+t.toLowerCase().replace(/[^a-z]+/g,"-"));
+    side.appendChild(b);
+  });
+  m.appendChild(side);
+  var rows=el("div","grows");
+  var list=[
+    ["On-screen Tutorials","On",1],
+    ["Automatic Finishers","On",1],
+    ["Manual sword drawing / sheathing","Off",1],
+    ["Color-blind Friendly Witcher Senses","Off",1],
+    ['Turn off Witcher Senses "fish-eye" effect',"Off",1],
+    ["Movement Response","Standard",0],
+    ["Automatic camera centering","On",1],
+    ["Autosave Interval (Minutes)","10",0],
+    ["Enemy upscaling","Off",1]
+  ];
+  list.forEach(function(r){
+    var d=el("div","grow"+(r[0]==="Movement Response"?" act":""));
+    d.setAttribute("data-zone","gr-"+r[0].toLowerCase().replace(/[^a-z]+/g,"-"));
+    d.appendChild(el("div","gl",r[0]));
+    d.appendChild(el("div","gv",r[1]));
+    var s=el("div","gs");
+    var i=el("i");
+    i.style.width=r[2]?(r[1]==="On"?"88%":"14%"):"52%";
+    s.appendChild(i);
+    d.appendChild(s);
+    rows.appendChild(d);
+  });
+  m.appendChild(rows);
+  return m;
+}
+
+function siteNav(items,cls){
+  var n=el("nav");
+  items.forEach(function(it){
+    var s=el("span",(cls||"")+(it.on?" on":""));
+    s.textContent=it.t;
+    s.setAttribute("data-zone",it.z||("nv-"+it.t.toLowerCase().replace(/[^a-z]+/g,"-")));
+    n.appendChild(s);
+  });
+  return n;
+}
+function mockCamar(){
+  var m=el("div","mock-site");
+  var row=el("div","mainrow");
+  var brand=el("div");
+  brand.appendChild(el("div","wordmark camar","CAMAR"));
+  brand.appendChild(el("div","tag","the art of innovation"));
+  row.appendChild(brand);
+  row.appendChild(siteNav([
+    {t:"HOME"},{t:"COMPANY"},{t:"PRODUCTS",on:1},{t:"WARNING"},{t:"CONTACTS"},{t:"IT"},{t:"EN"}
+  ],"up"));
+  m.appendChild(row);
+  var mega=el("div","mega");
+  var cols=[
+    ["Levellers",["fixed to the side panel","fixed to the base panel","concealed in the side panel","concealed in the base panel"],null],
+    ["Plinth legs",["decorative legs","one-piece legs","legs with separate fixing socket"],["CLASSIC","NEXT GENERATION","Ercolino System","Smile System"]],
+    ["Hanging brackets for wall units",["visible","concealed","in the side panel"],null],
+    ["Base cabinet hanging brackets",["concealed hanging brackets","inset hanging brackets","hanging brackets mounted on the side panel"],null],
+    ["Panel hanging brackets",["flush wall panel","jutting wall panel"],null],
+    ["Shelf support",[],null],
+    ["Table legs",["round legs","square legs","design legs","folding legs","legs for glass tables","“Bistrot” legs"],null],
+    ["Systems",[],null]
+  ];
+  cols.forEach(function(c){
+    var d=el("div","mcol");
+    var h=el("h5",null,c[0]);
+    h.setAttribute("data-zone","mg-"+c[0].toLowerCase().replace(/[^a-z]+/g,"-"));
+    d.appendChild(h);
+    var ul=el("ul","sub");
+    c[1].forEach(function(s){
+      var li=el("li");
+      var b=el("button","zone",s);
+      b.type="button";
+      b.setAttribute("data-zone","mgi-"+s.toLowerCase().replace(/[^a-z]+/g,"-"));
+      li.appendChild(b);
+      ul.appendChild(li);
+    });
+    d.appendChild(ul);
+    if(c[2])c[2].forEach(function(k){d.appendChild(el("div","kicker",k));});
+    mega.appendChild(d);
+  });
+  m.appendChild(mega);
+  return m;
+}
+function mockSalice(){
+  var m=el("div","mock-site");
+  var u=el("div","util");
+  ["Technical Services","Press Area","Job Opportunities","Sustainability","Subscribe to our newsletter","International / EN \u{1F310}"].forEach(function(t){
+    var s=el("span");
+    s.textContent=t;
+    s.setAttribute("data-zone","ut-"+t.toLowerCase().replace(/[^a-z]+/g,"-").replace(/-$/,""));
+    u.appendChild(s);
+  });
+  m.appendChild(u);
+  var row=el("div","mainrow");
+  row.appendChild(el("div","wordmark","SALICE"));
+  row.appendChild(siteNav([
+    {t:"Company"},{t:"Products"},{t:"Inspire me"},{t:"Magazine"},{t:"Distribution"},
+    {t:"Download"},{t:"Contact us"},{t:"Configurators"},{t:"Search \u{1F50D}"}
+  ]));
+  m.appendChild(row);
+  return m;
+}
+function mockNordfit(){
+  var m=el("div","mock-site");
+  var u=el("div","util");
+  ["Reserved area","Where to buy","Newsletter","World / EN"].forEach(function(t){
+    var s=el("span");
+    s.textContent=t;
+    s.setAttribute("data-zone","n-"+t.toLowerCase().replace(/[^a-z]+/g,"-"));
+    u.appendChild(s);
+  });
+  m.appendChild(u);
+  var row=el("div","mainrow");
+  row.appendChild(el("div","wordmark","NORDFIT"));
+  row.appendChild(siteNav([
+    {t:"About us"},{t:"Range"},{t:"Solutions"},{t:"Media library"},
+    {t:"Assembly instructions"},{t:"Request a quote"},{t:"Get in touch"}
+  ]));
+  m.appendChild(row);
+  return m;
+}
+
+function dlgBtn(label,zone,cls){
+  var b=el("button","db"+(cls?" "+cls:""),label);
+  b.type="button";
+  b.setAttribute("data-zone",zone);
+  return b;
+}
+function optLine(label,kind,on){
+  var d=el("div","opt-line");
+  var bx=el("span","bx"+(kind==="rad"?" rad":"")+(on?(kind==="rad"?" dot":" chk"):""));
+  if(on&&kind!=="rad")bx.textContent="✓";
+  d.appendChild(bx);
+  d.appendChild(el("span",null,label));
+  return d;
+}
+function mockDialog(o){
+  var m=el("div","mock-dlg");
+  var bar=el("div","dbar");
+  bar.appendChild(el("span",null,o.title));
+  var x=el("button","x","✕");
+  x.type="button";
+  x.setAttribute("data-zone","x");
+  bar.appendChild(x);
+  m.appendChild(bar);
+  var body=el("div","dbody");
+  if(o.icon)body.appendChild(el("div","ico"+(o.icon==="warn"?" warn":""),o.icon==="warn"?"!":"?"));
+  var tx=el("div");
+  o.lines.forEach(function(l){
+    var p=el("p");
+    p.style.margin="0 0 7px";
+    p.textContent=l;
+    tx.appendChild(p);
+  });
+  (o.opts||[]).forEach(function(op){tx.appendChild(optLine(op.t,op.kind,op.on));});
+  body.appendChild(tx);
+  m.appendChild(body);
+  var foot=el("div","dfoot");
+  o.buttons.forEach(function(b){foot.appendChild(dlgBtn(b.t,b.z,b.cls));});
+  m.appendChild(foot);
+  return m;
+}
+function mockConfirmDelete(){
+  return mockDialog({
+    title:"Delete file",icon:"warn",
+    lines:["Are you sure you want to delete “181-0009000_rev-A9.pvs”?","This action cannot be undone."],
+    buttons:[{t:"Cancel",z:"cancel"},{t:"Delete",z:"delete",cls:"dgr"}]
+  });
+}
+function mockUnsaved(){
+  return mockDialog({
+    title:"Creo View Lite",icon:"q",
+    lines:["Changes you made may not be saved.","Do you want to save your changes before closing?"],
+    buttons:[{t:"Cancel",z:"cancel"},{t:"Don't Save",z:"dontsave"},{t:"Save",z:"save",cls:"pri"}]
+  });
+}
+function mockInstaller(){
+  return mockDialog({
+    title:"Setup — Choose components",
+    lines:["Select the components you want to install:"],
+    opts:[
+      {t:"Typical installation (recommended)",kind:"rad",on:1},
+      {t:"Custom installation",kind:"rad"},
+      {t:"Create a desktop shortcut",kind:"chk",on:1},
+      {t:"Launch the application when setup exits",kind:"chk",on:1},
+      {t:"I accept the terms in the License Agreement",kind:"chk"}
+    ],
+    buttons:[{t:"Cancel",z:"cancel"},{t:"< Back",z:"back"},{t:"Next >",z:"next",cls:"pri"}]
+  });
+}
+function mockWinError(){
+  return mockDialog({
+    title:"Creo View Lite",icon:"warn",
+    lines:["Access denied.","You have insufficient permissions to open this file. Contact your administrator."],
+    buttons:[{t:"OK",z:"ok",cls:"pri"}]
+  });
+}
+function mockCookie(){
+  var m=el("div","mock-cookie");
+  m.appendChild(el("h5",null,"We value your privacy"));
+  var p=el("p",null,"This site uses cookies to improve your experience, analyse traffic and show personalised content. You can change your choice at any time.");
+  m.appendChild(p);
+  var row=el("div","crow");
+  [["Reject all","reject"],["Manage preferences","manage"],["Accept all","accept"]].forEach(function(b,i){
+    var n=el("button","cb"+(i===2?" pri":""),b[0]);
+    n.type="button";
+    n.setAttribute("data-zone",b[1]);
+    row.appendChild(n);
+  });
+  m.appendChild(row);
+  return m;
+}
+function mockPerm(){
+  var m=el("div","mock-perm");
+  var u=el("div","purl");
+  u.appendChild(el("span",null,"\u{1F512}"));
+  u.appendChild(el("span",null,"meet.example.com"));
+  m.appendChild(u);
+  var b=el("div","pbody");
+  b.appendChild(el("div",null,"Will you allow meet.example.com to use your camera?"));
+  var o=el("div");
+  o.style.marginTop="9px";
+  o.style.fontSize="12.5px";
+  o.style.color="#555";
+  o.textContent="Camera to share: Integrated Webcam";
+  b.appendChild(o);
+  m.appendChild(b);
+  var f=el("div","pfoot");
+  [["Block","block"],["Allow",'allow']].forEach(function(x,i){
+    var n=el("button","pb"+(i===1?" pri":""),x[0]);
+    n.type="button";
+    n.setAttribute("data-zone",x[1]);
+    f.appendChild(n);
+  });
+  m.appendChild(f);
+  return m;
+}
+
+var DATA=[];
+function reg(sec){DATA.push(sec);}
+
+function renderAll(){
+  var app=pick("#app");
+  app.textContent="";
+  SCORED=[];
+  DATA.forEach(function(sec){
+    var s=el("section","blk"+(sec.printable?" printable":""));
+    s.id="b"+sec.n;
+    var h=el("div","blk-h");
+    var t=el("h2");
+    t.appendChild(el("span","num",String(sec.n)));
+    t.appendChild(document.createTextNode(sec.title));
+    if(sec.mins)t.appendChild(el("span","mins",sec.mins+" мин"));
+    h.appendChild(t);
+    if(sec.lead){
+      var l=el("p","lead");
+      l.appendChild(rich(sec.lead));
+      h.appendChild(l);
+    }
+    s.appendChild(h);
+    var b=el("div","blk-b");
+    (sec.items||[]).forEach(function(it){
+      if(it.t==="extra"){
+        var d=el("details","extra");
+        d.appendChild(el("summary",null,it.label||"если есть время"));
+        var box=el("div");
+        (it.items||[]).forEach(function(sub){box.appendChild(buildItem(sub));});
+        d.appendChild(box);
+        b.appendChild(d);
+      }else{
+        b.appendChild(buildItem(it));
+      }
+    });
+    s.appendChild(b);
+    app.appendChild(s);
+  });
+}
+
+pick("#reset").addEventListener("click",function(){
+  if(!confirm("Стереть все ответы и начать урок заново?"))return;
+  try{localStorage.removeItem(KEY);}catch(e){}
+  S={name:"",score:0,ans:{},open:{}};
+  TRIES={};
+  renderAll();
+  setProgress();
+  pick("#main").scrollTop=0;
+});
+
+function boot(){
+  try{
+    var raw=localStorage.getItem(KEY);
+    if(raw){
+      var p=JSON.parse(raw);
+      if(p&&typeof p==="object"){
+        S.name=p.name||"";
+        S.score=p.score||0;
+        S.ans=p.ans||{};
+        S.open=p.open||{};
+      }
+    }
+  }catch(e){}
+  renderAll();
+  setProgress();
+}
+reg({n:0,title:"Start",mins:4,
+lead:"Interface English is not a language — it is a closed list of about 300 words that repeat everywhere: in a browser, in a game, in a CAD viewer. [Это не язык, это закрытый список слов. Его не учат — его один раз опознают.]",
+items:[
+  {t:"gate"},
+  {t:"note",h:"Three rules that remove 90% of the panic",
+   rules:[
+    {h:"Buttons carry verbs. Tabs carry nouns.",p:"A button answers “what will happen”: {Save}, {Delete}, {Continue}. A tab answers “where am I”: {Home}, {Markup}, {Tools}. [Значит: если слово стоит на кнопке и непонятно — ищи его в словаре как ГЛАГОЛ. Draw a sword — «вынуть меч», а не «рисовать».]"},
+    {h:"Every button is one of four things.",p:"Agree · refuse · postpone · leave. [Согласиться, отказаться, отложить, уйти. Больше вариантов не бывает. Даже если слово незнакомое — оно из одной из этих четырёх семей.]"},
+    {h:"Esc and X are always safe.",p:"They mean “leave, change nothing”. [Уйти, ничего не поменяв. Это твой выход из любого окна — ты ничего не сломаешь.]"}
+   ]},
+  {t:"mc",id:"b0q1",
+   q:"You open a window at work. You understand not a single word. What do you press?",
+   sub:"[Открылось окно, и ты не понял ни слова. Что нажать?]",
+   items:[
+    {t:"{Esc} or the {✕} in the corner",ok:1,why:"Right. Esc and ✕ mean “leave, change nothing”. Ты ничего не сломал и можешь спокойно вернуться."},
+    {t:"The brightest, most colourful button",why:"Осторожно: выделенная кнопка — это то, чего от тебя ЖДУТ, а не то, что безопасно. В окне удаления выделенной будет {Delete}."},
+    {t:"{OK} — it sounds neutral",near:1,why:"{OK} не нейтральна. Она значит «применить и закрыть» — то есть согласиться с тем, что написано выше. А ты ещё не прочитал."},
+    {t:"Nothing — call a colleague",why:"Рабочий вариант, но урок не про это. Твой бесплатный выход — {Esc}. После него можно исследовать окно спокойно."}
+   ],
+   hint:"Ищи не то, что понятно, а то, что безопасно."},
+  {t:"mc",id:"b0q2",
+   q:"In Creo View you see the word {Sectioning} at the top of the window, next to {Home} and {Tools}. What is it?",
+   sub:"[Слово стоит в одном ряду с Home и Tools. Что это значит по правилу №1?]",
+   items:[
+    {t:"A tab — so it is a noun, a place: “the section area”",ok:1,why:"Верно. Оно стоит в ряду вкладок, значит это существительное и место. {Sectioning} — раздел «разрезы»: там режут модель плоскостью, чтобы посмотреть внутрь."},
+    {t:"A button — so it is a verb: “cut it now”",why:"Если бы это была кнопка, разрез появился бы сразу. Но слово стоит В РЯДУ с {Home} и {Tools} — а это ряд вкладок."},
+    {t:"An error message",why:"Сообщения об ошибках не живут в ряду вкладок и обычно содержат целое предложение."}
+   ],
+   hint:"Посмотри не на само слово, а на его СОСЕДЕЙ. Компания слова говорит о нём больше, чем словарь."}
+]});
+
+reg({n:1,title:"The Base — ядро кнопок",mins:12,
+lead:"Four families. Every button you will ever meet belongs to one of them. [Четыре семьи. Любая кнопка — из одной из них.]",
+items:[
+  {t:"note",h:"The four families",
+   fams:[
+    {h:"1 · AGREE — say yes",list:["OK","Accept","Agree","Allow","Confirm","Continue","Submit","Apply","Save","Enable","Turn on"],ru:"[Согласиться. Самая опасная семья: тут ты на что-то соглашаешься.]"},
+    {h:"2 · REFUSE — say no",list:["Cancel","Deny","Block","Reject","Decline","Disable","Turn off","Discard","No thanks"],ru:"[Отказаться. Почти всегда безопасно.]"},
+    {h:"3 · POSTPONE — later",list:["Skip","Not now","Maybe later","Remind me later","Dismiss","Snooze"],ru:"[Отложить. Окно уйдёт, но вернётся.]"},
+    {h:"4 · LEAVE — get out",list:["Close","Exit","Quit","Back","Sign out","Log out","Esc","✕"],ru:"[Уйти. Твой аварийный выход.]"}
+   ]},
+  {t:"words",h:"Core actions — послушай каждое слово",
+   list:[
+    {w:"Save",d:"write it to a file [записать в файл]"},
+    {w:"Apply",d:"use the change, keep the window open [применить и НЕ закрывать окно]"},
+    {w:"Cancel",d:"do not do what I started [не делай то, что я начал]"},
+    {w:"Close",d:"put the window away [убрать окно]"},
+    {w:"Dismiss",d:"put the message away, I have seen it [убрать сообщение]"},
+    {w:"Delete",d:"destroy the object [уничтожить объект]"},
+    {w:"Remove",d:"take it out of a list [вынуть из списка, объект жив]"},
+    {w:"Clear",d:"empty the contents, keep the container [опустошить, но не удалить]"},
+    {w:"Discard",d:"throw away my changes [выбросить изменения, файл жив]"},
+    {w:"Undo",d:"take back the last step [отменить последнее действие]"},
+    {w:"Reset",d:"put values back to zero [обнулить]"},
+    {w:"Restore defaults",d:"back to how the maker set it [заводские настройки]"},
+    {w:"Confirm",d:"a second yes for something final [второе «да» для необратимого]"},
+    {w:"Submit",d:"send the form for processing [отправить форму]"}
+   ]},
+  {t:"words",h:"Files, access, lists",
+   list:[
+    {w:"Download",d:"get a file from the network [скачать]"},
+    {w:"Upload",d:"send a file to the network [загрузить на сервер]"},
+    {w:"Export",d:"rebuild the data in another format [пересобрать в другой формат]"},
+    {w:"Import",d:"bring outside data in [внести данные извне]"},
+    {w:"Browse",d:"open a window to pick a file [открыть окно выбора файла]"},
+    {w:"Sign in",d:"enter an account you already have [войти]"},
+    {w:"Sign up",d:"create a new account [зарегистрироваться]"},
+    {w:"Sign out",d:"leave the account, program keeps running [выйти из аккаунта]"},
+    {w:"Subscribe",d:"ask to receive things regularly [подписаться]"},
+    {w:"Search",d:"look across the whole site or system [искать по всему]"},
+    {w:"Filter",d:"show fewer items by a rule [отфильтровать]"},
+    {w:"Sort",d:"change the order [упорядочить]"},
+    {w:"Select all",d:"mark everything [выделить всё]"},
+    {w:"Deselect",d:"unmark it [снять выделение]"}
+   ]},
+  {t:"words",h:"Visibility, steps, help",
+   list:[
+    {w:"Show",d:"make it visible again [показать]"},
+    {w:"Hide",d:"it still exists, just not visible [спрятать, объект жив]"},
+    {w:"Expand",d:"open it up, show the inside [раскрыть]"},
+    {w:"Collapse",d:"fold it shut [свернуть]"},
+    {w:"Enable",d:"switch a feature on for yourself [включить функцию]"},
+    {w:"Disable",d:"switch it off, often greys it out [отключить]"},
+    {w:"Next",d:"the next numbered step [следующий шаг]"},
+    {w:"Back",d:"the previous step [шаг назад]"},
+    {w:"Skip",d:"stay in the process, miss this step [пропустить шаг, остаться в процессе]"},
+    {w:"Finish",d:"the last step, we are done [завершить]"},
+    {w:"Retry",d:"try the same thing again [повторить попытку]"},
+    {w:"Refresh",d:"ask for the data again [обновить данные]"},
+    {w:"Learn more",d:"a link to an explanation, not an action [ссылка на объяснение]"},
+    {w:"Settings",d:"where the knobs live [настройки]"}
+   ]},
+  {t:"match",id:"b1q1",
+   q:"Sort these buttons into the right family.",
+   sub:"[Нажми слово, потом его семью. Первая попытка считается.]",
+   left:[{k:"a",t:"Discard"},{k:"b",t:"Snooze"},{k:"c",t:"Quit"},{k:"d",t:"Apply"},{k:"e",t:"Block"}],
+   right:[{k:"1",t:"AGREE — say yes"},{k:"2",t:"REFUSE — say no"},{k:"3",t:"POSTPONE — later"},{k:"4",t:"LEAVE — get out"},{k:"5",t:"REFUSE — and remember it forever"}],
+   pairs:{a:"2",b:"3",c:"4",d:"1",e:"5"},
+   why:{a:"{Discard} = выбросить изменения. Это отказ, семья REFUSE.",b:"{Snooze} — от «дремать». Окно уйдёт и вернётся позже. POSTPONE.",c:"{Quit} закрывает всю программу. LEAVE.",d:"{Apply} применяет изменение — значит ты согласился. AGREE.",e:"{Block} — не просто «нет», а «нет навсегда, и запомни»."},
+   done:"Все пять на месте. Обрати внимание: ни одно из этих слов не переводится словом «кнопка нажата» — каждое говорит, ЧТО именно случится."},
+  {t:"mc",id:"b1q2",
+   q:"You changed five settings. You want to see the result but keep changing things. Which button?",
+   sub:"[Поменял пять настроек, хочешь посмотреть результат и продолжить настраивать.]",
+   items:[
+    {t:"{Apply}",ok:1,why:"Точно. {Apply} применяет и ОСТАВЛЯЕТ окно открытым. Это её единственное отличие от {OK}."},
+    {t:"{OK}",near:1,why:"Почти: {OK} тоже применит, но ЗАКРОЕТ окно. Придётся открывать заново."},
+    {t:"{Save}",why:"{Save} пишет в файл. В окне настроек файла нет — там {Apply} или {OK}."},
+    {t:"{Confirm}",why:"{Confirm} — это второе «да» перед необратимым действием, а не «применить настройки»."}
+   ]},
+  {t:"mc",id:"b1q3",
+   q:"A dialog says: {Changes you made may not be saved.} You press {Don’t Save}. What happens?",
+   sub:"[Что произойдёт с файлом?]",
+   items:[
+    {t:"The file stays as it was before I edited it",ok:1,why:"Верно. Твои правки выброшены, а сам файл жив и остался в прежнем виде. {Don’t Save} = {Discard changes}."},
+    {t:"The file is deleted",why:"Нет. Удаление — это {Delete}. Здесь речь только об ИЗМЕНЕНИЯХ, не о файле."},
+    {t:"Nothing — it just closes the message",why:"Это был бы {Dismiss}. А {Don’t Save} принимает решение: правки выбросить."},
+    {t:"The program saves quietly, just without asking",why:"Наоборот. {Don’t} — это отрицание. Не сохранять."}
+   ],
+   hint:"Ключ в слове {changes}. Речь про изменения, а не про файл."},
+  {t:"mc",id:"b1q4",
+   q:"Which pair means the SAME action?",
+   items:[
+    {t:"{Sign in} and {Log in}",ok:1,why:"Да, это полные синонимы — войти в существующий аккаунт. Разница только в привычке сайта."},
+    {t:"{Sign in} and {Sign up}",why:"Опасная пара! {in} = внутрь, аккаунт уже есть. {up} = создать нового себя, регистрация. Один предлог меняет всё."},
+    {t:"{Remove} and {Delete}",why:"Близко, но нет: {Remove} вынимает из списка (товар из корзины), {Delete} уничтожает объект."},
+    {t:"{Hide} and {Close}",why:"Нет: {Hide} — объект есть, просто не видно. {Close} — окно больше не открыто."}
+   ]},
+  {t:"gap",id:"b1q5",
+   q:"Complete the standard sentence you see before something final.",
+   sub:"[Достроь стандартную фразу, которая появляется перед необратимым действием.]",
+   before:"Are you sure you want to delete this file? This action cannot be ",
+   after:".",
+   chips:[
+    {t:"undone",ok:1,why:"{This action cannot be undone.} — «это действие нельзя отменить». Заучи целиком: это последнее предупреждение перед точкой невозврата."},
+    {t:"undo",why:"Грамматика: после {cannot be} нужна третья форма — {undone}. {undo} — это форма для кнопки."},
+    {t:"canceled",near:1,why:"Смысл рядом, но так не говорят. Устойчивая фраза одна: {cannot be undone}."},
+    {t:"returned",why:"{return} — вернуть предмет. Про действие говорят {undo}."}
+   ],
+   hint:"Та же форма, что в кнопке {Undo}, но после {be} она меняется."},
+  {t:"err",id:"b1q6",
+   q:"One word here is wrong for a real interface. Find it, then fix it.",
+   sub:"[Одно слово для настоящего интерфейса выбрано неверно. Найди его, потом исправь.]",
+   tokens:["Remove","this","file","from","the","disk"],
+   badIndex:0,
+   found:"Да. {Remove ... from the disk} звучит как «вынуть из списка», а речь про уничтожение файла. Чем заменить?",
+   miss:"Это слово тут нормальное. Смотри на глагол.",
+   fixes:[
+    {t:"Delete",ok:1,why:"Верно: {Delete this file from the disk}. {Delete} уничтожает объект, {Remove} только вынимает из списка."},
+    {t:"Clear",why:"{Clear} опустошает содержимое, оставляя контейнер: {Clear history}. Файл при этом остался бы."},
+    {t:"Discard",near:1,why:"{Discard} выбрасывает ИЗМЕНЕНИЯ, а не файл."},
+    {t:"Hide",why:"{Hide} только прячет — файл остался бы на диске."}
+   ],
+   hint:"Разница между «вынуть из списка» и «уничтожить»."},
+  {t:"mc",id:"b1q7",
+   q:"In a setup wizard you press {Skip}. Are you still installing the program?",
+   items:[
+    {t:"Yes — I stay in the process, I just miss this step",ok:1,why:"Верно. {Skip} остаётся ВНУТРИ процесса. Вышел бы {Cancel} — вот он прерывает установку целиком."},
+    {t:"No — {Skip} stops the installation",why:"Это {Cancel}. Опасная пара: {Skip} = пропустить шаг, {Cancel} = выйти из процесса."},
+    {t:"It depends on the program",near:1,why:"На практике {Skip} везде значит одно: пропустить ЭТОТ шаг и идти дальше."}
+   ]},
+  {t:"mc",id:"b1q8",
+   q:"Which button is the safest to press when you are not sure?",
+   items:[
+    {t:"{Cancel}",ok:1,why:"Да. {Cancel} отменяет начатое и ничего не меняет. Вместе с {Esc} и {✕} это твои три бесплатных выхода."},
+    {t:"{Apply}",why:"{Apply} уже применит изменение. Отменять придётся отдельно."},
+    {t:"{Reset}",why:"{Reset} обнулит то, что ты успел настроить. Это действие, а не выход."},
+    {t:"{Confirm}",why:"{Confirm} — согласие с необратимым. Самая опасная кнопка в списке."}
+   ]},
+  {t:"talk",h:"Talk to your tutor — 3 минуты",
+   body:["Скажи это вслух по-английски, целыми фразами."],
+   list:[
+    "Open any program on your computer. Name four buttons you can see, and say which family each one belongs to.",
+    "Say the difference out loud: “{Apply} keeps the window open, {OK} closes it.”",
+    "Finish the sentence about your own work: “When I am not sure, I press …”"
+   ]},
+  {t:"extra",label:"ещё три пары, если идём быстро",
+   items:[
+    {t:"mc",id:"b1x1",extraOnly:1,
+     q:"{Export} or {Download} — you need the drawing as a PDF on your desktop.",
+     items:[
+      {t:"First {Export} to PDF, then {Download} the file",ok:1,why:"Именно так и работает: {Export} пересобирает данные в другой формат, {Download} приносит файл к тебе. Часто идут парой."},
+      {t:"{Download} only",why:"{Download} принесёт то, что уже есть. Если PDF ещё не существует, сначала нужен {Export}."},
+      {t:"They are the same word",why:"Нет: {Export} — про ФОРМАТ, {Download} — про ПЕРЕДАЧУ по сети."}
+     ]},
+    {t:"mc",id:"b1x2",extraOnly:1,
+     q:"A button says {Proceed}. What should you do first?",
+     items:[
+      {t:"Read the warning above it",ok:1,why:"Верно. {Proceed} почти всегда значит «дальше ВОПРЕКИ предупреждению». {Next} — просто следующий шаг, а {Proceed} — сигнал: над кнопкой что-то важное."},
+      {t:"Press it — it means the same as {Next}",why:"Опасно. {Next} нейтральна, {Proceed} появляется там, где тебя только что предупредили."},
+      {t:"Look for {Back}",near:1,why:"Разумная осторожность, но сначала всё-таки прочитай, о чём предупреждают."}
+     ]},
+    {t:"mc",id:"b1x3",extraOnly:1,
+     q:"{Custom installation} — what does {Custom} mean here?",
+     items:[
+      {t:"I choose the components myself",ok:1,why:"Да. {Custom} = «по-моему, я настраиваю сам». Противоположность — {Default} / {Typical}, как задумал производитель."},
+      {t:"The usual, ordinary installation",why:"Классическая ловушка: {Custom} НЕ значит «обычный». Обычный — это {Typical} или {Default}."},
+      {t:"The paid version",why:"Это было бы {Upgrade}."}
+     ]}
+   ]}
+]});
+
+reg({n:2,title:"Dangerous pairs — опасные пары",mins:12,
+lead:"Words that look like synonyms and are not. This is where the real mistakes happen. [Слова, которые кажутся синонимами. Именно здесь и происходят настоящие ошибки.]",
+items:[
+  {t:"note",h:"Ten pairs — one discriminator each",
+   table:{head:["Pair","The difference in one line"],rows:[
+    ["{Cancel} · {Close} · {Dismiss}","{Cancel} = не делай то, что я начал. {Close} = убери окно. {Dismiss} = убери сообщение, я его увидел. [В одном окне они не живут вместе — если есть Cancel, то Close там не будет.]"],
+    ["{Delete} · {Remove} · {Clear}","{Delete} уничтожает объект. {Remove} вынимает из списка. {Clear} опустошает содержимое, оставляя контейнер. [Remove from cart — товар в магазине остался. Clear history — история пуста, браузер цел.]"],
+    ["{Save} · {Apply} · {OK}","{Save} пишет в файл. {Apply} применяет и оставляет окно. {OK} применяет и закрывает. [Хочешь посмотреть и продолжить — Apply.]"],
+    ["{Allow} · {Enable}","{Allow} = дать доступ КОМУ-ТО ДРУГОМУ (сайту, программе). {Enable} = включить функцию У СЕБЯ. [Allow the site to use your camera. Enable dark mode. Наоборот не говорят.]"],
+    ["{Deny} · {Block} · {Reject} · {Decline}","{Deny} — отказать сейчас. {Block} — отказать навсегда и запомнить. {Reject} — отклонить предложенное. {Decline} — вежливо отказаться. [Deny и Block живут в разрешениях, Reject и Decline — в предложениях и формах.]"],
+    ["{Sign in} · {Sign up}","Ключ — предлог. {in} = внутрь, аккаунт уже есть. {up} = создать нового себя, регистрация. [Одна буква меняет всё.]"],
+    ["{Undo} · {Reset} · {Restore defaults}","{Undo} — откатить последнее действие. {Reset} — обнулить текущее поле. {Restore defaults} — вернуть заводские настройки всего экрана. [Шаг назад · в ноль · как при покупке.]"],
+    ["{Discard} · {Delete}","{Discard} выбрасывает ИЗМЕНЕНИЯ. {Delete} уничтожает ОБЪЕКТ. [Discard changes — документ жив. Delete document — документа нет.]"],
+    ["{Hide} · {Close}","{Hide} — объект есть, но не показывается, его можно вернуть. {Close} — окно или файл больше не открыт. [В Creo: Hide деталь — она в дереве модели, просто невидима.]"],
+    ["{Export} · {Download}","{Export} пересобирает данные в другой формат. {Download} получает файл по сети. [Часто парой: сначала Export в PDF, потом Download файла.]"]
+   ]}},
+  {t:"mc",id:"b2q1",
+   q:"An online shop: you no longer want an item in your basket. Which button do you look for?",
+   sub:"[Не хочешь товар в корзине. Что искать?]",
+   items:[
+    {t:"{Remove}",ok:1,why:"Верно. {Remove from cart} — товар вынут из ТВОЕГО списка, а в магазине он остался. Магазин не удаляет товар из каталога, когда ты передумал."},
+    {t:"{Delete}",near:1,why:"Смысл поймут, но настоящие магазины пишут {Remove}: объект (товар) продолжает существовать, он просто больше не в твоей корзине."},
+    {t:"{Clear}",near:1,why:"{Clear} есть рядом — {Clear cart}, «опустошить корзину целиком». Но ты хотел убрать ОДИН товар."},
+    {t:"{Discard}",why:"{Discard} про изменения в документе, не про товары."}
+   ]},
+  {t:"mc",id:"b2q2",
+   q:"A browser window says: “meet.example.com wants to use your camera.” You will never want this. Which button?",
+   items:[
+    {t:"{Block}",ok:1,why:"Да — {Block} значит «нет навсегда, и запомни». Больше этот сайт не спросит."},
+    {t:"{Deny}",near:1,why:"Почти. {Deny} — отказ СЕЙЧАС. Сайт спросит снова при следующем визите. Тебе нужен {Block}."},
+    {t:"{Decline}",why:"{Decline} — вежливый отказ от приглашения или оплаты, не от доступа к устройству."},
+    {t:"{Disable}",why:"{Disable} выключил бы камеру У ТЕБЯ целиком. А ты хотел отказать конкретному сайту."}
+   ],
+   hint:"Разница между «нет сейчас» и «нет навсегда»."},
+  {t:"mc",id:"b2q3",
+   q:"{Enable dark mode} or {Allow dark mode} — which one is real English?",
+   items:[
+    {t:"{Enable dark mode} — it is my own feature",ok:1,why:"Верно. {Enable} — включить функцию у себя. {Allow} нужен, только когда доступ просит кто-то ДРУГОЙ: сайт, программа, человек."},
+    {t:"{Allow dark mode}",why:"Так не говорят. {Allow} требует того, КОМУ разрешают: {Allow this site to…}. Тёмная тема ничего у тебя не просит."},
+    {t:"Both are equally correct",why:"Нет, и это надёжное правило: {Allow} — про чужой доступ, {Enable} — про свою функцию."}
+   ]},
+  {t:"mc",id:"b2q4",
+   q:"In a settings screen you broke everything and want it back the way the maker set it. Which button?",
+   items:[
+    {t:"{Restore defaults}",ok:1,why:"Верно. {defaults} — заводские значения. Вернёт ВЕСЬ экран к тому, как было при установке."},
+    {t:"{Undo}",why:"{Undo} откатит только ПОСЛЕДНИЙ шаг. Ты сломал пять — придётся жать пять раз, и то если программа помнит."},
+    {t:"{Reset}",near:1,why:"Близко, но {Reset} обычно обнуляет одно поле или форму. Заводские настройки — это {Restore defaults}."},
+    {t:"{Refresh}",why:"{Refresh} перезапрашивает данные. Настройки не тронет."}
+   ]},
+  {t:"match",id:"b2q5",
+   q:"Match each button to what survives after you press it.",
+   sub:"[Что ОСТАЁТСЯ живым после нажатия? Это самый практичный способ различать эти слова.]",
+   left:[{k:"a",t:"Discard changes"},{k:"b",t:"Delete document"},{k:"c",t:"Clear history"},{k:"d",t:"Hide part"},{k:"e",t:"Remove from list"}],
+   right:[{k:"1",t:"документ жив, правки выброшены"},{k:"2",t:"ничего не осталось"},{k:"3",t:"браузер цел, список пуст"},{k:"4",t:"деталь в модели, просто не видна"},{k:"5",t:"объект существует, но не в этом списке"}],
+   pairs:{a:"1",b:"2",c:"3",d:"4",e:"5"},
+   miss:"Спроси себя: что именно исчезло — изменения, объект, содержимое или только видимость?",
+   done:"Вот и весь секрет: эти слова различаются не силой, а тем, ЧТО именно исчезает."},
+  {t:"match",id:"b2q6",
+   q:"Match the pair to its one-line rule.",
+   left:[{k:"a",t:"Cancel vs Close"},{k:"b",t:"Sign in vs Sign up"},{k:"c",t:"Apply vs OK"},{k:"d",t:"Export vs Download"}],
+   right:[{k:"1",t:"окно остаётся / окно закрывается"},{k:"2",t:"не делай начатое / убери окно"},{k:"3",t:"аккаунт есть / аккаунта нет"},{k:"4",t:"другой формат / передача по сети"}],
+   pairs:{a:"2",b:"3",c:"1",d:"4"},
+   done:"Четыре правила, каждое в одну строку. Их и надо держать в голове, а не переводы."},
+  {t:"gap",id:"b2q7",
+   q:"You are in a form with an unfinished text. Complete the warning.",
+   before:"If you leave this page, your ",
+   after:" will be lost.",
+   chips:[
+    {t:"changes",ok:1,why:"{Your changes will be lost} — стандартная фраза. Обрати внимание на пассив {will be lost}: не «ты потеряешь», а «будут потеряны». Интерфейс избегает обвинять пользователя."},
+    {t:"change",why:"Здесь всегда множественное: {changes}. Устойчивая формула."},
+    {t:"file",near:1,why:"Смысл сдвинулся: файл не потеряется, потеряются только несохранённые ПРАВКИ."},
+    {t:"data",near:1,why:"Встречается, но каноническая фраза именно {your changes will be lost}."}
+   ],
+   hint:"То же слово, что в {Discard changes}."},
+  {t:"err",id:"b2q8",
+   q:"This dialog button is wrong. Find the wrong word, then fix it.",
+   sub:"[Окно настроек, и внизу три кнопки. Одно слово выбрано неверно.]",
+   tokens:["OK","Apply","Close"],
+   badIndex:2,
+   found:"Верно. В окне НАСТРОЕК не бывает {Close} рядом с {OK} и {Apply} — там должна стоять кнопка отказа. Какая?",
+   miss:"Эта кнопка в окне настроек на своём месте.",
+   fixes:[
+    {t:"Cancel",ok:1,why:"Да: канонический набор — {OK} · {Cancel} · {Apply}. {Cancel} значит «не применяй то, что я тут накрутил». {Close} просто убрала бы окно, не сказав, что делать с изменениями."},
+    {t:"Dismiss",why:"{Dismiss} живёт на сообщениях и уведомлениях, не в окнах настроек."},
+    {t:"Exit",why:"{Exit} закрывает программу целиком."},
+    {t:"Back",near:1,why:"{Back} бывает в мастерах с шагами, а не в окне настроек с {OK} и {Apply}."}
+   ],
+   hint:"Вспомни правило: если в окне есть {Cancel}, то {Close} там не будет. И наоборот."},
+  {t:"extra",label:"ещё три пары",
+   items:[
+    {t:"mc",id:"b2x1",extraOnly:1,
+     q:"A button is grey and does not react. Is it broken?",
+     items:[
+      {t:"No — {greyed out} means “not available right now”",ok:1,why:"Верно, и это одно из самых полезных знаний за весь урок. Чаще всего надо сначала что-то ВЫДЕЛИТЬ, и кнопка оживёт. В твоём Creo так ведут себя {Hide Selected} и {Isolate}."},
+      {t:"Yes, the program has an error",why:"Нет. Серый цвет — это язык интерфейса, а не поломка. Он говорит: «сейчас нельзя, условие не выполнено»."},
+      {t:"It means the function is switched off in settings",near:1,why:"Иногда и так, но обычная причина проще: ничего не выбрано."}
+     ]},
+    {t:"mc",id:"b2x2",extraOnly:1,
+     q:"{Log in} or {login} — which one is the noun?",
+     items:[
+      {t:"{login} — one word is the noun; {log in} — two words is the verb",ok:1,why:"Верно. То же правило работает с {set up}/{setup}, {back up}/{backup}, {sign in}/{sign-in}. Два слова — действие, одно слово — вещь."},
+      {t:"{log in} is the noun",why:"Наоборот. Два слова = глагол, действие."},
+      {t:"There is no difference",why:"Разница есть, и по ней сразу видно, кнопка это или заголовок."}
+     ]},
+    {t:"mc",id:"b2x3",extraOnly:1,
+     q:"{Update} or {Upgrade} — the program asks for money. Which word was it?",
+     items:[
+      {t:"{Upgrade}",ok:1,why:"Да. {Upgrade} — переход на более мощную или платную версию. {Update} — просто свежая версия того же самого, обычно бесплатно."},
+      {t:"{Update}",why:"{Update} — это та же программа, но новее. Денег за это обычно не просят."}
+     ]}
+   ]}
+]});
+
+reg({n:3,title:"Dialogs — окна, которые требуют решения",mins:12,
+lead:"Now we read real screens. Click on them — they are alive. [Дальше экраны кликабельные. Жми прямо по кнопкам в макете.]",
+items:[
+  {t:"note",h:"Read with your eyes before you read the words",
+   body:["Прежде чем переводить, посмотри на форму и цвет. Интерфейс говорит ими честнее, чем словами."],
+   table:{head:["Signal","What it means"],rows:[
+    ["кнопка справа и цветная","Основное действие, которого от тебя ждут. [Обычно безопасное — но НЕ в окне удаления.]"],
+    ["кнопка красная","Разрушительное действие: удалить, отключить, отказать."],
+    ["кнопка серая — {greyed out}","Сейчас недоступна. [НЕ сломана. Чаще всего надо сначала что-то выделить.]"],
+    ["{Esc} или {✕} в углу","Уйти, ничего не изменив. Всегда безопасно."],
+    ["многоточие {…} в конце надписи","Сразу ничего не произойдёт — сначала появится ещё одно окно. [Print печатает сразу, Print… сначала спрашивает.]"],
+    ["стрелка {▾} на кнопке","Есть выпадающий список вариантов."],
+    ["квадрат — {checkbox}","Независимая опция вкл/выкл. Можно отметить сколько угодно."],
+    ["круг — {radio button}","Из группы работает ТОЛЬКО ОДИН."],
+    ["замок {🔒}","Нужны права администратора."]
+   ]}},
+  {t:"hotspot",id:"b3q1",
+   q:"Task: you accept only the cookies the site cannot work without. Nothing else.",
+   sub:"[Согласиться только на необходимые cookie. Жми в макете.]",
+   mock:mockCookie,
+   zones:[
+    {z:"reject",ok:1,why:"Верно. {Reject all} отклоняет все НЕобязательные cookie — необходимые остаются всегда, их не спрашивают. Это самый быстрый честный выход из баннера."},
+    {z:"accept",why:"{Accept all} — «принять все», включая рекламные и аналитические. Именно на эту кнопку рассчитан весь дизайн баннера: она яркая и справа."},
+    {z:"manage",near:1,why:"{Manage preferences} тоже приведёт к цели, но откроет ещё один экран с галочками. Дольше. Заметь {…}-логику: эта кнопка не заканчивает разговор, а продолжает его."}
+   ],
+   hint:"Три кнопки — три семьи: согласиться, отказаться, отложить решение в другое окно."},
+  {t:"hotspot",id:"b3q2",
+   q:"Task: this site must never ask for your camera again.",
+   sub:"[Сайт больше никогда не должен спрашивать камеру.]",
+   mock:mockPerm,
+   zones:[
+    {z:"block",ok:1,why:"Верно. {Block} = отказать и ЗАПОМНИТЬ отказ. Сайт больше не спросит. Заметь: она не выделена цветом — интерфейс подталкивает к {Allow}."},
+    {z:"allow",why:"{Allow} даёт сайту доступ к камере. Помни правило: {Allow} — это всегда про доступ КОГО-ТО ДРУГОГО к твоим вещам."}
+   ],
+   hint:"«Никогда больше» — это не «нет сейчас». Вспомни пару {Deny} / {Block}."},
+  {t:"mc",id:"b3q3",
+   q:"In a cookie settings screen you see round marks next to “Necessary only” and “All cookies”, and square marks next to “Analytics” and “Advertising”. What does that tell you?",
+   sub:"[Круги у одних пунктов, квадраты у других. Что это значит?]",
+   items:[
+    {t:"Round = choose exactly one. Square = choose as many as you like.",ok:1,why:"Именно. {radio button} (круг) — один из группы. {checkbox} (квадрат) — сколько хочешь. Это снимает половину непонимания в cookie-баннерах и установщиках."},
+    {t:"Round marks are more important",why:"Форма говорит не о важности, а о ТИПЕ выбора: один или сколько угодно."},
+    {t:"Square = already switched on",why:"Включённость показывает галочка или точка ВНУТРИ, а не форма самого значка."},
+    {t:"They mean the same, it is just design",why:"Нет, это строгая договорённость во всех интерфейсах мира. Круг — одно, квадрат — много."}
+   ]},
+  {t:"hotspot",id:"b3q4",
+   q:"Task: leave this window WITHOUT deleting the file.",
+   sub:"[Уйти, не удаляя файл. У тебя два безопасных варианта — найди любой.]",
+   mock:mockConfirmDelete,
+   zones:[
+    {z:"cancel",ok:1,why:"Верно. {Cancel} = «не делай то, что я начал». Файл цел."},
+    {z:"x",ok:1,why:"Тоже верно, и это важное открытие: {✕} здесь равен {Cancel}. Закрыть окно вопроса = не отвечать = ничего не делать."},
+    {z:"delete",why:"Это была бы точка невозврата. Заметь: кнопка КРАСНАЯ и стоит справа. Обычно справа — безопасное основное действие, но в окне удаления справа стоит именно разрушительное. Цвет тут главнее позиции."}
+   ],
+   hint:"Красный цвет — не украшение."},
+  {t:"hotspot",id:"b3q5",
+   q:"Task: close the file and KEEP the changes you made.",
+   sub:"[Закрыть файл, сохранив правки.]",
+   mock:mockUnsaved,
+   zones:[
+    {z:"save",ok:1,why:"Верно. {Save} — записать правки и закрыть. Кнопка выделена цветом: интерфейс сам подсказывает безопасный выбор."},
+    {z:"dontsave",why:"{Don’t Save} выбросит твои правки. Файл останется, но в прежнем виде — это то же, что {Discard changes}."},
+    {z:"cancel",near:1,why:"{Cancel} вернёт тебя в программу, ничего не закрыв. Файл не закрыт, правки не сохранены — задача не выполнена."},
+    {z:"x",near:1,why:"{✕} здесь работает как {Cancel}: окно уйдёт, файл останется открытым. Правки по-прежнему не сохранены."}
+   ]},
+  {t:"gap",id:"b3q6",
+   q:"Complete the standard browser permission sentence.",
+   before:"Will you allow meet.example.com ",
+   after:" use your camera?",
+   chips:[
+    {t:"to",ok:1,why:"{allow somebody TO DO something} — так устроен этот глагол. Формула: {Allow} + КТО + {to} + действие. Запомни её целиком, и любое окно разрешений станет читаемым."},
+    {t:"for",why:"{allow for} значит совсем другое — «учитывать, предусматривать»."},
+    {t:"—",near:1,why:"Без {to} получается {allow ... use} — так говорят с {let} ({let it use}), но не с {allow}."},
+    {t:"that",why:"{allow that} в интерфейсах не встречается."}
+   ],
+   hint:"После {allow} и того, КОМУ разрешают, всегда идёт одно короткое слово."},
+  {t:"mc",id:"b3q7",
+   q:"Look at the setup screen below. Which line means “I want to decide myself which parts to install”?",
+   sub:"[Какая строка значит «я сам выберу, что устанавливать»?]",
+   items:[
+    {t:"{Custom installation}",ok:1,why:"Верно. {Custom} = «по-своему, я решаю сам». Заметь: рядом стоит {Typical installation (recommended)} с точкой в круге — это выбор по умолчанию, и он ОДИН из двух, потому что круг."},
+    {t:"{Typical installation (recommended)}",why:"Это противоположное: «как задумал производитель». {recommended} в скобках — подсказка, что тут не надо думать."},
+    {t:"{Create a desktop shortcut}",why:"Это про ярлык на рабочем столе, а не про состав установки. И это квадрат — независимая галочка."},
+    {t:"{Launch the application when setup exits}",why:"Это «запустить программу, когда установка закончится». {exit} тут — про закрытие установщика, а не про выход из программы."}
+   ]},
+  {t:"note",h:"The installer, decoded",
+   body:[
+    "{I accept the terms in the License Agreement} — [принимаю условия лицензионного соглашения]. Помни пару: {accept} принимает предложенное, {agree} соглашается с ТЕКСТОМ. С лицензией — оба варианта живут.",
+    "{End User License Agreement} — стек из четырёх слов. Читай справа налево: agreement → какое? license → с кем? end user. [Лицензионное соглашение с конечным пользователем.]",
+    "{Launch the application when setup exits} — [запустить программу, когда установщик закроется]. {setup} одним словом — существительное, «установка». {set up} двумя — глагол."
+   ]},
+  {t:"extra",label:"ошибки и предупреждения",
+   items:[
+    {t:"hotspot",id:"b3x1",extraOnly:1,
+     q:"Task: you decided not to install this program at all.",
+     sub:"[Ты решил не устанавливать программу вообще.]",
+     mock:mockInstaller,
+     zones:[
+      {z:"cancel",ok:1,why:"Верно. {Cancel} выходит из ПРОЦЕССА целиком. Именно этим она отличается от {Skip}, которая только пропустила бы шаг."},
+      {z:"next",why:"{Next >} — следующий шаг установки. Стрелка {>} подсказывает направление."},
+      {z:"back",why:"{< Back} — шаг назад внутри установки. Ты всё ещё устанавливаешь."},
+      {z:"x",near:1,why:"{✕} тоже прервёт установку, но установщики обычно ещё раз спросят: {Are you sure you want to cancel the installation?}"}
+     ]},
+    {t:"mc",id:"b3x2",extraOnly:1,
+     q:"{Access denied. You have insufficient permissions to open this file.} Whose problem is it?",
+     items:[
+      {t:"Mine, but I cannot fix it myself — I need an administrator",ok:1,why:"Верно. {insufficient} = недостаточно (приставка {in-} = отрицание). {permissions} = права доступа. Файл цел, программа работает — просто тебе не выдали прав. Отсюда и {Contact your administrator}."},
+      {t:"The file is broken",why:"{Access denied} говорит только о правах. О повреждении сказали бы {corrupted} или {cannot be read}."},
+      {t:"The program has crashed",why:"Это было бы {Not responding} или {has stopped working}."}
+     ]},
+    {t:"gap",id:"b3x3",extraOnly:1,
+     q:"You come back to your computer after lunch and the site says:",
+     before:"Your session has ",
+     after:". Please sign in again.",
+     chips:[
+      {t:"expired",ok:1,why:"{Your session has expired} — «сеанс истёк». Стандартная фраза после долгого простоя. Ничего не сломалось, просто войди заново."},
+      {t:"finished",near:1,why:"Смысл близкий, но интерфейсы говорят {expired} — то же слово, что на сроке годности."},
+      {t:"closed",why:"{closed} сказали бы про окно, не про сеанс."},
+      {t:"deleted",why:"{deleted} — про объекты, и звучит страшнее, чем есть."}
+     ]}
+   ]}
+]});
+
+reg({n:4,title:"Your software — лента Creo View Lite",mins:18,
+lead:"This is your own screen. Almost every word here also lives in Word, in Photoshop, in a browser. [Это твой экран. Почти каждое слово отсюда встречается и в других программах — поэтому разобрав его, ты разберёшь их все.]",
+items:[
+  {t:"note",h:"How a ribbon is built — three levels",
+   body:[
+    "1 · {Tabs} наверху — {File · Home · Markup · Tools · Sectioning · Animation}. Это СУЩЕСТВИТЕЛЬНЫЕ: где я. [Вкладки.]",
+    "2 · {Groups} — подписи под рядом кнопок: {Selection · Navigation · Display · Location}. Тоже существительные: о чём этот участок. [Группы.]",
+    "3 · Команды внутри групп — ГЛАГОЛЫ: {Find}, {Show}, {Isolate}, {Transform}. Что произойдёт. [Команды.]",
+    "Правило: чтобы найти нужную кнопку, сначала спроси «в какой это ГРУППЕ по смыслу» — и только потом читай надписи."
+   ]},
+  {t:"mc",id:"b4q1",
+   q:"Look at the {Display} group below: {Hide Selected}, {Show}, {Isolate} and {Thumbnail} are pale grey. Why?",
+   sub:"[Четыре кнопки бледные. Почему?]",
+   items:[
+    {t:"Nothing is selected yet — they need a selection to work",ok:1,why:"Именно. {greyed out} = «сейчас недоступно», а не «сломано». Три из четырёх названий сами это выдают: {Hide SELECTED}, {Show}, {Isolate} — все требуют, чтобы ты сначала что-то выбрал. Выдели деталь — и они оживут."},
+    {t:"They are broken in the Lite version",near:1,why:"Логичная догадка — {Lite} действительно урезанная версия. Но серый цвет значит другое: условие не выполнено. Здесь — ничего не выделено."},
+    {t:"They are switched off in settings",why:"Выключенное в настройках обычно исчезает совсем, а не бледнеет."},
+    {t:"I do not have permissions",why:"Про права сказали бы отдельным сообщением: {Access denied} или {insufficient permissions}."}
+   ],
+   hint:"Прочитай сами надписи. Одно слово в них повторяется и объясняет всё."},
+  {t:"hotspot",id:"b4q2",
+   q:"Task: earlier you hid several parts. Bring them ALL back on screen.",
+   sub:"[Ты прятал детали. Верни на экран все.]",
+   mock:function(){return mockCreo("Home");},
+   zones:[
+    {z:"unhide-all",ok:1,why:"Верно. Приставка {un-} переворачивает смысл корня: {hide → unhide}. А {All} значит «все», в отличие от {Selected} — «только выбранные». Заметь: эта кнопка НЕ серая, потому что для неё ничего выделять не надо."},
+    {z:"show",why:"{Show} серая — она показывает только ВЫБРАННОЕ, а ты ничего не выбрал (и не можешь выбрать то, что не видно). Классическая ловушка."},
+    {z:"isolate",why:"{Isolate} — обратная операция: показать только выбранное, спрятав всё остальное. И она серая."},
+    {z:"filters",near:1,why:"{Filters} управляет тем, какие ТИПЫ объектов показывать. Это не про то, что ты спрятал вручную."},
+    {z:"restore-location",why:"{Location} — про положение модели в пространстве, а не про видимость."}
+   ],
+   hint:"Ищи слово с приставкой {un-}."},
+  {t:"hotspot",id:"b4q3",
+   q:"Task: you turned the model to a good angle. Save this exact view so you can come back to it later.",
+   sub:"[Ты повернул модель как надо. Сохрани именно этот вид, чтобы вернуться.]",
+   mock:function(){return mockCreo("Home");},
+   zones:[
+    {z:"capture-location",ok:1,why:"Верно. {Capture} — «схватить, зафиксировать». {Capture Location} запоминает текущее положение. Пара к ней — {Restore Location}, вернуть его. Та же логика, что {Save} / {Open}, только про вид."},
+    {z:"restore-location",near:1,why:"Зеркальная кнопка: {Restore} ВОЗВРАЩАЕТ ранее сохранённое положение. Сначала надо было {Capture}."},
+    {z:"orientation",why:"{Orientation} задаёт стандартные виды — сверху, спереди, сбоку. Твой собственный угол она не запомнит."},
+    {z:"preset-explode",why:"{Explode} разносит детали в стороны, чтобы видеть сборку. {Preset} — «заранее заданный». Не про сохранение вида."},
+    {z:"transform",why:"{Transform} двигает и вращает саму деталь. Ты же хотел запомнить КАМЕРУ."}
+   ],
+   hint:"В группе {Location} есть пара из двух слов, которые работают как {Save} и {Open}."},
+  {t:"hotspot",id:"b4q4",
+   q:"Task: the assembly has 400 parts. You know the part name. Locate it.",
+   sub:"[В сборке 400 деталей, ты знаешь название нужной. Найди её.]",
+   mock:function(){return mockCreo("Home");},
+   zones:[
+    {z:"find",ok:1,why:"Верно, {Find} — и обрати внимание на группу: {Selection}. Кнопка не просто ищет, она ВЫДЕЛЯЕТ найденное. Помни пару: {Find} ищет внутри открытого документа, {Search} — по всей системе или сайту."},
+    {z:"select-mode",near:1,why:"{Select Mode ▾} задаёт, ЧТО ты выделяешь мышкой — деталь, грань, узел. Стрелка {▾} значит выпадающий список. Но искать по имени она не умеет."},
+    {z:"zoom-all",why:"{Zoom All} впишет в экран всю модель — «zoom to fit». Детали не найдёт."},
+    {z:"filters",why:"{Filters} скрывает целые типы объектов, а не находит конкретный."}
+   ]},
+  {t:"stack",id:"b4q5",
+   q:"Decode this label. Start with the LAST word — it is the main one.",
+   sub:"[Разбери надпись. Начни с последнего слова: оно главное. Потом двигайся налево.]",
+   phrase:"Mass Properties",
+   order:[{t:"Properties",ru:"свойства, характеристики — ГЛАВНОЕ слово"},{t:"Mass",ru:"массы — какие именно свойства"}],
+   ru:"массовые характеристики: масса, объём, центр тяжести",
+   done:"{Mass Properties} = массовые характеристики. Правило: последнее слово — суть, всё слева — уточнения. Так читаются ВСЕ длинные надписи в английских интерфейсах."},
+  {t:"stack",id:"b4q6",
+   q:"Same trick, three words.",
+   phrase:"Automatic camera centering",
+   order:[{t:"centering",ru:"центрирование — ГЛАВНОЕ слово, суффикс -ing = процесс"},{t:"camera",ru:"камеры — чего центрирование"},{t:"Automatic",ru:"автоматическое — какое"}],
+   ru:"автоматическое центрирование камеры",
+   done:"Заметь суффикс {-ing}: он значит не команду, а НАЗВАНИЕ процесса. Поэтому это не кнопка «центрируй», а настройка «центрирование»."},
+  {t:"hotspot",id:"b4q7",
+   q:"Task: measure the gap between two holes.",
+   sub:"[Измерь зазор между двумя отверстиями. Вкладка Markup.]",
+   mock:function(){return mockCreo("Markup");},
+   zones:[
+    {z:"distance",ok:1,why:"Верно. {Distance} — расстояние МЕЖДУ двумя объектами. Не путай с {Length}: та измеряет длину одного объекта, например ребра."},
+    {z:"length",near:1,why:"Почти. {Length} — длина ОДНОГО объекта. Между двумя точками — это {Distance}. Хорошая минимальная пара, запомни обе."},
+    {z:"diameter",why:"{Diameter} — диаметр окружности. Полезно для тех же отверстий, но это не зазор между ними."},
+    {z:"area",why:"{Area} — площадь. [Не «область» в смысле региона, а именно площадь поверхности.]"},
+    {z:"envelope",why:"{Envelope} здесь не «конверт», а габаритная оболочка: самый маленький ящик, в который влезает модель."},
+    {z:"summary",why:"{Summary} — «умное» измерение: программа сама решает, что мерить по выбранной геометрии."}
+   ],
+   hint:"Между двумя объектами — одно слово. Длина одного объекта — другое."},
+  {t:"hotspot",id:"b4q8",
+   q:"Task: add a note on the model with a thin line pointing at the exact place.",
+   sub:"[Поставь на модели подпись с тонкой линией-указателем к нужному месту.]",
+   mock:function(){return mockCreo("Markup");},
+   zones:[
+    {z:"leader-line",ok:1,why:"Верно. {Leader line} — выносная линия: она «ведёт» ({lead} = вести) от подписи к точке на чертеже. Тот же корень, что в {leader} — «ведущий»."},
+    {z:"note",near:1,why:"{Note} — сама подпись, текстовая заметка. Линии-указателя у неё нет. В работе их часто используют вместе: {Note} + {Leader Line}."},
+    {z:"freehand",why:"{Freehand} — рисование ОТ РУКИ, как карандашом. Дословно «свободная рука»."},
+    {z:"gtol",why:"{Gtol} — сокращение от {Geometric Tolerance}, геометрический допуск. Специальный чертёжный символ, не подпись."},
+    {z:"shape",why:"{Shape ▾} рисует фигуры — прямоугольник, круг. Стрелка {▾} значит: есть выбор фигуры."},
+    {z:"stamp",why:"{Stamp} — штамп («Проверено», «Утверждено»). И она СЕРАЯ: сейчас недоступна."}
+   ]},
+  {t:"match",id:"b4q9",
+   q:"These commands come in mirror pairs. Match them.",
+   sub:"[Эти команды работают парами-зеркалами. Соедини.]",
+   left:[{k:"a",t:"Hide Selected"},{k:"b",t:"Isolate"},{k:"c",t:"Capture Location"},{k:"d",t:"Zoom All"}],
+   right:[{k:"1",t:"спрятать выбранное, остальное оставить"},{k:"2",t:"показать только выбранное, остальное спрятать"},{k:"3",t:"запомнить текущее положение модели"},{k:"4",t:"вписать в экран всю модель целиком"}],
+   pairs:{a:"1",b:"2",c:"3",d:"4"},
+   miss:"Смотри, что именно остаётся на экране после команды.",
+   done:"{Hide Selected} и {Isolate} — точные зеркала: одна прячет выбранное, другая прячет ВСЁ ОСТАЛЬНОЕ. Это самая полезная пара во всей ленте."},
+  {t:"mc",id:"b4q10",
+   q:"The prefix {un-}. Which row is right?",
+   items:[
+    {t:"{un-} reverses the word: hide→unhide, do→undo, check→uncheck, install→uninstall",ok:1,why:"Верно, и это готовый инструмент: встретил незнакомое слово на {un-} — отбрось приставку, переведи корень, переверни смысл. {Unsubscribe} = отписаться, {unmute} = включить звук обратно, {unsaved} = несохранённый."},
+    {t:"{un-} makes the word stronger",why:"Нет, переворачивает. Усиления в интерфейсах вообще почти нет."},
+    {t:"{un-} means “not finished yet”",near:1,why:"Иногда так и читается ({unsaved} — ещё не сохранено), но общее правило шире: {un-} просто отрицает корень."}
+   ]},
+  {t:"talk",h:"Talk to your tutor — 4 минуты",
+   body:["Про твою настоящую работу, целыми фразами по-английски."],
+   list:[
+    "Describe what you do first when you open a model in Creo View. Use at least three ribbon words.",
+    "Explain the difference out loud: “{Hide Selected} hides the part I chose, {Isolate} hides everything else.”",
+    "Say which tab you use most often, and why: {Home}, {Markup} or {Sectioning}?",
+    "Tell me about a button in Creo View you have never dared to press. We will read it together."
+   ]},
+  {t:"extra",label:"глубже в ленту",
+   items:[
+    {t:"hotspot",id:"b4x1",extraOnly:1,
+     q:"Task: you need to cut the model with a plane and look inside. Which TAB?",
+     sub:"[Нужно разрезать модель плоскостью и посмотреть внутрь. Какая ВКЛАДКА?]",
+     mock:function(){return mockCreo("Home");},
+     zones:[
+      {z:"tab-sectioning",ok:1,why:"Верно. {Sectioning} — от {section}, «сечение, разрез». Суффикс {-ing} = название процесса. Существительное на вкладке, как и положено."},
+      {z:"tab-markup",why:"{Markup} — пометки ПОВЕРХ модели: подписи, размеры, штампы. Модель при этом не режется. [Кстати, в бизнесе markup = наценка. Одно слово, два далёких смысла.]"},
+      {z:"tab-animation",why:"{Animation} — движение и разлёт деталей во времени."},
+      {z:"tab-tools",near:1,why:"{Tools} — общая свалка вспомогательных инструментов. Разрезы живут в своей отдельной вкладке."}
+     ]},
+    {t:"stack",id:"b4x2",extraOnly:1,
+     q:"Decode the bottom tab.",
+     phrase:"Annotation Sets",
+     order:[{t:"Sets",ru:"наборы — ГЛАВНОЕ слово"},{t:"Annotation",ru:"аннотаций, пометок — наборы чего"}],
+     ru:"наборы аннотаций — сохранённые комплекты пометок",
+     done:"И сразу проверь себя на {Spin Center}: {Center} (центр) → чего? → {Spin} (вращения) = центр вращения."},
+    {t:"mc",id:"b4x3",extraOnly:1,
+     q:"The four tabs at the bottom: {Viewables}, {Annotation Sets}, {Structure}, {Model}. What does {Viewables} mean?",
+     items:[
+      {t:"The things that CAN be viewed — suffix {-able} = “can be”",ok:1,why:"Верно. {View} + {able} = «то, что можно посмотреть». Тот же суффикс: {editable} — можно редактировать, {selectable} — можно выбрать, {available} — доступно. Один суффикс открывает десятки слов."},
+      {t:"The views I have already saved",why:"Это ближе к {Capture Location}. {-able} говорит о ВОЗМОЖНОСТИ, а не о сохранённом."},
+      {t:"Visible parts only",near:1,why:"Соблазнительно, но {visible} и {viewable} — разные слова: первое «видимый сейчас», второе «доступный для просмотра»."}
+     ]},
+    {t:"mc",id:"b4x4",extraOnly:1,
+     q:"{Render Mode ▾} — what is the {▾} telling you before you even read the words?",
+     items:[
+      {t:"There is a dropdown list of options behind it",ok:1,why:"Верно. {▾} = выпадающий список. Ты ещё не прочитал слова, а уже знаешь: сразу ничего не случится, тебе дадут выбрать. Родственник — многоточие {…}, которое значит «сначала будет ещё окно»."},
+      {t:"The button is disabled",why:"Недоступность показывают бледностью, а не стрелкой."},
+      {t:"It will apply immediately",why:"Наоборот: стрелка обещает выбор, а не мгновенное действие."}
+     ]}
+   ]}
+]});
+
+reg({n:5,title:"Their websites — camar и salice",mins:14,
+lead:"Two real suppliers, two different difficulties. Camar is small and the words are hard. Salice is big and the words are easy — but there are three levels of menu. [Два твоих сайта: у одного трудные слова, у другого трудная навигация.]",
+items:[
+  {t:"note",h:"Every manufacturer site has TWO navigations",
+   body:[
+    "Верхняя строчка, мелкая — про КОМПАНИЮ: {Press Area}, {Job Opportunities}, {Sustainability}, {Subscribe to our newsletter}, язык и регион. Тебе она нужна редко.",
+    "Основная строка, крупная — про ТОВАР и дело: {Products}, {Distribution}, {Download}, {Contact us}, {Configurators}.",
+    "Правило: ищешь файл, каталог или инструкцию — смотри в ОСНОВНУЮ строку. Ищешь язык или подписку — в верхнюю. [Это экономит половину времени на любом сайте производителя.]"
+   ]},
+  {t:"hotspot",id:"b5q1",
+   q:"Task: the customer wants legs for a GLASS table. Find that page.",
+   sub:"[Клиенту нужны ножки для стеклянного стола. Найди раздел. Меню Camar уже раскрыто.]",
+   mock:mockCamar,
+   zones:[
+    {z:"mgi-legs-for-glass-tables",ok:1,why:"Верно. {legs for glass tables} — обрати внимание: здесь есть предлог {for}, поэтому читается легко, слева направо. Сравни с {Base cabinet hanging brackets} в соседней колонке — там предлога нет, и читать надо справа налево."},
+    {z:"mgi-round-legs",why:"{round} = круглый. Про форму, не про материал столешницы."},
+    {z:"mgi-design-legs",near:1,why:"{design legs} — «дизайнерские ножки». Итальянский сайт, писали неносители: у них {design} работает как прилагательное «декоративный, дизайнерский»."},
+    {z:"mgi-folding-legs",why:"{folding} = складные. От {fold} — складывать."},
+    {z:"mg-table-legs",near:1,why:"Правильная колонка! {Table legs} — ножки для столов. Но внутри есть более точный пункт про стекло."},
+    {z:"mg-plinth-legs",why:"{Plinth legs} — опоры цоколя кухни, те что под шкафом внизу. Не про столы."},
+    {z:"mg-shelf-support",why:"{Shelf support} — полкодержатель. {support} тут не «поддержка», а «держатель»."}
+   ],
+   hint:"Сначала найди нужную КОЛОНКУ, потом читай пункты внутри неё."},
+  {t:"mc",id:"b5q2",
+   q:"On salice.com the main menu has an item called {Magazine}. What is behind it?",
+   sub:"[В меню есть пункт Magazine. Что за ним?]",
+   items:[
+    {t:"Articles and company news — a journal",ok:1,why:"Верно, и это самый сильный ложный друг на всём сайте. {Magazine} = ЖУРНАЛ. Магазин по-английски — {shop} или {store}. Сколько раз ты искал там товары?"},
+    {t:"The online shop",why:"Ловушка сработала. {Magazine} никогда не значит «магазин». Магазин = {shop}, {store}. А если это B2B-сайт, магазина может не быть вообще — только {Request a quote}."},
+    {t:"A warehouse — stock levels",why:"Склад — {warehouse} или {stock}. Кстати, в итальянском {magazzino} действительно склад — отсюда и путаница на итальянских сайтах."},
+    {t:"Product catalogues in PDF",why:"Это {Download}. Отдельный пункт того же меню."}
+   ]},
+  {t:"hotspot",id:"b5q3",
+   q:"Task: you need the assembly instructions as a PDF. Which menu item?",
+   sub:"[Нужна инструкция по монтажу в PDF. Куда жать?]",
+   mock:mockSalice,
+   zones:[
+    {z:"nv-download",ok:1,why:"Верно. И заметь грамматику: здесь {Download} — не кнопка-глагол, а РАЗДЕЛ, существительное «Загрузки». Одно слово в двух ролях: на кнопке — «скачай», в меню — «файлы». За ним лежат {Catalogues}, {Assembly instructions}, {Technical drawings}."},
+    {z:"nv-products",near:1,why:"Через {Products} тоже можно дойти — у конкретного товара обычно есть свои файлы. Но короткий путь — {Download}."},
+    {z:"ut-technical-services",near:1,why:"Разумно, но заметь ГДЕ ты нажал: {Technical Services} стоит в ВЕРХНЕЙ, служебной строке. По нашему правилу файлы и товар живут в основной. Это про поддержку и сервис, а не про библиотеку PDF."},
+    {z:"nv-configurators",why:"{Configurators} — интерактивный подбор фурнитуры под твою мебель. Полезно, но это не библиотека PDF."},
+    {z:"nv-inspire-me",why:"{Inspire me} — «вдохнови меня»: галерея готовых решений. Редчайший в интерфейсах императив от лица ПОЛЬЗОВАТЕЛЯ, а не сайта."},
+    {z:"nv-magazine",why:"{Magazine} — журнал компании. Мы только что это разобрали."},
+    {z:"nv-distribution",why:"{Distribution} — где купить, дистрибьюторы. Не файлы."}
+   ]},
+  {t:"mc",id:"b5q4",
+   q:"camar.it has a menu item called {WARNING}. What do you expect, and what is actually there?",
+   sub:"[В меню Camar есть пункт WARNING. Что за ним на самом деле?]",
+   items:[
+    {t:"It looks like a danger notice, but it is a load calculator — how much weight a bracket can hold",ok:1,why:"Именно. Ярлык кричит «опасность», а внутри инженерный калькулятор допустимой нагрузки. И самое полезное: английская страница там наполовину осталась ИТАЛЬЯНСКОЙ — {CARICO MASSIMO AMMESSO}, {Seleziona prodotto}. Вот тебе прямой ответ на твой страх: непонятно бывает не потому, что ты плохо знаешь английский, а потому что текст объективно кривой."},
+    {t:"Legal warnings about counterfeit products",near:1,why:"Очень разумная догадка — на многих сайтах именно так. Но у Camar за этим пунктом калькулятор нагрузки."},
+    {t:"A cookie and privacy warning",why:"Это жило бы в подвале сайта, а не в главном меню."},
+    {t:"Safety instructions for installers",near:1,why:"Тепло: тема действительно про безопасность монтажа. Но конкретно там — калькулятор."}
+   ]},
+  {t:"hotspot",id:"b5q5",
+   q:"Task: the site opened in Italian. Switch it to English.",
+   sub:"[Сайт открылся по-итальянски. Переключи на английский.]",
+   mock:mockSalice,
+   zones:[
+    {z:"ut-international-en",ok:1,why:"Верно. {International / EN} со значком глобуса — переключатель РЫНКА и языка сразу. За ним будет {Select market / language} и кнопка {Confirm}. Ищи глобус {🌐} или две буквы вроде {EN}, {IT}, {DE} — это универсальный признак."},
+    {z:"nv-search-",why:"{Search} ищет по содержимому сайта, язык не меняет."},
+    {z:"ut-technical-services",why:"{Technical Services} — техподдержка."},
+    {z:"ut-subscribe-to-our-newsletter",why:"{Subscribe to our newsletter} — подписка на рассылку. Кстати, {newsletter} — не «письмо новостей», а именно регулярная рассылка."},
+    {z:"ut-press-area",why:"{Press Area} — раздел для журналистов. {press} здесь «пресса», а не «нажать»."},
+    {z:"ut-job-opportunities",why:"{Job Opportunities} — вакансии. Дословно «рабочие возможности»."},
+    {z:"ut-sustainability",why:"{Sustainability} — экология и устойчивое развитие. Длинное слово, но встречается на каждом корпоративном сайте."}
+   ],
+   hint:"Ищи глобус или буквы языка. Это всегда в верхней, служебной строке."},
+  {t:"match",id:"b5q6",
+   q:"Match the menu label to what is really behind it.",
+   left:[{k:"a",t:"Distribution"},{k:"b",t:"Inspire me"},{k:"c",t:"Configurators"},{k:"d",t:"Press Area"},{k:"e",t:"Reserved area"}],
+   right:[{k:"1",t:"где купить, дистрибьюторы"},{k:"2",t:"галерея готовых решений «для вдохновения»"},{k:"3",t:"интерактивный подбор фурнитуры"},{k:"4",t:"раздел для журналистов"},{k:"5",t:"личный кабинет партнёра, нужен логин"}],
+   pairs:{a:"1",b:"2",c:"3",d:"4",e:"5"},
+   miss:"Не переводи слово буквально — спроси, зачем такой раздел нужен ПРОИЗВОДИТЕЛЮ.",
+   done:"{Reserved area} — «зарезервированная зона» дословно, а на деле личный кабинет для партнёров: там цены и техническая документация. Ищи рядом {Login} или {Sign in}."},
+  {t:"gap",id:"b5q7",
+   q:"You clicked {CATALOGUE} and the page says {COMING SOON}. The catalogue does not exist yet. Write to the manager.",
+   sub:"[Каталога на сайте нет — страница говорит COMING SOON. Пишешь менеджеру.]",
+   before:"Hello, the catalogue page on your website says “coming soon”. Could you ",
+   after:" me the PDF catalogue for table legs, please?",
+   chips:[
+    {t:"send",ok:1,why:"{Could you send me…, please?} — самая полезная рабочая формула во всём уроке. Вежливая просьба: {Could you} + глагол без частицы {to}. Работает для чего угодно: {Could you send me the price list?}"},
+    {t:"to send",why:"Грамматика: после {Could you} идёт чистый глагол, без {to}. {Could you send}, не {Could you to send}."},
+    {t:"sending",why:"Тоже нет: после {Could you} — простая форма глагола."},
+    {t:"give",near:1,why:"Понятно, но по-английски файлы {send} (присылают), а не {give}. {Give} — про предметы из рук в руки."}
+   ],
+   hint:"После {Could you} глагол стоит в самой простой форме.",
+   answer:"Could you send me the PDF catalogue for table legs, please?"},
+  {t:"mc",id:"b5q8",
+   q:"You are filtering hinges on salice.com and see: {Opening angle: Standard / Great}. What does {Great} mean here?",
+   items:[
+    {t:"Large — a wide opening angle",ok:1,why:"Верно. Это итальянизм: от {grande} — «большой». По-английски здесь ждали бы {Wide} или {Large}. Живой пример того, что сайт писали неносители — и что твоё непонимание бывает не твоей виной."},
+    {t:"Excellent quality",why:"Обычное значение {great} — «отличный». Но в технической строке фильтра речь про размер угла."},
+    {t:"The standard, most popular option",why:"Это как раз {Standard} — второй вариант в той же строке."}
+   ]},
+  {t:"talk",h:"Talk to your tutor — 3 минуты",
+   list:[
+    "Tell me in English what you look for on a supplier’s website most often.",
+    "Ask me for something you need by email, out loud: “Could you send me …, please?”",
+    "Name three menu items you have never clicked, and guess what is behind them."
+   ]},
+  {t:"extra",label:"подвал сайта и мелкий шрифт",
+   items:[
+    {t:"mc",id:"b5x1",extraOnly:1,
+     q:"Both sites have {Whistleblowing} in the footer. What is it?",
+     items:[
+      {t:"A channel to report wrongdoing inside the company, anonymously",ok:1,why:"Верно. Дословно «свист в свисток»: сообщить о нарушении внутри компании. По закону такой канал обязателен для крупных фирм в ЕС — поэтому он и висит в подвале у обоих твоих поставщиков. Почти никто из неносителей это слово не знает."},
+      {t:"A complaints form for customers",near:1,why:"Близко по духу, но жалобы клиентов — это {Complaints} или {Customer care}. {Whistleblowing} — про нарушения ВНУТРИ компании."},
+      {t:"A newsletter about industry news",why:"Это {Newsletter} или {Magazine}."}
+     ]},
+    {t:"mc",id:"b5x2",extraOnly:1,
+     q:"{Where to buy}, {Distribution}, {Find a dealer} — how many different actions is that?",
+     items:[
+      {t:"One — three labels for the same thing",ok:1,why:"Верно. Разные сайты называют одно и то же по-разному. Полезный навык: не искать конкретное слово, а искать СМЫСЛ «где купить». {dealer} = дилер, продавец."},
+      {t:"Three different sections",why:"Нет, это синонимы. Именно поэтому вредно заучивать один ярлык — надо узнавать смысл."},
+      {t:"Two — {Distribution} is about logistics",near:1,why:"На складском сайте так и было бы. Но в меню производителя мебельной фурнитуры {Distribution} значит «где купить»."}
+     ]},
+    {t:"mc",id:"b5x3",extraOnly:1,
+     q:"A form field is marked {Sale conditions}. What is it about?",
+     items:[
+      {t:"Terms of sale — payment, delivery, returns",ok:1,why:"Верно. {conditions} = условия. Не «распродажа»! Распродажа — {sale} или {clearance}, но во множественном с {conditions} это всегда «условия продажи»."},
+      {t:"A discount campaign",why:"Ловушка сработала: {sale} само по себе бывает «распродажа», но {sale conditions} — «условия продажи»."},
+      {t:"The state of the goods",why:"Состояние товара — {condition} в единственном числе: {in good condition}. Число здесь меняет смысл."}
+     ]}
+   ]}
+]});
+
+reg({n:6,title:"Furniture words — твоя отрасль",mins:10,
+lead:"Five words describe WHERE a fitting sits relative to the panel. Half of the Camar menu is built from them. [Пять слов описывают, ГДЕ деталь стоит относительно панели. Из них собрана половина меню Camar.]",
+items:[
+  {t:"pos",h:"Where does the fitting sit?",
+   list:[
+    {k:"visible",w:"visible",d:"on the surface, you can see it [видимый, на поверхности — снаружи]"},
+    {k:"concealed",w:"concealed",d:"hidden inside the panel [скрытый внутри панели — от {conceal}, «скрывать»]"},
+    {k:"flush",w:"flush",d:"exactly level with the surface [заподлицо — ровно в уровень с поверхностью]"},
+    {k:"inset",w:"inset",d:"recessed, set INTO the panel [врезной, утопленный внутрь]"},
+    {k:"jutting",w:"jutting",d:"sticking out beyond the surface [выступающий — от {jut out}, «выпирать»]"}
+   ]},
+  {t:"stack",id:"b6q1",
+   q:"The hardest label on camar.it. Four nouns in a row, no prepositions. Decode it.",
+   sub:"[Самая трудная надпись на сайте: четыре существительных подряд без предлогов. Начни с последнего слова.]",
+   phrase:"Base cabinet hanging brackets",
+   order:[
+    {t:"brackets",ru:"кронштейны, навесы — ГЛАВНОЕ слово"},
+    {t:"hanging",ru:"навесные, для подвешивания — какие кронштейны"},
+    {t:"cabinet",ru:"шкафа — для чего они (ВНИМАНИЕ: не «кабинет»!)"},
+    {t:"Base",ru:"нижнего, напольного — какого шкафа"}
+   ],
+   ru:"навесы для нижнего (напольного) шкафа",
+   miss:"Последнее слово — главное. Всё, что слева, отвечает на вопрос «какой?». Двигайся справа налево.",
+   done:"Вот и весь фокус: {brackets} → какие? {hanging} → для чего? {cabinet} → какого? {base}. И сравни с соседним пунктом того же меню: {Hanging brackets FOR WALL UNITS} — там есть предлог {for}, поэтому читается слева направо. Один смысл, две грамматики, рядом в одном меню."},
+  {t:"mc",id:"b6q2",
+   q:"{cabinet} — for you this is the most important false friend on the whole site. What does it mean?",
+   items:[
+    {t:"A cupboard, a carcase unit — корпусная мебель, шкаф",ok:1,why:"Верно, и это твоё рабочее слово №1. {base cabinet} — напольный шкаф, {wall cabinet} — навесной. А «кабинет» по-английски {office} или {study}. (Ещё {cabinet} значит «кабинет министров» — но в мебельном контексте всегда шкаф.)"},
+    {t:"An office room",why:"Так подсказывает русский, и это ловушка. Кабинет = {office}, {study}. В мебельном каталоге {cabinet} — всегда шкаф."},
+    {t:"A drawer",why:"Ящик — {drawer}. Шкаф — {cabinet}. Ящик находится ВНУТРИ шкафа."},
+    {t:"A shelf",why:"Полка — {shelf}, во множественном {shelves}. Держатель полки — {shelf support}, он тоже есть в меню Camar."}
+   ]},
+  {t:"match",id:"b6q3",
+   q:"Match the word to the position.",
+   left:[{k:"a",t:"concealed"},{k:"b",t:"flush"},{k:"c",t:"jutting"},{k:"d",t:"inset"},{k:"e",t:"visible"}],
+   right:[{k:"1",t:"спрятан внутри панели, снаружи не видно"},{k:"2",t:"заподлицо, ровно в уровень с поверхностью"},{k:"3",t:"выступает наружу за поверхность"},{k:"4",t:"утоплен внутрь, врезной"},{k:"5",t:"стоит на поверхности, виден"}],
+   pairs:{a:"1",b:"2",c:"3",d:"4",e:"5"},
+   miss:"Посмотри ещё раз на схемы выше: где синий прямоугольник относительно красной линии?",
+   done:"Эти пять слов покрывают половину меню Camar: {concealed in the side panel}, {flush wall panel}, {jutting wall panel}, {inset hanging brackets}, {visible}."},
+  {t:"stack",id:"b6q4",
+   q:"Now a Salice product description. Three parts.",
+   phrase:"System for flap doors with upward or downward opening",
+   order:[
+    {t:"System",ru:"система — ГЛАВНОЕ слово, и здесь оно ПЕРВОЕ"},
+    {t:"for flap doors",ru:"для откидных дверей — {flap} значит «откидная створка»"},
+    {t:"with upward or downward opening",ru:"с открыванием вверх или вниз — {upward} / {downward}"}
+   ],
+   ru:"система для откидных дверей с открыванием вверх или вниз",
+   miss:"Здесь есть предлоги {for} и {with} — значит, читаем слева направо, а не справа налево.",
+   done:"Важный контраст с предыдущим заданием: как только появляются предлоги ({for}, {with}), порядок становится нормальным — слева направо. Справа налево читают только СТЕКИ без предлогов. Предлог — твой друг."},
+  {t:"mc",id:"b6q5",
+   q:"A customer writes: “the sofa is upholstered in velvet”. What material is it?",
+   items:[
+    {t:"Velvet is бархат",ok:1,why:"Верно. А вельвет по-английски {corduroy} — совсем другое слово. Ещё одна мебельная ловушка того же типа: {fabric} — это ТКАНЬ, а не фабрика (фабрика = {factory}, {plant})."},
+    {t:"Вельвет",why:"Ловушка сработала. {velvet} = бархат. Вельвет = {corduroy}. Для обивки это принципиально разные материалы и разные цены."},
+    {t:"Кожа",why:"Кожа — {leather}. {Faux leather} или {leatherette} — искусственная."}
+   ]},
+  {t:"err",id:"b6q6",
+   q:"One word here is a false friend and makes the sentence nonsense. Find it, then fix it.",
+   sub:"[Одно слово — ложный друг, и из-за него фраза бессмысленна. Найди его, потом исправь.]",
+   tokens:["Our","fabric","produces","hinges","for","kitchen","cabinets"],
+   badIndex:1,
+   found:"Да. {fabric} значит «ткань» — ткань не может производить петли. Чем заменить?",
+   miss:"Это слово на своём месте. Проверь каждое: какое из них выглядит по-русски знакомо, но значит другое?",
+   fixes:[
+    {t:"factory",ok:1,why:"Верно: {Our factory produces hinges for kitchen cabinets.} Запомни пару целиком: {factory} = фабрика, {fabric} = ткань. Отличается одна буква, а смысл — на километр. И заодно проверь себя: {hinges} = петли, {cabinets} = шкафы (не кабинеты)."},
+    {t:"fabrication",why:"{fabrication} — «изготовление», а иногда и «выдумка». Как подлежащее тут не работает: изготовление не производит петли."},
+    {t:"furniture",why:"{furniture} = мебель. Мебель не производит петли — наоборот, петли идут на мебель."},
+    {t:"fabricator",near:1,why:"Существует и значит «изготовитель», но в мебельной отрасли так почти не говорят. Нормальное слово — {factory} или {manufacturer}."}
+   ],
+   hint:"Ищи слово, которое по-русски читается как «фабрика», но значит совсем другое."},
+  {t:"extra",label:"ещё отраслевые слова",
+   items:[
+    {t:"mc",id:"b6x1",extraOnly:1,
+     q:"{soft close} — what does the customer get?",
+     items:[
+      {t:"A damper: the door or drawer closes slowly and silently",ok:1,why:"Верно — доводчик. {soft} = мягко, {close} = закрывание. Отраслевой интернационализм: это словосочетание понимают в мебельном мире на любом языке."},
+      {t:"A soft-touch surface finish",why:"Это было бы {soft-touch finish} — про покрытие."},
+      {t:"A quiet-running drawer runner",near:1,why:"Тепло: {drawer runner} — направляющая ящика, и у неё бывает {soft close}. Но само {soft close} — про мягкое ЗАКРЫВАНИЕ."}
+     ]},
+    {t:"mc",id:"b6x2",extraOnly:1,
+     q:"camar.it writes {Levellers}, an American catalogue writes {Levelers}. Who is wrong?",
+     items:[
+      {t:"Nobody — {Levellers} is British, {Levelers} is American",ok:1,why:"Верно. Британский вариант удваивает {l}. Тот же ряд: {Customise}/{Customize}, {Colour}/{Color}, {Cancelled}/{Canceled}, {Catalogue}/{Catalog}. На кнопках встречаются оба — это не опечатка."},
+      {t:"Camar has a typo",why:"Нет, это британское написание. Итальянские сайты обычно ориентируются на британский английский."},
+      {t:"The American one is wrong",why:"Оба верны, просто разные нормы."}
+     ]},
+    {t:"stack",id:"b6x3",extraOnly:1,
+     q:"One more from the Camar menu.",
+     phrase:"legs with separate fixing socket",
+     order:[
+      {t:"legs",ru:"ножки — ГЛАВНОЕ слово, и оно первое"},
+      {t:"with separate",ru:"с отдельным — предлог {with} задаёт нормальный порядок"},
+      {t:"fixing socket",ru:"крепёжным гнездом — {fixing} крепление, {socket} гнездо"}
+     ],
+     ru:"ножки с отдельным крепёжным гнездом",
+     done:"{fixing} — от {fix}, «закреплять». В интерфейсах {fix} чаще «исправить» ({fix a bug}), но в технике — «закрепить». Контекст решает."}
+   ]}
+]});
+
+reg({n:7,title:"The game — меню настроек",mins:10,
+lead:"Your Witcher 3 screen. Same skills as the ribbon — plus one trap that catches native speakers too. [Твой экран из Witcher 3. Те же навыки, плюс одна ловушка, на которой спотыкаются и носители языка.]",
+items:[
+  {t:"note",h:"The skeleton of ANY settings menu",
+   body:[
+    "Разделы почти всегда одни и те же: {Video / Graphics} — картинка · {Audio} — звук · {Gameplay} — правила игры · {Controls} и {Key Bindings} — управление · {Language} — язык · {Accessibility} — доступность · {Credits} — титры.",
+    "Справа от названия стоит ЗНАЧЕНИЕ, и оно бывает трёх типов: {On/Off} (переключатель), слово из списка вроде {Standard} (выбор), или число вроде {10} (ползунок). [Сначала определи ТИП — и станет ясно, чего от тебя хотят.]",
+    "Внизу такого экрана почти всегда: {Apply}, {Restore defaults}, {Back}. [Применить, вернуть заводские, назад.]"
+   ]},
+  {t:"hotspot",id:"b7q1",
+   q:"Task: you are tired of the tips popping up on screen. Switch them off.",
+   sub:"[Надоели подсказки, выскакивающие на экране. Выключи их.]",
+   mock:mockWitcher,
+   zones:[
+    {z:"gr-on-screen-tutorials",ok:1,why:"Верно. {On-screen} = «на экране» (дефис соединяет два слова в одно прилагательное), {Tutorials} = обучающие подсказки. Сейчас стоит {On} — значит их надо переключить в {Off}."},
+    {z:"gr-automatic-finishers",why:"{Finishers} — от {finish}, «добивающие удары». {Automatic} значит, что игра делает их сама. Не про подсказки."},
+    {z:"gm-gameplay",near:1,why:"Ты уже в разделе {GAMEPLAY} — он подсвечен. Нужная строка внутри него."},
+    {z:"gr-enemy-upscaling",why:"{upscale} — «поднимать уровень». Игра подтягивает врагов под твой уровень, чтобы они не были слишком слабыми."},
+    {z:"gm-credits",why:"{CREDITS} — не «кредиты», а ТИТРЫ: список тех, кто делал игру. Классический ложный друг."}
+   ]},
+  {t:"mc",id:"b7q2",
+   q:"Look at this line: {Turn off Witcher Senses “fish-eye” effect} — and the value on the right says {Off}. Is the fish-eye effect on or off right now?",
+   sub:"[Строка называется «выключить эффект», а значение — Off. Эффект сейчас включён или выключен?]",
+   items:[
+    {t:"The effect is ON — because “turning it off” is switched off",ok:1,why:"Верно, и это самая коварная строка на экране. Двойное отрицание: настройка называется «ВЫКЛЮЧИТЬ эффект», и сама эта настройка стоит в {Off}. Значит выключение не работает → эффект на месте. Правило: увидел в названии {off}, {don’t}, {no}, {never}, {un-} или {dis-} — читай ВСЮ строку вместе со значением, одно слово тут ничего не решает."},
+    {t:"The effect is OFF — it says Off",why:"Так читает большинство — и попадается. {Off} относится не к эффекту, а к «выключению эффекта». Минус на минус даёт плюс: эффект включён."},
+    {t:"Impossible to tell",near:1,why:"Понимаю осторожность, но определить можно: название настройки = «выключить эффект», её состояние = {Off} → выключение не действует → эффект работает."}
+   ],
+   hint:"Настройка называется не «эффект», а «выключение эффекта». Что тогда значит Off?"},
+  {t:"hotspot",id:"b7q3",
+   q:"Task: the game uses the wrong key for jumping. You want to reassign it.",
+   sub:"[Прыжок назначен на неудобную клавишу. Хочешь переназначить. Куда идти?]",
+   mock:mockWitcher,
+   zones:[
+    {z:"gm-key-bindings",ok:1,why:"Верно. {bind} = «привязывать», {bindings} = привязки. {Key bindings} — назначение клавиш. Читай справа налево: {bindings} → чего? → {key}."},
+    {z:"gm-control-settings",near:1,why:"Очень близко: {CONTROL SETTINGS} — общие настройки управления (чувствительность, инверсия). Но конкретно ПЕРЕНАЗНАЧЕНИЕ клавиш живёт в {KEY BINDINGS}."},
+    {z:"gm-controller-scheme",why:"{CONTROLLER} — геймпад (не «контролёр»!). {SCHEME} — готовая раскладка. Это про джойстик, а не про клавиатуру."},
+    {z:"gm-language",why:"{LANGUAGE} — язык интерфейса и озвучки."},
+    {z:"gm-back",why:"{BACK} — выйти на предыдущий экран. Здесь это глагол «назад», а не «спина»."}
+   ]},
+  {t:"match",id:"b7q4",
+   q:"Match each word to its opposite. All of them are on this one screen.",
+   sub:"[Соедини противоположности. Все эти слова есть на одном экране.]",
+   left:[{k:"a",t:"Automatic"},{k:"b",t:"On"},{k:"c",t:"drawing"},{k:"d",t:"Standard"},{k:"e",t:"Color-blind Friendly"}],
+   right:[{k:"1",t:"Manual — вручную"},{k:"2",t:"Off — выключено"},{k:"3",t:"sheathing — убирать в ножны"},{k:"4",t:"Custom — по-своему"},{k:"5",t:"обычный режим цветов"}],
+   pairs:{a:"1",b:"2",c:"3",d:"4",e:"5"},
+   miss:"Смотри на две соседние строки экрана: {Automatic Finishers} и {Manual sword drawing / sheathing}.",
+   done:"Пара {Automatic} / {Manual} стоит на экране двумя строками подряд — идеальная минимальная пара. А слэш в {drawing / sheathing} значит «и то, и другое одной кнопкой»: достать меч и убрать."},
+  {t:"stack",id:"b7q5",
+   q:"Decode this label — and pay attention to the brackets.",
+   sub:"[Разбери надпись. Особое внимание — скобкам.]",
+   phrase:"Autosave Interval (Minutes)",
+   order:[
+    {t:"Interval",ru:"интервал — ГЛАВНОЕ слово"},
+    {t:"Autosave",ru:"автосохранения — интервал чего"},
+    {t:"(Minutes)",ru:"в минутах — скобки задают ЕДИНИЦУ ИЗМЕРЕНИЯ, а не смысл"}
+   ],
+   ru:"интервал автосохранения в минутах — значение 10 значит «каждые 10 минут»",
+   done:"Скобки в интерфейсах почти всегда уточняют единицу или условие: {(Minutes)}, {(MB)}, {(seconds)}, {(optional)} — необязательно, {(required)} — обязательно, {(recommended)} — рекомендуется. Увидел скобки — там подсказка, а не сложность."},
+  {t:"mc",id:"b7q6",
+   q:"{Movement Response: Standard} — what kind of setting is this, and what do you do with it?",
+   items:[
+    {t:"A choice from a list — I pick another word, not On/Off",ok:1,why:"Верно. {Standard} — это не {On} и не число, значит перед тобой ВЫБОР из вариантов (обычно {Standard} / {Alternative} / {Custom}). Определив тип, ты уже знаешь, чего ждать: кликов по кругу или выпадающего списка."},
+    {t:"A switch — it can only be On or Off",why:"Если бы так, справа стояло бы {On} или {Off}. Стоит слово {Standard} — значит вариантов больше двух."},
+    {t:"A number I drag with the slider",why:"Числа выглядят как {10} в строке {Autosave Interval}. {Standard} — слово, а не число."},
+    {t:"Text I type in myself",why:"В игровых меню почти никогда не вводят текст руками — только выбирают."}
+   ]},
+  {t:"talk",h:"Talk to your tutor — 3 минуты",
+   list:[
+    "Which settings do you always change first in a new game? Say it in English.",
+    "Explain the fish-eye trap out loud, in your own words. If you can explain it, you own it.",
+    "Read three lines from this screen aloud. I will correct your pronunciation."
+   ]},
+  {t:"extra",label:"словарь графики и звука",
+   items:[
+    {t:"mc",id:"b7x1",extraOnly:1,
+     q:"{Display mode}: {Fullscreen} / {Borderless} / {Windowed}. What is {Borderless}?",
+     items:[
+      {t:"A window with no frame — it fills the screen but is still a window",ok:1,why:"Верно. Суффикс {-less} значит «без»: {border} (рамка) + {less} = «без рамки». Тот же ряд: {wireless} — без провода, {endless} — бесконечный. Практическая польза: {Borderless} позволяет быстро переключаться на другие окна."},
+      {t:"A screen with no edges — a curved monitor mode",why:"Нет, это про окно программы, а не про монитор."},
+      {t:"Unlimited resolution",why:"Разрешение — {Resolution}, отдельная настройка."}
+     ]},
+    {t:"mc",id:"b7x2",extraOnly:1,
+     q:"In the Audio menu: {Master volume}, {SFX}, {Music}, {Voice}. What is {SFX}?",
+     items:[
+      {t:"Sound effects — steps, swords, explosions",ok:1,why:"Верно, {SFX} = {sound effects}. А {Master volume} — общая громкость («главная»), она управляет всеми остальными сразу. {Voice} — голоса персонажей, {Mute} — заглушить, сохранив уровень."},
+      {t:"Special effects on the picture",near:1,why:"{FX} действительно бывает про визуальные эффекты, но в разделе {Audio} {SFX} — только звуковые."},
+      {t:"Surround sound",why:"Объёмный звук — {Surround}."}
+     ]},
+    {t:"mc",id:"b7x3",extraOnly:1,
+     q:"{Invert Y axis} in the controls. What happens if you enable it?",
+     items:[
+      {t:"Push the mouse forward — the camera looks DOWN instead of up",ok:1,why:"Верно. {invert} = перевернуть, {Y axis} = вертикальная ось. Настройка для тех, кто привык к авиасимуляторам. Рядом обычно {Sensitivity} — чувствительность, и {Vibration} / {Rumble} — отдача геймпада."},
+      {t:"The picture turns upside down",why:"Это было бы про экран. Здесь речь только об управлении камерой."},
+      {t:"Left and right swap",near:1,why:"Это была бы ось X. {Y} — вертикальная."}
+     ]}
+   ]}
+]});
+
+reg({n:8,title:"Final challenge — незнакомый экран",mins:6,
+lead:"Three screens you have NOT seen in this lesson. No hints on the surface — use the 60-second procedure. [Три экрана, которых в уроке не было. Подсказки спрятаны глубже. Работай по алгоритму.]",
+items:[
+  {t:"note",h:"The 60-second procedure",
+   body:[
+    "1 · Не читай всё. Найди глазами кнопки — они внизу или справа.",
+    "2 · Найди безопасный выход: {Cancel}, {Close}, {✕}, {Esc}. Убедился, что он есть — дальше можно спокойно исследовать.",
+    "3 · Прочитай ЗАГОЛОВОК окна: он говорит, о чём речь (существительное).",
+    "4 · Прочитай ВЫДЕЛЕННУЮ кнопку: это то, чего от тебя ждут (глагол).",
+    "5 · Проверь на отрицание: есть ли {off}, {don’t}, {un-}, {no}, {never}?",
+    "6 · Если слово длинное и составное — читай справа налево.",
+    "7 · Если ничего не помогло — {Cancel}. Ты ничего не сломал."
+   ]},
+  {t:"hotspot",id:"b8q1",
+   q:"Screen 1. Task: install the program, but WITHOUT putting an icon on your desktop.",
+   sub:"[Установить программу, но БЕЗ ярлыка на рабочем столе. Что нажать первым?]",
+   mock:mockInstaller,
+   zones:[
+    {z:"next",ok:1,why:"Верно — но сначала надо было снять галочку {Create a desktop shortcut} (она стоит с ✓), и только потом {Next >}. Логика установщика: сначала настраиваешь ЭТОТ шаг, потом идёшь дальше. {shortcut} = ярлык, дословно «короткий путь»."},
+    {z:"cancel",why:"{Cancel} прервёт установку целиком. А ты хотел установить — просто без ярлыка."},
+    {z:"back",why:"{< Back} вернёт на предыдущий шаг. Настройки этого шага останутся ненастроенными."},
+    {z:"x",why:"{✕} прервёт установку, как и {Cancel}."}
+   ],
+   hint:"Сначала галочка, потом кнопка. Какая из двух кнопок продолжает установку?"},
+  {t:"hotspot",id:"b8q2",
+   q:"Screen 2. A supplier’s site you have never seen. Task: find the mounting instructions.",
+   sub:"[Незнакомый сайт поставщика (вымышленный NORDFIT). Найди инструкции по монтажу.]",
+   mock:mockNordfit,
+   zones:[
+    {z:"nv-assembly-instructions",ok:1,why:"Верно, и заметь: слово {Download} здесь вообще не встречается. Ты нашёл раздел по СМЫСЛУ, а не по знакомому ярлыку. {assembly} = сборка, монтаж; {instructions} = инструкции. Это и есть навык, за которым ты пришёл."},
+    {z:"nv-media-library",near:1,why:"{Media library} — библиотека фото, видео и, возможно, PDF. Разумная догадка, файлы могут быть и там. Но есть пункт, который называет нужное прямо."},
+    {z:"nv-range",why:"{Range} здесь не «диапазон», а АССОРТИМЕНТ — то же, что {Products}. Ещё один ярлык для того же смысла."},
+    {z:"nv-solutions",why:"{Solutions} — «решения», обычно готовые применения товара. Маркетинговый раздел."},
+    {z:"nv-request-a-quote",why:"{Request a quote} — запросить коммерческое предложение. {quote} тут не «цитата», а ЦЕНА. Одна из самых нужных тебе фраз — но не сейчас."},
+    {z:"n-reserved-area",near:1,why:"{Reserved area} — кабинет партнёра. Инструкции часто лежат там, но нужен логин."},
+    {z:"nv-get-in-touch",why:"{Get in touch} — «свяжитесь с нами», то же что {Contact us}."}
+   ],
+   hint:"Ищи не знакомое слово, а нужный СМЫСЛ: сборка + инструкции."},
+  {t:"mc",id:"b8q3",
+   q:"Screen 3. A window says: {Access denied. You have insufficient permissions to open this file. Contact your administrator.} What do you do?",
+   sub:"[Разбери сообщение по алгоритму и реши, что делать.]",
+   items:[
+    {t:"Press {OK} and ask IT for access — nothing is broken and I cannot fix it myself",ok:1,why:"Верно, и разбор такой: {denied} — от {deny}, отказано. {insufficient} — приставка {in-} = не + {sufficient} = достаточный → «недостаточно». {permissions} = права доступа. Ни файл, ни программа не сломаны — просто прав нет. Единственная кнопка {OK} значит «я прочитал», а не «согласен»."},
+    {t:"Try opening the file again a few times",why:"{Access denied} не про сбой — повторение ничего не изменит. Повторять имеет смысл на {Please try again later}."},
+    {t:"The file is damaged — ask for a new copy",why:"О повреждении сказали бы {corrupted} или {cannot be read}. Здесь речь только о правах."},
+    {t:"Reinstall the program",why:"Программа работает — она же показала тебе внятное сообщение. Переустановка не выдаст прав."}
+   ],
+   hint:"Разбери два длинных слова по частям: {in-sufficient} и {permission-s}."}
+]});
+
+reg({n:9,title:"Take it with you",mins:4,printable:1,
+lead:"One page to print and keep next to your monitor. [Одна страница — распечатай и держи у монитора.]",
+items:[
+  {t:"final"},
+  {t:"sheet",cols:[
+   [
+    {h:"Любая кнопка — одно из четырёх",list:[
+     "СОГЛАСИТЬСЯ: {OK} · {Accept} · {Agree} · {Allow} · {Confirm} · {Continue} · {Submit} · {Apply} · {Save} · {Enable}",
+     "ОТКАЗАТЬСЯ: {Cancel} · {Deny} · {Block} · {Reject} · {Decline} · {Disable} · {Discard}",
+     "ОТЛОЖИТЬ: {Skip} · {Not now} · {Maybe later} · {Dismiss} · {Snooze}",
+     "УЙТИ: {Close} · {Exit} · {Quit} · {Back} · {Sign out} · {Esc} · {✕}"
+    ]},
+    {h:"Десять опасных пар",list:[
+     "{Cancel} не делай начатое · {Close} убери окно · {Dismiss} убери сообщение",
+     "{Delete} уничтожить объект · {Remove} вынуть из списка · {Clear} опустошить, контейнер цел",
+     "{Save} в файл · {Apply} применить и оставить окно · {OK} применить и закрыть",
+     "{Allow} доступ КОМУ-ТО другому · {Enable} включить функцию у себя",
+     "{Deny} нет сейчас · {Block} нет навсегда · {Reject} отклонить предложенное · {Decline} вежливо отказаться",
+     "{Sign in} аккаунт есть · {Sign up} создать новый (in = внутрь, up = создать)",
+     "{Undo} шаг назад · {Reset} в ноль · {Restore defaults} как при покупке",
+     "{Discard} выбросить ИЗМЕНЕНИЯ · {Delete} уничтожить ОБЪЕКТ",
+     "{Hide} объект жив, не виден · {Close} больше не открыт",
+     "{Export} в другой формат · {Download} получить файл по сети"
+    ]},
+    {h:"Читай глазами до слов",list:[
+     "справа и цветная — основное действие, которого ждут",
+     "красная — разрушительное: удалить, отказать",
+     "серая ({greyed out}) — недоступна СЕЙЧАС, не сломана. Обычно надо сначала что-то выделить",
+     "{…} в конце — сразу ничего не будет, появится ещё окно",
+     "{▾} — есть выпадающий список",
+     "квадрат — сколько хочешь · круг — только ОДИН",
+     "{Esc} и {✕} — уйти, ничего не изменив. Всегда безопасно"
+    ]}
+   ],
+   [
+    {h:"Ловить отрицания",list:[
+     "маркеры: {off} · {don’t} · {un-} · {dis-} · {in-} · {de-} · {no} · {never}",
+     "увидел маркер — читай ВСЮ строку вместе со значением справа",
+     "{Turn off … effect} = {Off} → выключение не работает → эффект ВКЛЮЧЁН",
+     "{un-} переворачивает корень: {unhide} · {undo} · {uncheck} · {uninstall} · {unsubscribe}",
+     "{in-} / {im-} тоже отрицают: {invalid} · {insufficient}"
+    ]},
+    {h:"Длинная надпись: читай справа налево",list:[
+     "последнее слово — главное, всё слева отвечает «какой?»",
+     "{Mass Properties} → свойства → какие? массовые",
+     "{Base cabinet hanging brackets} → кронштейны → навесные → шкафа → нижнего",
+     "{Autosave Interval (Minutes)} → интервал → автосохранения → в минутах",
+     "ЕСЛИ есть предлог ({for}, {with}) — читай нормально, слева направо"
+    ]},
+    {h:"Три суффикса решают почти всё",list:[
+     "{-able} «можно сделать»: {viewable} · {editable} · {available}",
+     "{-ing} процесс или название: {sectioning} · {centering} · {settings}",
+     "{-ed} состояние, уже случилось: {selected} · {disabled} · {unsaved}",
+     "{-less} без: {borderless} · {wireless}",
+     "{-friendly} приспособленный для: {colour-blind friendly}"
+    ]},
+    {h:"Твои ложные друзья",list:[
+     "{cabinet} шкаф, НЕ кабинет (кабинет = {office})",
+     "{magazine} журнал, НЕ магазин (магазин = {shop})",
+     "{fabric} ткань, НЕ фабрика (фабрика = {factory})",
+     "{velvet} бархат, НЕ вельвет (вельвет = {corduroy})",
+     "{credits} титры, НЕ кредиты",
+     "{actual} фактический, НЕ актуальный",
+     "{accurate} точный, НЕ аккуратный",
+     "{quote} цена, КП — а не только цитата",
+     "{sale conditions} условия продажи, НЕ распродажа"
+    ]},
+    {h:"Незнакомый экран за 60 секунд",list:[
+     "1 · не читай всё — найди кнопки внизу или справа",
+     "2 · найди выход: {Cancel} · {✕} · {Esc}",
+     "3 · прочитай заголовок окна — о чём речь",
+     "4 · прочитай выделенную кнопку — чего от тебя ждут",
+     "5 · проверь на отрицание",
+     "6 · длинное слово — справа налево",
+     "7 · не помогло — {Cancel}. Ты ничего не сломал"
+    ]},
+    {h:"Фразы для работы",list:[
+     "{Could you send me the PDF catalogue, please?}",
+     "{Could you send me the price list for table legs?}",
+     "{I would like to request a quote for …}",
+     "{Where can I find the assembly instructions?}",
+     "{Is this item available?}"
+    ]}
+   ]
+  ]},
+  {t:"review",h:"Разбор твоих ошибок"},
+  {t:"note",h:"Что делать с этим листом",
+   body:[
+    "Распечатай (кнопка выше или {Ctrl}+{P}) — печатается только шпаргалка и разбор ошибок, остальное скроется само.",
+    "Положи рядом с монитором на неделю. Каждый раз, когда захочешь открыть переводчик, сначала посмотри на лист.",
+    "Через неделю он тебе не понадобится — не потому, что ты выучил 300 слов, а потому что перестанешь бояться экрана."
+   ]}
+]});
+
+boot();
+</script>
+</body>
+</html>
