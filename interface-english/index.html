@@ -170,6 +170,14 @@ main>.wrap{padding-bottom:28px}
 
 .mockbox{margin:12px 0 0}
 .mockwrap{border-radius:var(--r-sm);overflow-x:auto;overscroll-behavior-x:contain;border:1px solid var(--line)}
+.mockwrap.pad{background:#E7E9ED;padding:24px 18px;display:flex;justify-content:center}
+[data-zone]{cursor:pointer;position:relative}
+[data-zone]:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+@media (hover:hover){
+  [data-zone]:hover{outline:2px solid var(--acc);outline-offset:1px;border-radius:3px}
+  .mock-ribbon .ri.dim:hover,.mock-cookie .prow .sw.lock:hover{outline-color:var(--ink-muted)}
+}
+[data-zone]:active{outline:2px solid var(--acc-ink);outline-offset:1px}
 .mocktools{display:flex;gap:8px;align-items:center;margin:8px 0 0;flex-wrap:wrap}
 .mocktools .hintx{font-size:12.5px;color:var(--ink-muted)}
 .trbtn{border:1px solid var(--acc);background:var(--acc-tint);color:var(--acc-ink);border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;min-height:34px}
@@ -240,13 +248,13 @@ main>.wrap{padding-bottom:28px}
 .mock-calc .cside{flex:1 1 250px}
 .mock-calc .cfield{margin-bottom:11px}
 .mock-calc .cfield label{display:block;font-size:12px;color:#555;margin-bottom:3px}
-.mock-calc .cfield .inp{border:1px solid #BBB;background:#FAFAFA;padding:7px 9px;font-size:13px;color:#333}
+.mock-calc .cfield .inp{border:1px solid #BBB;background:#FAFAFA;padding:7px 9px;font-size:13px;color:#333;min-height:32px}
 .mock-calc .cfield .inp.sel:after{content:"▾";float:right;color:#888}
 .mock-calc .cres{flex:1 1 220px;background:#F4F4F5;border:1px solid #DDD;padding:13px}
 .mock-calc .cres .big{font:700 26px/1.1 Arial;color:#D5121B;margin:5px 0}
 .mock-calc .it{color:#8A6D00;background:#FFF8DC;border-left:3px solid #C9A227;padding:2px 6px;display:inline-block}
 
-.mock-dlg{background:#F0F0F0;border:1px solid #B4B4B4;font:13.5px/1.5 "Segoe UI",Arial,sans-serif;color:#1A1A1A;max-width:540px;margin:0 auto}
+.mock-dlg{background:#F0F0F0;border:1px solid #B4B4B4;box-shadow:0 8px 26px rgba(0,0,0,.18);font:13.5px/1.5 "Segoe UI",Arial,sans-serif;color:#1A1A1A;width:100%;max-width:540px}
 .mock-dlg .dbar{background:#fff;border-bottom:1px solid #DEDEDE;padding:8px 12px;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600}
 .mock-dlg .dbar .x{margin-left:auto;font-size:15px;line-height:1;padding:0 4px;color:#555;font-weight:400}
 .mock-dlg .dbody{padding:17px;background:#fff;display:flex;gap:13px}
@@ -264,7 +272,7 @@ main>.wrap{padding-bottom:28px}
 .mock-dlg .bx.dot:after{content:"";position:absolute;inset:3px;border-radius:50%;background:#0B5FA5}
 .mock-dlg .frow{display:flex;gap:9px;align-items:center;margin:9px 0;font-size:13px}
 .mock-dlg .frow .fl{flex:0 0 92px;color:#444}
-.mock-dlg .frow .fi{flex:1 1 auto;border:1px solid #BBB;padding:6px 8px;background:#fff;color:#333}
+.mock-dlg .frow .fi{flex:1 1 auto;border:1px solid #BBB;padding:6px 8px;background:#fff;color:#333;min-height:30px}
 .mock-dlg .tree{border:1px solid #CCC;background:#fff;padding:8px;font-size:12.5px;color:#333;min-height:76px}
 .mock-dlg .tree div{padding:2px 0}
 
@@ -283,7 +291,7 @@ main>.wrap{padding-bottom:28px}
 .mock-cookie .prow b{display:block;color:#E7E9F0;font-size:13px}
 .mock-cookie .prow span{color:#98A0B4}
 
-.mock-perm{background:#fff;border:1px solid #C6C6C6;border-radius:8px;box-shadow:0 6px 22px rgba(0,0,0,.16);max-width:410px;font:13.5px/1.5 "Segoe UI",Arial,sans-serif}
+.mock-perm{background:#fff;border:1px solid #C6C6C6;border-radius:8px;box-shadow:0 6px 22px rgba(0,0,0,.16);width:100%;max-width:410px;font:13.5px/1.5 "Segoe UI",Arial,sans-serif}
 .mock-perm .purl{display:flex;align-items:center;gap:8px;padding:9px 13px;border-bottom:1px solid #EDEDED;font-size:12.5px;color:#444}
 .mock-perm .purl svg{width:13px;height:13px;flex:0 0 auto;color:#5F6368}
 .mock-perm .pbody{padding:14px 13px}
@@ -298,20 +306,20 @@ main>.wrap{padding-bottom:28px}
 .mock-dl .kb{border:1px solid #DADCE0;background:#fff;border-radius:4px;padding:5px 11px;font-size:12.5px}
 .mock-dl .kb.pri{background:#0B57D0;border-color:#0B57D0;color:#fff;font-weight:600}
 
-.mock-login{background:#fff;border:1px solid #DDD;max-width:380px;margin:0 auto;font:14px/1.5 Arial,sans-serif;padding:22px}
+.mock-login{background:#fff;border:1px solid #DDD;width:100%;max-width:380px;font:14px/1.5 Arial,sans-serif;padding:22px}
 .mock-login h5{margin:0 0 4px;font-size:17px}
 .mock-login .hint{color:#777;font-size:12.5px;margin:0 0 14px}
-.mock-login .li{border:1px solid #BBB;padding:9px 10px;margin-bottom:9px;font-size:13px;color:#666;background:#FAFAFA}
+.mock-login .li{border:1px solid #BBB;padding:9px 10px;margin-bottom:9px;font-size:13px;color:#666;background:#FAFAFA;min-height:36px;display:flex;align-items:center}
 .mock-login .lb{background:#1A1A1A;color:#fff;text-align:center;padding:10px;font-weight:600;font-size:13.5px}
 .mock-login .lx{display:flex;justify-content:space-between;font-size:12px;color:#0B5FA5;margin-top:11px;gap:10px;flex-wrap:wrap}
 
-.mock-form{background:#fff;border:1px solid #DDD;font:14px/1.5 Arial,sans-serif;padding:18px;min-width:520px}
+.mock-form{background:#fff;border:1px solid #DDD;font:14px/1.5 Arial,sans-serif;padding:20px 22px;width:100%;max-width:560px}
 .mock-form h5{margin:0 0 3px;font-size:16px}
 .mock-form .fhint{color:#777;font-size:12.5px;margin:0 0 14px}
 .mock-form .ff{margin-bottom:12px}
 .mock-form .ff label{display:block;font-size:12.5px;color:#333;margin-bottom:4px;font-weight:600}
 .mock-form .ff .req{color:#BB3626}
-.mock-form .ff .in{border:1px solid #BBB;padding:8px 10px;font-size:13px;color:#666;background:#fff}
+.mock-form .ff .in{border:1px solid #BBB;padding:8px 10px;font-size:13px;color:#666;background:#fff;min-height:34px;display:flex;align-items:center}
 .mock-form .ff .in.err{border-color:#BB3626;background:#FDF6F5}
 .mock-form .ff .em{color:#BB3626;font-size:12px;margin-top:4px}
 .mock-form .fcheck{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:#444;margin:12px 0}
@@ -605,7 +613,9 @@ function mockBox(mockFn,opts){
   opts=opts||{};
   var box=el("div","mockbox");
   var wrap=el("div","mockwrap");
-  wrap.appendChild(mockFn());
+  var node=mockFn();
+  if(/mock-(dlg|perm|login|form)/.test(node.className||""))wrap.className="mockwrap pad";
+  wrap.appendChild(node);
   box.appendChild(wrap);
   var tools=el("div","mocktools");
   var b=el("button","trbtn");
