@@ -176,8 +176,12 @@ main>.wrap{padding-bottom:28px}
 @media (hover:hover){
   [data-zone]:hover{outline:2px solid var(--acc);outline-offset:1px;border-radius:3px}
   .mock-ribbon .ri.dim:hover,.mock-cookie .prow .sw.lock:hover{outline-color:var(--ink-muted)}
+  .mock-game [data-zone]:hover{outline-color:#E8C87A}
+  .mock-cookie [data-zone]:hover{outline-color:#93B4FF}
 }
 [data-zone]:active{outline:2px solid var(--acc-ink);outline-offset:1px}
+.mock-game [data-zone]:active{outline-color:#fff}
+.mock-cookie [data-zone]:active{outline-color:#fff}
 .mocktools{display:flex;gap:8px;align-items:center;margin:8px 0 0;flex-wrap:wrap}
 .mocktools .hintx{font-size:12.5px;color:var(--ink-muted)}
 .trbtn{border:1px solid var(--acc);background:var(--acc-tint);color:var(--acc-ink);border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;min-height:34px}
@@ -606,7 +610,7 @@ var TR={
 "Continue":"Продолжить","Skip":"Пропустить","Apply":"Применить","OK":"ОК","Close":"Закрыть","Retry":"Повторить","Undo":"Отменить"
 };
 
-function T(node,en){node.setAttribute("data-t",en);node.textContent=en;return node;}
+function T(node,en){if(en)node.setAttribute("data-t",en);node.textContent=en||"";return node;}
 function tspan(cls,en){return T(el("span",cls),en);}
 
 function mockBox(mockFn,opts){
@@ -1104,8 +1108,9 @@ function review(spec){
 }
 function final(spec){
   var c=el("div","card final");
-  var n=0,got=S.score;
+  var n=0;
   SCORED.forEach(function(id){if(S.ans[id])n++;});
+  var got=Math.min(S.score,n);
   c.appendChild(el("div","big",got+" / "+n));
   var p=el("p","verdict"),pct=n?got/n:0,nm=S.name?S.name+", ":"";
   var t;
