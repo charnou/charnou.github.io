@@ -138,20 +138,23 @@ main>.wrap{padding-bottom:28px}
 .stackslot{display:flex;align-items:center;gap:10px;border:1px dashed var(--line);border-radius:var(--r-sm);padding:9px 12px;min-height:44px;font-size:14.5px}
 .stackslot .n{flex:0 0 auto;width:22px;height:22px;border-radius:6px;background:var(--line-soft);color:var(--ink-muted);font:600 12px/22px var(--f-mono);text-align:center}
 .stackslot.filled{border-style:solid;border-color:var(--ok);background:var(--ok-tint)}
+.stackslot .ph{color:var(--ink-muted);font-size:13.5px}
+.stackslot.next{border-color:var(--acc);background:var(--acc-tint)}
+.stackslot.next .ph{color:var(--acc-ink);font-weight:600}
+.howto{background:var(--acc-tint);color:var(--acc-ink);border-radius:var(--r-sm);padding:10px 13px;margin:10px 0 0;font-size:14px}
 
-details.extra{border:1px dashed var(--line);border-radius:var(--r-sm);margin:14px 0;background:#FCFCFD}
-details.extra>summary{cursor:pointer;padding:10px 14px;font-size:13.5px;color:var(--ink-muted);font-weight:600;list-style:none}
-details.extra>summary::-webkit-details-marker{display:none}
-details.extra>summary:before{content:"ЗАПАС · ";font-family:var(--f-mono);color:var(--acc);font-size:11px}
-details.extra>div{padding:0 14px 6px}
+.reserve{border:1px solid var(--line);border-left:4px solid var(--ink-muted);border-radius:var(--r);margin:26px 0 0;background:#FBFBFC;padding:0 15px 8px}
+.reserve>.rh{margin:0 -15px 4px;padding:12px 15px;border-bottom:1px dashed var(--line)}
+.reserve>.rh .lb{display:inline-block;font:600 10.5px/1 var(--f-mono);letter-spacing:.8px;background:var(--ink-muted);color:#fff;border-radius:4px;padding:4px 7px;vertical-align:2px}
+.reserve>.rh .tt{font:600 15px/1.35 var(--f-head);margin-left:9px}
+.reserve>.rh .ds{display:block;margin-top:5px;font-size:13.5px;color:var(--ink-muted)}
 
-details.talk{border:1px solid var(--near);background:var(--near-tint);border-radius:var(--r-sm);margin:14px 0}
-details.talk>summary{cursor:pointer;padding:11px 14px;font-weight:600;font-size:14.5px;color:var(--near-ink);list-style:none;display:flex;align-items:center;gap:8px}
-details.talk>summary::-webkit-details-marker{display:none}
-details.talk>summary svg{width:16px;height:16px;flex:0 0 auto}
-details.talk>div{padding:0 14px 12px;font-size:14.5px;color:var(--near-ink)}
-details.talk ul{margin:6px 0 0;padding-left:19px}
-details.talk li{margin:4px 0}
+.talk{border:1px solid var(--near);background:var(--near-tint);border-radius:var(--r);margin:16px 0;padding:14px 17px}
+.talk h4{margin:0 0 8px;font:600 15px/1.35 var(--f-head);color:var(--near-ink);display:flex;align-items:center;gap:8px}
+.talk h4 svg{width:17px;height:17px;flex:0 0 auto}
+.talk p,.talk li{font-size:14.5px;color:var(--near-ink)}
+.talk ul{margin:6px 0 0;padding-left:20px}
+.talk li{margin:5px 0}
 
 .rule{display:flex;gap:13px;border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:var(--r-sm);padding:14px 16px;margin:10px 0}
 .rule .rn{flex:0 0 auto;font:600 20px/1 var(--f-head);color:var(--acc);opacity:.45}
@@ -350,7 +353,7 @@ details.talk li{margin:4px 0}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media print{
   body{height:auto;overflow:visible;display:block;background:#fff}
-  .top,.tabsbar,.pager,.row,.mocktools,details.extra,details.talk,.final .row{display:none!important}
+  .top,.tabsbar,.pager,.row,.mocktools,.reserve,.talk{display:none!important}
   main{overflow:visible}
   .card{border:none;box-shadow:none;padding:0;margin:8px 0}
   .sheet{border:1px solid #999;page-break-inside:avoid}
@@ -498,6 +501,11 @@ function head(spec){
   if(spec.sub){var s=el("p","sub");s.appendChild(rich(spec.sub));f.appendChild(s);}
   return f;
 }
+function howLine(spec,def){
+  var d=el("div","howto");
+  d.appendChild(rich(spec.how||def));
+  return d;
+}
 
 var TR={
 "File":"Файл","Home":"Главная","Markup":"Пометки","Tools":"Инструменты","Sectioning":"Разрезы","Animation":"Анимация",
@@ -625,6 +633,7 @@ function mockBox(mockFn,opts){
 function mc(spec){
   var c=el("div","card");
   c.appendChild(head(spec));
+  if(spec.how)c.appendChild(howLine(spec,""));
   var box=fbBox(),opts=el("div","opts"),nodes=[];
   spec.items.forEach(function(it,i){
     var b=el("button","opt");b.type="button";
@@ -655,6 +664,7 @@ function mc(spec){
 function match(spec){
   var c=el("div","card");
   c.appendChild(head(spec));
+  c.appendChild(howLine(spec,"Что делать: нажми слово в левом столбце, потом его пару в правом. Верная пара станет зелёной и погаснет. Собери все."));
   var box=fbBox(),wrap=el("div","pairs"),lc=el("div","col"),rc=el("div","col");
   var sel=null,solved={},L={},R={};
   function mk(t,side,k){
@@ -704,6 +714,7 @@ function match(spec){
 function hotspot(spec){
   var c=el("div","card");
   c.appendChild(head(spec));
+  c.appendChild(howLine(spec,"Что делать: нажми прямо в макете на то место, куда нажал бы в настоящей программе. Любой ответ объяснят — и верный, и неверный."));
   var box=fbBox();
   var m=mockBox(spec.mock,{tip:spec.tip});
   var zmap={};
@@ -748,16 +759,22 @@ function look(spec){
   return c;
 }
 
+var STACK_PH=["главное слово — о чём вообще речь","уточнение: какой именно?","ещё уточнение","и последнее уточнение"];
 function stack(spec){
   var c=el("div","card");
   c.appendChild(head(spec));
+  var how=el("div","howto");
+  how.appendChild(rich(spec.how||"Что делать: нажимай слова по одному снизу. Начни с ГЛАВНОГО слова — в английской надписи оно стоит последним. Потом двигайся справа налево, добавляя уточнения."));
+  c.appendChild(how);
   var box=fbBox();
   c.appendChild(el("div","stackphr",spec.phrase));
   var slots=el("div","stackslots"),sn=[],step=0;
   spec.order.forEach(function(o,i){
-    var s=el("div","stackslot");
+    var s=el("div","stackslot"+(i===0?" next":""));
     s.appendChild(el("span","n",String(i+1)));
-    s.appendChild(el("span","tx",""));
+    var t=el("span","tx");
+    t.appendChild(el("span","ph",STACK_PH[i]||"уточнение"));
+    s.appendChild(t);
     slots.appendChild(s);sn.push(s);
   });
   c.appendChild(slots);
@@ -768,10 +785,17 @@ function stack(spec){
     tn.push({o:o,b:b});toks.appendChild(b);
   });
   function place(o,b){
-    var s=sn[step];s.className="stackslot filled";
-    var tx=pick(".tx",s);tx.textContent="";
+    var s=sn[step];
+    s.className="stackslot filled";
+    var tx=pick(".tx",s);
+    tx.textContent="";
     tx.appendChild(rich(o.t+" — "+o.ru));
-    b.disabled=true;b.className="tok is-ok";step++;
+    b.disabled=true;b.className="tok is-ok";
+    step++;
+    sn.forEach(function(x,i){
+      if(i===step)x.className="stackslot next";
+      else if(i>step)x.className="stackslot";
+    });
   }
   function tap(o,b,sc){
     if(b.disabled)return;
@@ -802,6 +826,7 @@ function stack(spec){
 function gap(spec){
   var c=el("div","card");
   c.appendChild(head(spec));
+  c.appendChild(howLine(spec,"Что делать: выбери слово из кнопок под фразой — оно встанет в пропуск."));
   var box=fbBox(),line=el("p","gapline");
   line.appendChild(rich(spec.before));
   var slot=el("span","slot","?");
@@ -835,6 +860,7 @@ function gap(spec){
 function findErr(spec){
   var c=el("div","card");
   c.appendChild(head(spec));
+  c.appendChild(howLine(spec,"Что делать: два шага. Сначала нажми слово, которое считаешь неверным. Когда найдёшь его — появится второй ряд, выбери в нём замену."));
   var box=fbBox(),toks=el("div","toks"),nodes=[],phase=0;
   spec.tokens.forEach(function(t,i){
     var b=el("button","tok",t);b.type="button";
@@ -945,19 +971,17 @@ function vocab(spec){
 }
 
 function talk(spec){
-  var d=el("details","talk");
-  var sm=el("summary");
-  sm.appendChild(icon("talk"));
-  sm.appendChild(txt(spec.h||"Скажи вслух"));
-  d.appendChild(sm);
-  var box=el("div");
-  (spec.body||[]).forEach(function(p){var n=el("p");n.style.margin="0 0 6px";n.appendChild(rich(p));box.appendChild(n);});
+  var d=el("div","talk");
+  var h=el("h4");
+  h.appendChild(icon("talk"));
+  h.appendChild(txt(spec.h||"Скажи вслух"));
+  d.appendChild(h);
+  (spec.body||[]).forEach(function(p){var n=el("p");n.style.margin="0 0 6px";n.appendChild(rich(p));d.appendChild(n);});
   if(spec.list){
     var ul=el("ul");
     spec.list.forEach(function(t){var li=el("li");li.appendChild(rich(t));ul.appendChild(li);});
-    box.appendChild(ul);
+    d.appendChild(ul);
   }
-  d.appendChild(box);
   return d;
 }
 
@@ -1580,11 +1604,14 @@ function renderChapter(){
   v.appendChild(h);
   (c.items||[]).forEach(function(it){
     if(it.t==="extra"){
-      var d=el("details","extra");
-      d.appendChild(el("summary",null,it.label||"если есть время"));
-      var box=el("div");
-      (it.items||[]).forEach(function(s){box.appendChild(buildItem(s));});
-      d.appendChild(box);
+      var d=el("div","reserve");
+      var n=(it.items||[]).length;
+      var hh=el("div","rh");
+      hh.appendChild(el("span","lb","ЗАПАС"));
+      hh.appendChild(el("span","tt",it.label||"если останется время"));
+      hh.appendChild(el("span","ds","Не входит в основной план урока. "+n+" "+(n===1?"задание":(n<5?"задания":"заданий"))+" ниже — берите, если прошли главу быстрее, чем рассчитывали."));
+      d.appendChild(hh);
+      (it.items||[]).forEach(function(s){d.appendChild(buildItem(s));});
       v.appendChild(d);
     }else v.appendChild(buildItem(it));
   });
