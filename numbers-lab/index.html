@@ -88,26 +88,6 @@ p{margin:0 0 12px}
 .step.on{background:var(--acc-tint);border-color:var(--acc);color:var(--acc-ink);font-weight:600}
 .step.past{background:var(--green-tint);border-color:var(--green);color:var(--green-ink)}
 
-/* ---------- explicit name picker ---------- */
-.pick-q{font-family:Georgia,serif;font-size:clamp(21px,5.4vw,27px);margin:0 0 4px}
-.name{position:relative;display:flex;align-items:center;gap:13px;background:#fff;border:2px solid var(--line);
-  border-radius:16px;padding:14px 15px;font:inherit;cursor:pointer;text-align:left;width:100%;
-  transition:border-color .14s ease,background .14s ease,transform .12s ease}
-.name:hover{transform:translateY(-1px)}
-.av{flex:0 0 44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-family:Georgia,serif;font-size:20px;color:#5F5468}
-.name .who b{display:block;font-family:Georgia,serif;font-size:19px;font-weight:400;line-height:1.2}
-.name .who span{font-size:12.5px;color:var(--ink-soft)}
-.name .mark{position:absolute;right:14px;font-size:18px;color:var(--green-ink);opacity:0;transition:opacity .14s ease}
-.name[aria-pressed=true]{border-color:var(--green-ink);background:var(--green-tint)}
-.name[aria-pressed=true] .mark{opacity:1}
-.gate{border-top:1px dashed var(--line);margin-top:18px;padding-top:16px}
-
-/* ---------- old name grid tweak ---------- */
-.names{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
-.name{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;font:inherit;cursor:pointer;text-align:left}
-.name[aria-pressed=true]{background:var(--green-tint);border-color:var(--green)}
-
 /* ---------- rules ---------- */
 .rules{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);margin-bottom:26px}
 .rsec{border-top:2px solid var(--line);padding:22px 0 6px}
@@ -151,6 +131,7 @@ li{margin-bottom:5px}
 .digits small{font-family:inherit;font-size:15px;color:var(--ink-soft);display:block;margin-top:4px}
 input[type=text]{font:inherit;font-size:16px;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#FFFDFB;color:var(--ink)}
 input[type=text]:disabled{background:var(--green-tint);border-color:var(--green)}
+.gate{border-top:1px dashed var(--line);margin-top:18px;padding-top:16px}
 .fb{margin-top:10px;font-size:14.5px;padding:10px 12px;border-radius:12px;display:none}
 .fb.show{display:block}
 .fb.ok{background:var(--green-tint);color:var(--green-ink)}
@@ -458,12 +439,6 @@ body.cool .sticky{background:rgba(246,250,251,.94)}
 <script>
 "use strict";
 /* ============================== data ============================== */
-var STUDENTS=[
-  {name:"Alesya",ru:"Алеся",c:"var(--pink)",t:"warm"},
-  {name:"Rita",ru:"Рита",c:"var(--yellow)",t:"warm"},
-  {name:"Rodion",ru:"Родион",c:"var(--green)",t:"cool"},
-  {name:"Vladimir",ru:"Владимир",c:"var(--blue)",t:"cool"}
-];
 
 var BLOCKS=[
  {id:"write",kind:"write",colour:"pink",title:"Write it in words",sub:"Пишем словами: даты, дроби, проценты, числа",
@@ -876,36 +851,36 @@ function screenStart(){
   h.appendChild(steps(0));
   var box=el("div","card");
   box.appendChild(el("p","eyebrow","Step 1 — required"));
-  box.appendChild(el("p","pick-q","Who is doing this homework?"));
-  box.appendChild(el("p","ru","Нажми на своё имя — оно подсветится зелёным — и жми кнопку внизу. Дальше приложение будет обращаться к тебе по имени."));
-  var g=el("div","names"),chosen=null,btns=[];
+  box.appendChild(el("p","pick-q","What is your name?"));
+  box.appendChild(el("p","ru","Впиши своё имя и жми кнопку внизу. Дальше приложение будет обращаться к тебе по имени."));
+  var inp=document.createElement("input");
+  inp.type="text";
+  inp.placeholder="Type your name";
+  inp.setAttribute("autocomplete","given-name");
+  inp.setAttribute("aria-label","Your name");
   var gate=el("div","gate");
-  var go=el("button","btn wide","Select your name first");
+  var go=el("button","btn wide","Type your name first");
   go.type="button";go.disabled=true;
-  STUDENTS.forEach(function(st){
-    var b=el("button","name",'<span class="av" style="background:'+st.c+'">'+st.name.charAt(0)+
-      '</span><span class="who"><b>'+st.name+'</b><span>'+st.ru+'</span></span><span class="mark">✓</span>');
-    b.type="button";b.setAttribute("aria-pressed","false");
-    b.onclick=function(){
-      chosen=st;
-      btns.forEach(function(x){x.setAttribute("aria-pressed","false");});
-      b.setAttribute("aria-pressed","true");
-      go.disabled=false;
-      go.textContent="Continue as "+st.name+" →";
-    };
-    btns.push(b);g.appendChild(b);
-  });
+  function typed(){return inp.value.replace(/^\s+|\s+$/g,"");}
+  function sync(){
+    var v=typed();
+    go.disabled=!v;
+    go.textContent=v?("Continue as "+v+" →"):"Type your name first";
+  }
+  inp.oninput=sync;
+  inp.onkeydown=function(e){if(e.key==="Enter"&&typed())go.onclick();};
   go.onclick=function(){
-    if(!chosen)return;
-    S.name=chosen.name;S.ru=chosen.ru;S.theme=chosen.t;
-    document.body.className=(chosen.t==="cool"?"cool":"");
+    var v=typed();
+    if(!v)return;
+    S.name=v;S.ru=v;
     goRules();
   };
-  box.appendChild(g);
+  box.appendChild(inp);
   gate.appendChild(go);
   box.appendChild(gate);
   h.appendChild(box);
   app.appendChild(h);
+  try{inp.focus();}catch(e){}
 }
 
 /* ---------- step 2: rules only ---------- */
