@@ -61,12 +61,14 @@ main>.wrap{padding-bottom:28px}
 
 .chap-h{padding:22px 0 4px}
 .chap-h h1{margin:0;font:600 24px/1.25 var(--f-head);letter-spacing:-.4px;display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.chap-h h1[tabindex]:focus{outline:none}
+.chap-h h1[tabindex]:focus-visible{outline:2px solid var(--acc);outline-offset:4px;border-radius:4px}
 .chap-h .mins{font:500 12px/1 var(--f-mono);color:var(--ink-muted);border:1px solid var(--line);border-radius:999px;padding:5px 9px}
 .chap-h .lead{margin:9px 0 0;color:var(--ink-soft);font-size:15px;max-width:820px}
 
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px;margin:16px 0}
 .card>*:not(.mockwrap):not(.mockbox){max-width:830px}
-.card>h3{margin:0 0 10px;font:600 16px/1.35 var(--f-head)}
+.card>h2{margin:0 0 10px;font:600 17px/1.35 var(--f-head)}
 .q{margin:0 0 4px;font-weight:600;font-size:16.5px;line-height:1.45}
 .sub{margin:3px 0 12px;font-size:14px;color:var(--ink-muted)}
 
@@ -112,7 +114,7 @@ main>.wrap{padding-bottom:28px}
 
 .fam{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:12px 0 0}
 .fam>div{border:1px solid var(--line);border-radius:var(--r-sm);padding:12px}
-.fam h4{margin:0 0 6px;font:600 14px/1.3 var(--f-head)}
+.fam h3{margin:0 0 6px;font:600 14px/1.3 var(--f-head)}
 .fam ul{margin:0;padding-left:17px;font-family:var(--f-mono);font-size:13px;line-height:1.75}
 .fam p{margin:7px 0 0}
 
@@ -144,21 +146,21 @@ main>.wrap{padding-bottom:28px}
 .howto{background:var(--acc-tint);color:var(--acc-ink);border-radius:var(--r-sm);padding:10px 13px;margin:10px 0 0;font-size:14px}
 
 .reserve{border:1px solid var(--line);border-left:4px solid var(--ink-muted);border-radius:var(--r);margin:26px 0 0;background:#FBFBFC;padding:0 15px 8px}
-.reserve>.rh{margin:0 -15px 4px;padding:12px 15px;border-bottom:1px dashed var(--line)}
+.reserve>.rh{margin:0 -15px 4px;padding:12px 15px;border-bottom:1px dashed var(--line);font-weight:400;font-size:inherit}
 .reserve>.rh .lb{display:inline-block;font:600 10.5px/1 var(--f-mono);letter-spacing:.8px;background:var(--ink-muted);color:#fff;border-radius:4px;padding:4px 7px;vertical-align:2px}
 .reserve>.rh .tt{font:600 15px/1.35 var(--f-head);margin-left:9px}
 .reserve>.rh .ds{display:block;margin-top:5px;font-size:13.5px;color:var(--ink-muted)}
 
 .talk{border:1px solid var(--near);background:var(--near-tint);border-radius:var(--r);margin:16px 0;padding:14px 17px}
-.talk h4{margin:0 0 8px;font:600 15px/1.35 var(--f-head);color:var(--near-ink);display:flex;align-items:center;gap:8px}
-.talk h4 svg{width:17px;height:17px;flex:0 0 auto}
+.talk h3{margin:0 0 8px;font:600 15px/1.35 var(--f-head);color:var(--near-ink);display:flex;align-items:center;gap:8px}
+.talk h3 svg{width:17px;height:17px;flex:0 0 auto}
 .talk p,.talk li{font-size:14.5px;color:var(--near-ink)}
 .talk ul{margin:6px 0 0;padding-left:20px}
 .talk li{margin:5px 0}
 
 .rule{display:flex;gap:13px;border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:var(--r-sm);padding:14px 16px;margin:10px 0}
 .rule .rn{flex:0 0 auto;font:600 20px/1 var(--f-head);color:var(--acc);opacity:.45}
-.rule h4{margin:0 0 5px;font:600 15.5px/1.35 var(--f-head)}
+.rule h3{margin:0 0 5px;font:600 15.5px/1.35 var(--f-head)}
 .rule p{margin:0 0 6px;font-size:14.5px;color:var(--ink-soft)}
 .rule p:last-child{margin:0}
 .rule .how{font-size:14px;color:var(--ink);background:var(--acc-tint);border-radius:8px;padding:8px 11px;margin-top:8px}
@@ -239,8 +241,8 @@ main>.wrap{padding-bottom:28px}
 .mock-site .mega{background:#57575A;color:#fff;padding:16px;display:flex;gap:14px;flex-wrap:wrap}
 .mock-site .mega.light{background:#F4F4F5;color:#1A1A1A;border-top:1px solid #DDD}
 .mock-site .mcol{flex:1 1 128px;min-width:118px}
-.mock-site .mcol h5{margin:0 0 5px;font-size:12.5px;line-height:1.3;border-bottom:1px solid #8A8A8D;padding-bottom:5px}
-.mock-site .mega.light .mcol h5{border-bottom-color:#CCC}
+.mock-site .mcol .mh{margin:0 0 5px;font-size:12.5px;line-height:1.3;border-bottom:1px solid #8A8A8D;padding-bottom:5px}
+.mock-site .mega.light .mcol .mh{border-bottom-color:#CCC}
 .mock-site .mcol ul{margin:0;padding:0;list-style:none;font-size:11.5px;line-height:1.8;color:#E2E2E2}
 .mock-site .mega.light .mcol ul{color:#444}
 .mock-site .mcol .kicker{font-size:10px;letter-spacing:.8px;color:#C9C9C9;margin:7px 0 2px}
@@ -281,7 +283,7 @@ main>.wrap{padding-bottom:28px}
 .mock-dlg .tree div{padding:2px 0}
 
 .mock-cookie{background:#1E2330;color:#E7E9F0;font:13.5px/1.55 Arial,sans-serif;padding:18px}
-.mock-cookie h5{margin:0 0 6px;font-size:15px}
+.mock-cookie .mh{margin:0 0 6px;font-size:15px}
 .mock-cookie p{margin:0 0 12px;color:#B2B8C9;font-size:13px}
 .mock-cookie .crow{display:flex;gap:8px;flex-wrap:wrap}
 .mock-cookie .cb{border:1px solid #4A5266;background:none;color:#E7E9F0;border-radius:4px;padding:9px 15px;font-size:13px;min-height:38px;display:inline-flex;align-items:center}
@@ -311,14 +313,14 @@ main>.wrap{padding-bottom:28px}
 .mock-dl .kb.pri{background:#0B57D0;border-color:#0B57D0;color:#fff;font-weight:600}
 
 .mock-login{background:#fff;border:1px solid #DDD;width:100%;max-width:380px;font:14px/1.5 Arial,sans-serif;padding:22px}
-.mock-login h5{margin:0 0 4px;font-size:17px}
+.mock-login .mh{margin:0 0 4px;font-size:17px}
 .mock-login .hint{color:#777;font-size:12.5px;margin:0 0 14px}
 .mock-login .li{border:1px solid #BBB;padding:9px 10px;margin-bottom:9px;font-size:13px;color:#666;background:#FAFAFA;min-height:36px;display:flex;align-items:center}
 .mock-login .lb{background:#1A1A1A;color:#fff;text-align:center;padding:10px;font-weight:600;font-size:13.5px}
 .mock-login .lx{display:flex;justify-content:space-between;font-size:12px;color:#0B5FA5;margin-top:11px;gap:10px;flex-wrap:wrap}
 
 .mock-form{background:#fff;border:1px solid #DDD;font:14px/1.5 Arial,sans-serif;padding:20px 22px;width:100%;max-width:560px}
-.mock-form h5{margin:0 0 3px;font-size:16px}
+.mock-form .mh{margin:0 0 3px;font-size:16px}
 .mock-form .fhint{color:#777;font-size:12.5px;margin:0 0 14px}
 .mock-form .ff{margin-bottom:12px}
 .mock-form .ff label{display:block;font-size:12.5px;color:#333;margin-bottom:4px;font-weight:600}
@@ -338,8 +340,8 @@ main>.wrap{padding-bottom:28px}
 .mist .mw{font-size:13.5px;color:var(--ink-soft);margin-top:5px}
 
 .sheet{border:2px solid var(--acc);border-radius:var(--r-sm);padding:18px;margin:14px 0;background:#fff}
-.sheet h3{margin:0 0 12px;font:600 18px/1.3 var(--f-head)}
-.sheet h4{margin:15px 0 5px;font:600 11.5px/1.3 var(--f-head);color:var(--acc-ink);text-transform:uppercase;letter-spacing:.6px}
+.sheet h2{margin:0 0 12px;font:600 18px/1.3 var(--f-head)}
+.sheet h3{margin:15px 0 5px;font:600 11.5px/1.3 var(--f-head);color:var(--acc-ink);text-transform:uppercase;letter-spacing:.6px}
 .sheet ul{margin:0;padding-left:19px;font-size:13.5px;line-height:1.7}
 .sheet .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 24px}
 
@@ -362,7 +364,11 @@ main>.wrap{padding-bottom:28px}
   .card{padding:15px 14px}
   .chap-h h1{font-size:20px}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.btn,.opt,.chip,.tok,.tab,.trbtn,.reset{transition:transform .09s var(--ease),border-color .15s,background .15s,color .15s}
+.btn:active,.opt:active,.chip:not([disabled]):active,.tok:not([disabled]):active,.trbtn:active,.reset:active{transform:scale(.975)}
+@keyframes chapIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+#view.enter{animation:chapIn .16s var(--ease)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}#view.enter{animation:none!important}}
 @media print{
   body{height:auto;overflow:visible;display:block;background:#fff}
   .top,.tabsbar,.pager,.row,.mocktools,.reserve,.talk{display:none!important}
@@ -489,7 +495,7 @@ function settle(id,correct,o){
   save();setProgress();
   return first;
 }
-function fbBox(){return el("div","fb");}
+function fbBox(){var b=el("div","fb");b.setAttribute("role","status");b.setAttribute("aria-live","polite");return b;}
 function showFb(box,kind,text){box.className="fb on "+kind;box.textContent="";box.appendChild(rich(text));}
 function bump(id){TRIES[id]=(TRIES[id]||0)+1;return TRIES[id];}
 function hintRow(spec,box){
@@ -924,7 +930,7 @@ function findErr(spec){
 
 function note(spec){
   var c=el("div","card");
-  if(spec.h)c.appendChild(el("h3",null,spec.h));
+  if(spec.h)c.appendChild(el("h2",null,spec.h));
   (spec.body||[]).forEach(function(p){
     var n=el("p");n.style.margin="0 0 9px";n.style.fontSize="14.5px";
     n.appendChild(rich(p));c.appendChild(n);
@@ -933,7 +939,7 @@ function note(spec){
     var d=el("div","rule");
     d.appendChild(el("div","rn",String(i+1)));
     var t=el("div");
-    t.appendChild(el("h4",null,r.h));
+    t.appendChild(el("h3",null,r.h));
     (r.p||[]).forEach(function(x){var p=el("p");p.appendChild(rich(x));t.appendChild(p);});
     if(r.how){var hw=el("div","how");hw.appendChild(rich(r.how));t.appendChild(hw);}
     d.appendChild(t);c.appendChild(d);
@@ -953,7 +959,7 @@ function note(spec){
     var g=el("div","fam");
     spec.fams.forEach(function(f){
       var d=el("div");
-      d.appendChild(el("h4",null,f.h));
+      d.appendChild(el("h3",null,f.h));
       var ul=el("ul");
       f.list.forEach(function(w){ul.appendChild(el("li",null,w));});
       d.appendChild(ul);
@@ -967,7 +973,7 @@ function note(spec){
 
 function vocab(spec){
   var c=el("div","card");
-  if(spec.h)c.appendChild(el("h3",null,spec.h));
+  if(spec.h)c.appendChild(el("h2",null,spec.h));
   if(spec.sub){var s=el("p","sub");s.appendChild(rich(spec.sub));c.appendChild(s);}
   var tb=el("table","vocab");
   spec.list.forEach(function(o){
@@ -986,7 +992,7 @@ function vocab(spec){
 
 function talk(spec){
   var d=el("div","talk");
-  var h=el("h4");
+  var h=el("h3");
   h.appendChild(icon("talk"));
   h.appendChild(txt(spec.h||"Скажи вслух"));
   d.appendChild(h);
@@ -1025,7 +1031,7 @@ function posSvg(kind){
 }
 function pos(spec){
   var c=el("div","card");
-  if(spec.h)c.appendChild(el("h3",null,spec.h));
+  if(spec.h)c.appendChild(el("h2",null,spec.h));
   var s=el("p","sub");
   s.appendChild(rich("Красная пунктирная линия — лицевая поверхность панели. Серое — панель, синее — сама фурнитура."));
   c.appendChild(s);
@@ -1033,7 +1039,7 @@ function pos(spec){
   spec.list.forEach(function(o){
     var d=el("div");
     d.appendChild(posSvg(o.k));
-    var w=el("h4");
+    var w=el("h3");
     w.appendChild(txt(o.w));
     w.appendChild(sayBtn(o.w));
     d.appendChild(w);
@@ -1072,7 +1078,7 @@ function walkItems(fn){
 }
 function review(spec){
   var c=el("div","card");
-  c.appendChild(el("h3",null,spec.h||"Разбор ошибок"));
+  c.appendChild(el("h2",null,spec.h||"Разбор ошибок"));
   var out=el("div");
   function build(){
     out.textContent="";
@@ -1131,12 +1137,12 @@ function final(spec){
 }
 function sheet(spec){
   var c=el("div","sheet");
-  c.appendChild(el("h3",null,"Interface English — шпаргалка на один лист"));
+  c.appendChild(el("h2",null,"Interface English — шпаргалка на один лист"));
   var g=el("div","grid2");
   spec.cols.forEach(function(col){
     var d=el("div");
     col.forEach(function(s){
-      d.appendChild(el("h4",null,s.h));
+      d.appendChild(el("h3",null,s.h));
       var ul=el("ul");
       s.list.forEach(function(t){var li=el("li");li.appendChild(rich(t));ul.appendChild(li);});
       d.appendChild(ul);
@@ -1258,7 +1264,7 @@ function utilRow(items,pfx){
 }
 function megaCol(title,items,kickers,pfx){
   var d=el("div","mcol");
-  var h=T(el("h5"),title);
+  var h=T(el("div","mh"),title);
   Z(h,"mg-"+slug(title));
   d.appendChild(h);
   var ul=el("ul");
@@ -1384,7 +1390,7 @@ function mockNordfit(){
 
 function mockCookie(){
   var m=el("div","mock-cookie");
-  m.appendChild(T(el("h5"),"We value your privacy"));
+  m.appendChild(T(el("div","mh"),"We value your privacy"));
   m.appendChild(T(el("p"),"This site uses cookies to improve your experience, analyse traffic and show personalised content."));
   var row=el("div","crow");
   [["Reject all","reject",""],["Manage preferences","manage",""],["Accept all","accept"," pri"]].forEach(function(b){
@@ -1397,7 +1403,7 @@ function mockCookie(){
 }
 function mockCookiePrefs(){
   var m=el("div","mock-cookie");
-  m.appendChild(T(el("h5"),"Manage preferences"));
+  m.appendChild(T(el("div","mh"),"Manage preferences"));
   [["Strictly necessary","Required for the site to work. Cannot be switched off.","lock","Always active"],
    ["Performance","Helps us count visits and see what is slow.","on",""],
    ["Advertising","Lets partners show you ads based on this visit.","on",""]].forEach(function(r){
@@ -1535,7 +1541,7 @@ function mockDownloadBar(){
 }
 function mockLogin(){
   var m=el("div","mock-login");
-  m.appendChild(T(el("h5"),"Sign in to the reserved area"));
+  m.appendChild(T(el("div","mh"),"Sign in to the reserved area"));
   m.appendChild(T(el("p","hint"),"Dealers and partners only."));
   ["Email address","Password"].forEach(function(t){
     m.appendChild(Z(T(el("div","li"),t),"li-"+slug(t)));
@@ -1549,7 +1555,7 @@ function mockLogin(){
 }
 function mockQuoteForm(){
   var m=el("div","mock-form");
-  m.appendChild(T(el("h5"),"Request a quote — table legs"));
+  m.appendChild(T(el("div","mh"),"Request a quote — table legs"));
   m.appendChild(T(el("p","fhint"),"Fields marked with * are required."));
   function ff(lab,val,req,err){
     var d=el("div","ff"),l=el("label");
@@ -1621,7 +1627,7 @@ function renderChapter(){
     if(it.t==="extra"){
       var d=el("div","reserve");
       var n=(it.items||[]).length;
-      var hh=el("div","rh");
+      var hh=el("h2","rh");
       hh.appendChild(el("span","lb","ЗАПАС"));
       hh.appendChild(el("span","tt",it.label||"если останется время"));
       hh.appendChild(el("span","ds","Не входит в основной план урока. "+n+" "+(n===1?"задание":(n<5?"задания":"заданий"))+" ниже — берите, если прошли главу быстрее, чем рассчитывали."));
@@ -1631,6 +1637,11 @@ function renderChapter(){
     }else v.appendChild(buildItem(it));
   });
   renderTabs();
+  t.setAttribute("tabindex","-1");
+  try{t.focus({preventScroll:true});}catch(e){}
+  v.className="";
+  void v.offsetWidth;
+  v.className="enter";
   pick("#pmid").textContent="Глава "+(S.cur+1)+" из "+CH.length;
   pick("#prev").disabled=S.cur===0;
   pick("#next").disabled=S.cur===CH.length-1;
@@ -1703,7 +1714,7 @@ window.addEventListener("hashchange",function(){
 ch({tab:"Правила",title:"Три правила чтения экрана",mins:4,
 lead:"Интерфейсный английский — это не язык. Это закрытый список примерно из 300 слов, которые повторяются везде: в браузере, в игре, в Creo View. [Их не учат как язык. Их один раз опознают как список.]",
 items:[
-  {t:"note",
+  {t:"note",h:"С чего начинать на любом незнакомом экране",
    rules:[
     {h:"Кнопка делает. Вкладка только переключает то, на что ты смотришь.",
      p:["Нажал кнопку — что-то произошло: файл сохранился, окно закрылось, деталь спряталась.",
@@ -1736,7 +1747,7 @@ items:[
 ch({tab:"База",title:"Ядро кнопок",mins:10,
 lead:"Четыре семьи и слова, которые в них живут. Ядро помечено — это то, что надо знать наизусть.",
 items:[
-  {t:"note",
+  {t:"note",h:"Четыре семьи кнопок",
    fams:[
     {h:"Согласиться",list:["OK","Accept","Agree","Allow","Confirm","Continue","Submit","Apply","Save","Enable","Turn on"],ru:"Самая опасная семья: здесь ты на что-то соглашаешься."},
     {h:"Отказаться",list:["Cancel","Deny","Block","Reject","Decline","Disable","Turn off","Discard","No thanks"],ru:"Почти всегда безопасно."},
